@@ -5,14 +5,13 @@
 class Protocol
 {
 private:
-	Buffer buffer = Buffer(32);
-
+	Buffer buffer = Buffer(0);
 	unsigned int message_id;
 
 public:
-	Protocol(unsigned int m_id)
+	Protocol(unsigned int m_id, unsigned int buffer_size)
 	{
-		//Don't think we need to do anything here?
+		buffer = Buffer(buffer_size);
 		message_id = m_id;
 	}
 
