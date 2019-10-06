@@ -15,6 +15,11 @@ public:
 		}
 	}
 
+	void Clear()
+	{
+		_buffer.clear();
+	}
+
 	void writeInt32LE(size_t index, int32_t value)
 	{
 		if (index + sizeof(int32_t) > _buffer.size())
