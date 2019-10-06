@@ -1,13 +1,13 @@
 ﻿  main.cpp
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(22,21): warning C4018:  '<': signed/unsigned mismatch
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(46,20): warning C4244:  '=': conversion from 'int16_t' to '_Ty', possible loss of data
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(46,20): warning C4244:         with
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(46,20): warning C4244:         [
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(46,20): warning C4244:             _Ty=uint8_t
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(46,20): warning C4244:         ]
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(52,16): warning C4244:  '=': conversion from 'int16_t' to '_Ty', possible loss of data
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(52,16): warning C4244:         with
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(52,16): warning C4244:         [
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(52,16): warning C4244:             _Ty=uint8_t
-D:\My Data\Projects\INFO6016 Network Programming\Serialization\Serialization\main.cpp(52,16): warning C4244:         ]
-  Serialization.vcxproj -> D:\My Data\Projects\INFO6016 Network Programming\Serialization\Debug\Serialization.exe
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(22,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(46,20): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(46,20): warning C4244:         with
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(46,20): warning C4244:         [
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(46,20): warning C4244:             _Ty=uint8_t
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(46,20): warning C4244:         ]
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(52,16): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(52,16): warning C4244:         with
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(52,16): warning C4244:         [
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(52,16): warning C4244:             _Ty=uint8_t
+C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Serialization\main.cpp(52,16): warning C4244:         ]
+  Serialization.vcxproj -> C:\Users\Oragagashi\Desktop\Programming\Chat Program\NP-Chat-Program\Serialization\Debug\Serialization.exe
