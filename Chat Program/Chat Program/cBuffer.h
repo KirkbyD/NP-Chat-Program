@@ -17,6 +17,13 @@ public:
 
 	void writeInt32LE(size_t index, int32_t value)
 	{
+		if (index + sizeof(int32_t) > _buffer.size())
+		{
+			for (size_t i = 0; i < _buffer.size() - index - sizeof(int32_t); i++)
+			{
+				_buffer.push_back(0);
+			}
+		}
 		_buffer[index] = value;
 		_buffer[index + 1] = value >> 8;
 		_buffer[index + 2] = value >> 16;
@@ -25,6 +32,13 @@ public:
 
 	void writeInt32LE(int32_t value)
 	{
+		if (sizeof(int32_t) > _buffer.size())
+		{
+			for (size_t i = 0; i < _buffer.size() - sizeof(int32_t); i++)
+			{
+				_buffer.push_back(0);
+			}
+		}
 		_buffer[0] = value;
 		_buffer[1] = value >> 8;
 		_buffer[2] = value >> 16;
@@ -33,12 +47,26 @@ public:
 
 	void writeShortLE(size_t index, int16_t value)
 	{
+		if (index + sizeof(int16_t) > _buffer.size())
+		{
+			for (size_t i = 0; i < _buffer.size() - index - sizeof(int16_t); i++)
+			{
+				_buffer.push_back(0);
+			}
+		}
 		_buffer[index] = value;
 		_buffer[index + 1] = value >> 8;
 	}
 
 	void writeShortLE(int16_t value)
 	{
+		if (sizeof(int16_t) > _buffer.size())
+		{
+			for (size_t i = 0; i < _buffer.size() - sizeof(int16_t); i++)
+			{
+				_buffer.push_back(0);
+			}
+		}
 		_buffer[0] = value;
 		_buffer[1] = value >> 8;
 	}
