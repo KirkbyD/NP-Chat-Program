@@ -22,6 +22,8 @@ struct ClientInfo
 	// Buffer information (this is basically you buffer class)
 	Protocol dataProto;
 	WSABUF dataBuf;
+
+	std::string name = "New Client";
 };
 
 int TotalClients = 0;
@@ -307,7 +309,6 @@ int main(int argc, char** argv)
 				}
 			}
 		}
-
 	}
 
 

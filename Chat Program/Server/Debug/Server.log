@@ -1,0 +1,13 @@
+﻿  main_server.cpp
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:         with
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:         [
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:             _Ty=uint8_t
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:         ]
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:         with
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:         [
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:             _Ty=uint8_t
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:         ]
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Server\main_server.cpp(167,8): warning C4101: 'flags': unreferenced local variable
+  Server.vcxproj -> C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Debug\Server.exe
