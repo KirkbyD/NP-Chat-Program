@@ -7,6 +7,8 @@ private:
 	std::vector<uint8_t> _buffer;
 
 public:
+	Buffer(){}
+
 	Buffer(size_t size)
 	{
 		for (unsigned int i = 0; i < size; i++)
@@ -78,6 +80,13 @@ public:
 
 	void WriteString(size_t index, std::string value)
 	{
+		if (index + value.length() > _buffer.size())
+		{
+			for (size_t i = 0; i < _buffer.size() - index - value.length(); i++)
+			{
+				_buffer.push_back(0);
+			}
+		}
 		for (size_t i = 0; i < value.length(); i++)
 		{
 			_buffer[index + i] = value[i];
@@ -86,6 +95,13 @@ public:
 
 	void WriteString(std::string value)
 	{
+		if (value.length() > _buffer.size())
+		{
+			for (size_t i = 0; i < _buffer.size() - value.length(); i++)
+			{
+				_buffer.push_back(0);
+			}
+		}
 		for (size_t i = 0; i < value.length(); i++)
 		{
 			_buffer[i] = value[i];
@@ -160,8 +176,23 @@ public:
 		return swapped;
 	}
 
-	uint8_t* GetBufferContent()
+	std::vector<uint8_t> GetBufferContent()
 	{
-		return &_buffer[0];
+		std::vector<uint8_t> content;
+
+		for (size_t i = 0; i < _buffer.size(); i++)
+		{
+			content.push_back(_buffer[i]);
+		}
+
+		return content;
+	}
+
+	void ReceiveBufferContent(std::vector<uint8_t> content)
+	{
+		for (size_t i = 0; i < content.size(); i++)
+		{
+			_buffer[i] = content[i];
+		}
 	}
 };

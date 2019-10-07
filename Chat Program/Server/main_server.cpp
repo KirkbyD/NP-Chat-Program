@@ -11,7 +11,7 @@
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 16
+#define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "5150"
 
 // Client structure
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
 
 		// Call our select function to find the sockets that
 		// require our attention
-		printf("Waiting for select()...\n");
+		//printf("Waiting for select()...\n");
 		total = select(0, &ReadSet, NULL, NULL, &tv);
 		if (total == SOCKET_ERROR)
 		{
@@ -195,7 +195,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			printf("select() is successful!\n");
+			//("select() is successful!\n");
 		}
 
 		// #4 Check for arriving connections on the listening socket
@@ -239,8 +239,13 @@ int main(int argc, char** argv)
 			if (FD_ISSET(client->socket, &ReadSet))
 			{
 				total--;
-				client->dataBuf.buf = (char*)client->dataProto.GetBuffer();
-				client->dataBuf.len = DEFAULT_BUFLEN;
+
+				std::vector<std::uint8_t> var = client->dataProto.GetBuffer();
+				char* tmp_buf = new char[var.size()];
+				std::copy(var.begin(), var.end(), tmp_buf);
+
+				client->dataBuf.buf = tmp_buf;
+				client->dataBuf.len = client->dataProto.GetBuffer().size();
 
 				DWORD Flags = 0;
 				iResult = WSARecv(
@@ -252,6 +257,7 @@ int main(int argc, char** argv)
 					NULL,
 					NULL
 				);
+				//iResult = send(client->socket, (char*)client->dataProto.GetBuffer(), DEFAULT_BUFLEN, 0);
 
 				if (iResult == SOCKET_ERROR)
 				{
@@ -267,18 +273,23 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					printf("WSARecv() is OK!\n");
+					//printf("WSARecv() is OK!\n");
 					if (RecvBytes == 0)
 					{
 						RemoveClient(i);
 					}
-					else if (RecvBytes == SOCKET_ERROR)
-					{
-						printf("recv: There was an error..%d\n", WSAGetLastError());
-						continue;
-					}
 					else
 					{
+						/*Buffer my_buffer;
+						std::string str(client->dataBuf.buf);
+						my_buffer.ReceiveBufferContent(str);
+						printf("packet_length: %i bytes\n", my_buffer.readInt32LE(0));
+						printf("message_id: %i\n", my_buffer.readInt32LE(4));
+						printf("room_name_length: %i\n", my_buffer.readInt32LE(8));
+						printf("room_name: %s\n", my_buffer.ReadString(12).c_str());*/
+
+						//Print what we got
+						printf("  >>> %s\n", client->dataBuf.buf);
 						// RecvBytes > 0, we got data
 						iResult = WSASend(
 							client->socket,
@@ -289,22 +300,20 @@ int main(int argc, char** argv)
 							NULL,
 							NULL
 						);
-						int iSendResult = send(client->socket, client->dataBuf.buf, iResult, 0);
+						//iResult = send(client->socket, client->dataBuf.buf, iResult, 0);
 
-						if (iSendResult == SOCKET_ERROR)
+						if (iResult == SOCKET_ERROR)
 						{
 							printf("send error %d\n", WSAGetLastError());
 						}
-						else if (iSendResult == 0)
-						{
-							printf("Send result is 0\n");
-						}
 						else
 						{
-							printf("Successfully sent %d bytes!\n", iSendResult);
+							printf("Successfully sent %d bytes!\n", RecvBytes);
 						}
 					}
 				}
+
+				delete[] tmp_buf;
 			}
 		}
 

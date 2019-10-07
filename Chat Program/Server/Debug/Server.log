@@ -1,0 +1,13 @@
+﻿  main_server.cpp
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:  '=': conversion from 'int16_t' to '_Ty', possible loss of data
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:         with
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:         [
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:             _Ty=uint8_t
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:         ]
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:  '=': conversion from 'int16_t' to '_Ty', possible loss of data
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:         with
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:         [
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:             _Ty=uint8_t
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:         ]
+D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\Server\main_server.cpp(165,8): warning C4101:  'flags': unreferenced local variable
+  Server.vcxproj -> D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\Debug\Server.exe

@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "cProtocol.h"
+
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -91,7 +93,9 @@ int main(int argc, char** argv)
 	printf("Successfully connected to the server on socket %d!\n", (int)connectSocket);
 
 	// #3 write & read
-	const char* buffer = "Hello server!Hello server!Hello server!Hello server!";
+	//Protocol dataProto;
+	
+	const char* buffer = /*(const char*)&dataProto.UserJoinRoom("Room1")[0];*/ "Hello server!Hello server!Hello server!Hello server!";
 
 	printf("Sending a packet to the server...\n");
 	system("Pause");
@@ -113,6 +117,7 @@ int main(int argc, char** argv)
 	iResult = recv(connectSocket, recvbuf, recvbuflen, 0);
 	if (iResult > 0)
 	{
+		printf("  >>> %s\n", recvbuf);
 		printf("Bytes received: %d\n", iResult);
 	}
 	else if (iResult == 0)
@@ -131,5 +136,6 @@ int main(int argc, char** argv)
 	closesocket(connectSocket);
 	WSACleanup();
 
+	system("Pause");
 	return 0;
 }

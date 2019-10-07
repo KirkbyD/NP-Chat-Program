@@ -5,11 +5,15 @@
 class Protocol
 {
 private:
-	Buffer buffer = Buffer(0);
+	Buffer buffer;
 	unsigned int message_id;
 
 public:
-	Protocol() { }
+	Protocol()
+	{
+		buffer = Buffer(0);
+		message_id = 0;
+	}
 
 	Protocol(unsigned int m_id, unsigned int buffer_size)
 	{
@@ -17,7 +21,12 @@ public:
 		message_id = m_id;
 	}
 
-	void SendMessage(std::string room, std::string message)
+	std::vector<uint8_t> GetBuffer()
+	{
+		return buffer.GetBufferContent();
+	}
+
+	std::vector<uint8_t> UserSendMessage(std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -33,9 +42,11 @@ public:
 		//message
 		buffer.writeInt32LE(INT_SIZE * 3 + room.length(), message.length());
 		buffer.WriteString(INT_SIZE * 4 + room.length(), message);
+
+		return GetBuffer();
 	}
 
-	Buffer RecieveMessage(std::string name, std::string room, std::string message)
+	std::vector<uint8_t> UserRecieveMessage(std::string name, std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -56,10 +67,10 @@ public:
 		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + name.length(), message.length());
 		buffer.WriteString(INT_SIZE * 5 + room.length() + name.length(), message);
 
-		return buffer;
+		return GetBuffer();
 	}
 
-	void ChangeRoom(std::string room)
+	std::vector<uint8_t> UserJoinRoom(std::string room)
 	{
 		buffer.Clear();
 
@@ -71,10 +82,23 @@ public:
 
 		buffer.writeInt32LE(INT_SIZE * 2, room.length());
 		buffer.WriteString(INT_SIZE * 3, room);
+
+		return GetBuffer();
 	}
 
-	uint8_t* GetBuffer()
+	std::vector<uint8_t> UserLeaveRoom(std::string room)
 	{
-		return buffer.GetBufferContent();
+		buffer.Clear();
+
+		// [Header] [length] [room_name]
+		//packet length
+		buffer.writeInt32LE(INT_SIZE * 3 + room.length());
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, message_id++);
+
+		buffer.writeInt32LE(INT_SIZE * 2, room.length());
+		buffer.WriteString(INT_SIZE * 3, room);
+
+		return GetBuffer();
 	}
 };
