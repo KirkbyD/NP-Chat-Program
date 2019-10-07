@@ -1,4 +1,5 @@
 ﻿  main_client.cpp
+<<<<<<< HEAD
 D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:  '=': conversion from 'int16_t' to '_Ty', possible loss of data
 D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:         with
 D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(64,20): warning C4244:         [
@@ -10,3 +11,6 @@ D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat 
 D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:             _Ty=uint8_t
 D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(77,16): warning C4244:         ]
   Client.vcxproj -> D:\My Data\Projects\INFO6016 Network Programming\Project 1\NP-Chat-Program\Chat Program\Debug\Client.exe
+=======
+  Client.vcxproj -> C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Debug\Client.exe
+>>>>>>> bb40fb4bae4a42550fd5306ae094cf2a054cb03e
