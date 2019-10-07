@@ -46,6 +46,7 @@ public:
 				_buffer.push_back(0);
 			}
 		}
+		
 		_buffer[0] = value;
 		_buffer[1] = value >> 8;
 		_buffer[2] = value >> 16;

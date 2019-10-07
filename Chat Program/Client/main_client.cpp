@@ -17,6 +17,7 @@
 int main(int argc, char** argv)
 {
 	WSADATA wsaData;
+	WSABUF dataBuf;
 	int iResult;
 
 	// Initialize Winsock
@@ -93,13 +94,27 @@ int main(int argc, char** argv)
 	printf("Successfully connected to the server on socket %d!\n", (int)connectSocket);
 
 	// #3 write & read
-	//Protocol dataProto;
+	Protocol dataProto;
+	DWORD RecvBytes;
+	DWORD Flags = 0;
+
 	
-	const char* buffer = /*(const char*)&dataProto.UserJoinRoom("Room1")[0];*/ "Hello server!Hello server!Hello server!Hello server!";
+	std::vector<std::uint8_t> var = dataProto.UserJoinRoom("Room1");
+	//char* buffer = new char[var.size()];
+	//std::copy(var.begin(), var.end(), buffer);
+
+	//std::string str(var.begin(), var.end());
+	std::vector<char> writable(var.begin(), var.end());
+	writable.push_back('\0');
+
+
+	//const char* buffer = /*(const char*)&dataProto.UserJoinRoom("Room1");*/ str.c_str();
 
 	printf("Sending a packet to the server...\n");
 	system("Pause");
-	iResult = send(connectSocket, buffer, (int)strlen(buffer), 0);
+
+	iResult = send(connectSocket, &writable[0], (int)strlen(&writable[0]), 0);
+
 	if (iResult == SOCKET_ERROR)
 	{
 		printf("send() failed with error: %d\n", WSAGetLastError());
@@ -131,6 +146,8 @@ int main(int argc, char** argv)
 		WSACleanup();
 		return 1;
 	}
+
+	//delete[] buffer;
 
 	// #4 close
 	closesocket(connectSocket);

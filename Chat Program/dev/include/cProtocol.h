@@ -76,7 +76,7 @@ public:
 
 		// [Header] [length] [room_name]
 		//packet length
-		buffer.writeInt32LE(INT_SIZE * 3 + room.length());
+		buffer.writeInt32LE(IntToBigEndian(INT_SIZE * 3 + room.length()));
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, message_id++);
 
@@ -100,5 +100,24 @@ public:
 		buffer.WriteString(INT_SIZE * 3, room);
 
 		return GetBuffer();
+	}
+
+	int IntToBigEndian(int value)
+	{
+		// We need to grab the first byte an move it to the last
+		// Bytes in order: A B C D
+		char A = value >> 24;
+		char B = value >> 16;
+		char C = value >> 8;
+		char D = value;
+
+		// OR the data into our swapped variable
+		int swapped = 0;
+		swapped |= D << 24;
+		swapped |= C << 16;
+		swapped |= B << 8;
+		swapped |= A;
+
+		return swapped;
 	}
 };
