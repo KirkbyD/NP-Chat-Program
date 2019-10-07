@@ -10,5 +10,5 @@ C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Chat Progra
 C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Chat Program\cBuffer.h(75,16): warning C4244:         [
 C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Chat Program\cBuffer.h(75,16): warning C4244:             _Ty=uint8_t
 C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Chat Program\cBuffer.h(75,16): warning C4244:         ]
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Chat Program\Main.cpp(163,8): warning C4101: 'flags': unreferenced local variable
+C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Chat Program\Main.cpp(165,8): warning C4101: 'flags': unreferenced local variable
   Chat Program.vcxproj -> C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Debug\Server.exe

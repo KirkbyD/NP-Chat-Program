@@ -46,21 +46,23 @@ void RemoveClient(int index)
 
 int main(int argc, char** argv)
 {
+	WSADATA wsaData;
+
 	Protocol protocol = Protocol(0, DEFAULT_BUFLEN);
 	int iResult;
 
 	// Initialize Winsock
-	/*iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (iResult != 0)
 	{
-		 Something went wrong, tell the user the error id
+		// Something went wrong, tell the user the error id
 		printf("WSAStartup failed with error: %d\n", iResult);
 		return 1;
 	}
 	else
 	{
 		printf("WSAStartup() was successful!\n");
-	}*/
+	}
 
 #pragma region ServerSetup
 	// #1 Socket
