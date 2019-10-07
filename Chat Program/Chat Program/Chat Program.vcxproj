@@ -23,6 +23,7 @@
     <ProjectGuid>{EF34685F-88BF-4454-98B1-C7E36D195109}</ProjectGuid>
     <RootNamespace>ChatProgram</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -125,6 +126,9 @@
   <ItemGroup>
     <ClInclude Include="cBuffer.h" />
     <ClInclude Include="cProtocol.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

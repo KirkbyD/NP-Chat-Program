@@ -9,6 +9,8 @@ private:
 	unsigned int message_id;
 
 public:
+	Protocol() { }
+
 	Protocol(unsigned int m_id, unsigned int buffer_size)
 	{
 		buffer = Buffer(buffer_size);
@@ -33,7 +35,7 @@ public:
 		buffer.WriteString(INT_SIZE * 4 + room.length(), message);
 	}
 
-	void RecieveMessage(std::string name, std::string room, std::string message)
+	Buffer RecieveMessage(std::string name, std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -53,6 +55,8 @@ public:
 		//message
 		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + name.length(), message.length());
 		buffer.WriteString(INT_SIZE * 5 + room.length() + name.length(), message);
+
+		return buffer;
 	}
 
 	void ChangeRoom(std::string room)
@@ -67,5 +71,10 @@ public:
 
 		buffer.writeInt32LE(INT_SIZE * 2, room.length());
 		buffer.WriteString(INT_SIZE * 3, room);
+	}
+
+	uint8_t* GetBuffer()
+	{
+		return buffer.GetBufferContent();
 	}
 };

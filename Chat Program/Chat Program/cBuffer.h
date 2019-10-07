@@ -9,7 +9,7 @@ private:
 public:
 	Buffer(size_t size)
 	{
-		for (int i = 0; i < size; i++)
+		for (unsigned int i = 0; i < size; i++)
 		{
 			_buffer.push_back(0);
 		}
@@ -158,5 +158,10 @@ public:
 		}
 
 		return swapped;
+	}
+
+	uint8_t* GetBufferContent()
+	{
+		return &_buffer[0];
 	}
 };
