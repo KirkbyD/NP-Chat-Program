@@ -6,7 +6,10 @@ class Buffer
 private:
 	std::vector<uint8_t> _buffer;
 
+	//add internal read/write indexes.
+
 public:
+	//change from using uint32's to using bitset<8> ?
 	Buffer(){}
 
 	Buffer(size_t size)

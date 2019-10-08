@@ -2,6 +2,8 @@
 
 #define INT_SIZE sizeof(int32_t)/sizeof(char)
 
+enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE };
+
 class Protocol
 {
 private:
@@ -21,6 +23,8 @@ public:
 		message_id = m_id;
 	}
 
+
+	//change to using bitsets. Called in client based on recieved enum
 	std::vector<uint8_t> GetBuffer()
 	{
 		return buffer.GetBufferContent();
@@ -76,7 +80,7 @@ public:
 
 		// [Header] [length] [room_name]
 		//packet length
-		buffer.writeInt32LE(IntToBigEndian(INT_SIZE * 3 + room.length()));
+		buffer.writeInt32LE(SwapEndian(INT_SIZE * 3 + room.length()));
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, message_id++);
 
@@ -102,7 +106,7 @@ public:
 		return GetBuffer();
 	}
 
-	int IntToBigEndian(int value)
+	int SwapEndian(int value)
 	{
 		// We need to grab the first byte an move it to the last
 		// Bytes in order: A B C D
