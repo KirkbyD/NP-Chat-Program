@@ -22,6 +22,7 @@ struct ClientInfo {
 	SOCKET socket;
 
 	// Buffer information (this is basically you buffer class)
+
 };
 
 int TotalClients = 0;
@@ -30,6 +31,10 @@ ClientInfo* ClientArray[FD_SETSIZE];
 void RemoveClient(int index)
 {
 	ClientInfo* client = ClientArray[index];
+	
+	//TODO
+	//remove client from all vectors in room map
+	
 	closesocket(client->socket);
 	printf("Closing socket %d\n", (int)client->socket);
 
@@ -48,6 +53,7 @@ int main(int argc, char** argv)
 {
 	WSADATA wsaData;
 	int iResult;
+	Protocol serverProto = Protocol(DEFAULT_BUFLEN);
 
 	//Multirooming
 	std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
@@ -261,6 +267,7 @@ int main(int argc, char** argv)
 				{
 					if (iRecvResult == 0)
 					{
+						//DISCONNECT FROM ALL MAPS
 						RemoveClient(i);
 					}
 					else
@@ -318,7 +325,17 @@ int main(int argc, char** argv)
 								}
 
 								printf("socket %d joined room: %s\n", (int)client->socket, buf.ReadString(12, buf.readInt32LE(8)).c_str());
+								
 								//broadcast user join message
+								std::string msg = "User '" + client->socket;
+								msg += "' has joined " + buf.ReadString(12, buf.readInt32LE(8));
+								serverProto.UserRecieveMessage("Server", buf.ReadString(12, buf.readInt32LE(8)).c_str(), msg);
+
+								std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+								for (ClientInfo* tmpClient : m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()]) {
+									iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+								}
 
 								break;
 							}
@@ -347,7 +364,18 @@ int main(int argc, char** argv)
 											m_Rooms[room].erase(clientIt);
 
 											printf("socket %d left room: %s\n", (int)client->socket, room.c_str());
+											
 											//broadcast user leave message
+											std::string msg = "User '" + client->socket;
+											msg += "' has left " + buf.ReadString(12, buf.readInt32LE(8));
+											serverProto.UserRecieveMessage("Server", buf.ReadString(12, buf.readInt32LE(8)).c_str(), msg);
+
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+											for (ClientInfo* tmpClient : m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()]) {
+												iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+											}
+
 											break;
 										}
 										else if (clientIt == m_Rooms[room].end() - 1)
@@ -381,31 +409,25 @@ int main(int argc, char** argv)
 								printf("Message Length: %i\n", message_length);
 								printf("Message: %s\n", message.c_str());
 								break;
+
+								//broadcast user join message
+								std::string msg = "[" + room_name + "] " + message;
+								std::string sender = "" + client->socket;
+
+								serverProto.UserRecieveMessage(sender, buf.ReadString(12, buf.readInt32LE(8)).c_str(), msg);
+
+								std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+								for (ClientInfo* tmpClient : m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()]) {
+									iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+								}
 							}
 							case 3:
 							{
-								//Recieve
-								int packet_length = buf.readInt32LE(INT_SIZE * 0);
-								int message_id = buf.readInt32LE(INT_SIZE * 1);
-								int name_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string name = buf.ReadString(INT_SIZE * 3, name_length);
-								int room_name_length = buf.readInt32LE(INT_SIZE * 3 + name_length);
-								std::string room_name = buf.ReadString(INT_SIZE * 4 + name_length, room_name_length);
-								int message_length = buf.readInt32LE(INT_SIZE * 4 + name_length + room_name_length);
-								std::string message = buf.ReadString(INT_SIZE * 5 + name_length + room_name_length, message_length);
-
-								printf("Packet Length: %i\n", packet_length);
-								printf("Message ID: %i\n", message_id);
-								printf("Name Length: %i\n", room_name_length);
-								printf("Name: %s\n", room_name.c_str());
-								printf("Room Name Length: %i\n", room_name_length);
-								printf("Room Name: %s\n", room_name.c_str());
-								printf("Message Length: %i\n", message_length);
-								printf("Message: %s\n", message.c_str());
+								printf("Server should not be told to recieve, fool.");
 								break;
 							}
 							}
-
 						}
 					}
 				}
