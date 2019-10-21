@@ -237,16 +237,7 @@ int main(int argc, char** argv)
 				client->dataBuf.buf = client->buffer;
 				client->dataBuf.len = DEFAULT_BUFLEN;
 
-				DWORD Flags = 0;
-				iResult = WSARecv(
-					client->socket,
-					&(client->dataBuf),
-					1,
-					&(client->dataBuf.len),
-					&Flags,
-					NULL,
-					NULL
-				);
+				int iResult = recv(client->socket, client->dataBuf.buf, client->dataBuf.len, 0);
 
 				if (iResult == SOCKET_ERROR)
 				{
