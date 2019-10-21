@@ -96,6 +96,9 @@ int main(int argc, char** argv)
 
 	// #3 write & read
 	Protocol prot;
+	//prot.UserSendMessage("RoomName", "Hello");
+	//prot.UserRecieveMessage("Someone","RoomName", "Hello");
+	//prot.UserLeaveRoom("RoomName");
 	prot.UserJoinRoom("RoomName");
 	std::vector<uint8_t> vect = prot.GetBuffer();
 

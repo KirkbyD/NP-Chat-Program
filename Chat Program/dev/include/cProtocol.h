@@ -20,7 +20,6 @@ public:
 		buffer = Buffer(buffer_size);
 	}
 
-
 	//change to using bitsets. Called in client based on recieved enum
 	std::vector<uint8_t> GetBuffer()
 	{
@@ -32,16 +31,18 @@ public:
 		buffer.Clear();
 
 		// [Header] [length] [room_name] [length] [message]
-		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + message.length());
-		//buffer.
-		buffer.writeInt32LE(INT_SIZE);
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 4 + room.length() + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(SEND));
 
 		//room
-		buffer.writeInt32LE(INT_SIZE * 2, room.length());
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(room.length()));
 		buffer.WriteString(INT_SIZE * 3, room);
 		
 		//message
-		buffer.writeInt32LE(INT_SIZE * 3 + room.length(), message.length());
+		buffer.writeInt32LE(INT_SIZE * 3 + room.length(), SwapIntEndian(message.length()));
 		buffer.WriteString(INT_SIZE * 4 + room.length(), message);
 
 		return;
@@ -52,20 +53,22 @@ public:
 		buffer.Clear();
 
 		// [Header] [length] [name] [length] [room_name] [length] [message]
-		buffer.writeInt32LE(INT_SIZE * 5 + name.length() + room.length() + message.length());
-		//buffer.
-		buffer.writeInt32LE(INT_SIZE);
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 5 + name.length() + room.length() + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(RECIEVE));
 
 		//name
-		buffer.writeInt32LE(INT_SIZE * 2, name.length());
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(name.length()));
 		buffer.WriteString(INT_SIZE * 3, name);
 
 		//room
-		buffer.writeInt32LE(INT_SIZE * 3 + name.length(), room.length());
+		buffer.writeInt32LE(INT_SIZE * 3 + name.length(), SwapIntEndian(room.length()));
 		buffer.WriteString(INT_SIZE * 4 + name.length(), room);
 
 		//message
-		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + name.length(), message.length());
+		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + name.length(), SwapIntEndian(message.length()));
 		buffer.WriteString(INT_SIZE * 5 + room.length() + name.length(), message);
 
 		return;
@@ -76,11 +79,13 @@ public:
 		buffer.Clear();
 
 		// [Header] [length] [room_name]
+
 		//packet length
 		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + room.length()));
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(JOIN));
 
+		//room
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(room.length()));
 		buffer.WriteString(INT_SIZE * 3, room);
 
@@ -92,12 +97,14 @@ public:
 		buffer.Clear();
 
 		// [Header] [length] [room_name]
+
 		//packet length
-		buffer.writeInt32LE(INT_SIZE * 3 + room.length());
+		buffer.writeInt32LE(0, INT_SIZE * 3 + room.length());
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, LEAVE);
 
-		buffer.writeInt32LE(INT_SIZE * 2, room.length());
+		//room
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(room.length()));
 		buffer.WriteString(INT_SIZE * 3, room);
 
 		return;

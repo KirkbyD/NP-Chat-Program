@@ -259,83 +259,160 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					Buffer buf;
-					buf.ReceiveBufferContent(vect);
-
-					printf("Size of message: %i\n", buf.readInt32LE(0));
-					printf("MESSAGE ID: %i\n", buf.readInt32LE(4));
-
-					std::vector<uint8_t> vect2;
-					for (int i = 0; i < buf.readInt32LE(0) - 8; i++)
+					if (iRecvResult == 0)
 					{
-						vect2.push_back('0');
-					}
-
-					int iRecvResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
-
-					if (iRecvResult == SOCKET_ERROR)
-					{
-						if (WSAGetLastError() == WSAEWOULDBLOCK)
-						{
-							// We can ignore this, it isn't an actual error.
-						}
-						else
-						{
-							printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
-							RemoveClient(i);
-						}
+						RemoveClient(i);
 					}
 					else
 					{
-						buf.ReceiveBufferContent(8, vect2);
-						/*printf("Size of message: %i\n", buf.readInt32LE(0));
-						printf("MESSAGE ID: %i\n", buf.readInt32LE(4));
-						printf("Room Name Length: %i\n", buf.readInt32LE(8));
-						printf("Room Name: %s\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());*/
+						Buffer buf;
+						buf.ReceiveBufferContent(vect);
+						printf("Size of message: %i\n", buf.readInt32LE(INT_SIZE * 0));
+						printf("MESSAGE ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
 
-
-						//join room !
-						if (buf.readInt32LE(4) == JOIN) {
-							if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
-								m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
-							}
-							else {
-								m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()] = std::vector<ClientInfo*>();
-								m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
-							}
-
-							printf("socket %d joined room: %s\n", (int)client->socket, buf.ReadString(12, buf.readInt32LE(8)).c_str());
-							//broadcast user join message
+						std::vector<uint8_t> vect2;
+						for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE * 2; i++)
+						{
+							vect2.push_back('0');
 						}
 
-						//Leave room
-						if (buf.readInt32LE(4) == LEAVE) {
-							if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
-								std::string room = buf.ReadString(12, buf.readInt32LE(8)).c_str();
+						int iRecvResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
 
-								for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room].begin();
-									clientIt < m_Rooms[room].end();
-									clientIt++)
-								{
-									if (*clientIt == client)
-									{
-										m_Rooms[room].erase(clientIt);
+						if (iRecvResult == SOCKET_ERROR)
+						{
+							if (WSAGetLastError() == WSAEWOULDBLOCK)
+							{
+								// We can ignore this, it isn't an actual error.
+							}
+							else
+							{
+								printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
+								RemoveClient(i);
+							}
+						}
+						else
+						{
+							buf.ReceiveBufferContent(INT_SIZE * 2, vect2);
 
-										printf("socket %d left room: %s\n", (int)client->socket, room.c_str());
-										//broadcast user leave message
-										break;
-									}
-									else if (clientIt == m_Rooms[room].end() - 1)
+							switch (buf.readInt32LE(INT_SIZE))
+							{
+							case 0:
+							{
+								//Join
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
+
+								printf("Packet Length: %i\n", packet_length);
+								printf("Message ID: %i\n", message_id);
+								printf("Room Name Length: %i\n", room_name_length);
+								printf("Room Name: %s\n", room_name.c_str());
+
+
+
+
+								if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
+									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
+								}
+								else {
+									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()] = std::vector<ClientInfo*>();
+									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
+								}
+
+								printf("socket %d joined room: %s\n", (int)client->socket, buf.ReadString(12, buf.readInt32LE(8)).c_str());
+								//broadcast user join message
+
+								break;
+							}
+							case 1:
+							{
+								//Leave
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
+
+								printf("Packet Length: %i\n", packet_length);
+								printf("Message ID: %i\n", message_id);
+								printf("Room Name Length: %i\n", room_name_length);
+								printf("Room Name: %s\n", room_name.c_str());
+
+
+
+
+
+								if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
+									std::string room = buf.ReadString(12, buf.readInt32LE(8)).c_str();
+
+									for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room].begin();
+										clientIt < m_Rooms[room].end();
+										clientIt++)
 									{
-										printf("socket %d not in room: %s\n", (int)client->socket, room.c_str());
-										//not in room message
+										if (*clientIt == client)
+										{
+											m_Rooms[room].erase(clientIt);
+
+											printf("socket %d left room: %s\n", (int)client->socket, room.c_str());
+											//broadcast user leave message
+											break;
+										}
+										else if (clientIt == m_Rooms[room].end() - 1)
+										{
+											printf("socket %d not in room: %s\n", (int)client->socket, room.c_str());
+											//not in room message
+										}
 									}
 								}
+								else {
+									printf("Room: %s does not exist\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());
+									//room desnt exist msg
+								}
+
+								break;
 							}
-							else {
-								printf("Room: %s does not exist\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());
-								//room desnt exist msg
+							case 2:
+							{
+								//Send
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
+								int message_length = buf.readInt32LE(INT_SIZE * 3 + room_name_length);
+								std::string message = buf.ReadString(INT_SIZE * 4 + room_name_length, room_name_length);
+
+								printf("Packet Length: %i\n", packet_length);
+								printf("Message ID: %i\n", message_id);
+								printf("Room Name Length: %i\n", room_name_length);
+								printf("Room Name: %s\n", room_name.c_str());
+								printf("Message Length: %i\n", message_length);
+								printf("Message: %s\n", message.c_str());
+								break;
 							}
+							case 3:
+							{
+								//Recieve
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int name_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string name = buf.ReadString(INT_SIZE * 3, name_length);
+								int room_name_length = buf.readInt32LE(INT_SIZE * 3 + name_length);
+								std::string room_name = buf.ReadString(INT_SIZE * 4 + name_length, room_name_length);
+								int message_length = buf.readInt32LE(INT_SIZE * 4 + name_length + room_name_length);
+								std::string message = buf.ReadString(INT_SIZE * 5 + name_length + room_name_length, message_length);
+
+								printf("Packet Length: %i\n", packet_length);
+								printf("Message ID: %i\n", message_id);
+								printf("Name Length: %i\n", room_name_length);
+								printf("Name: %s\n", room_name.c_str());
+								printf("Room Name Length: %i\n", room_name_length);
+								printf("Room Name: %s\n", room_name.c_str());
+								printf("Message Length: %i\n", message_length);
+								printf("Message: %s\n", message.c_str());
+								break;
+							}
+							}
+
 						}
 					}
 				}
