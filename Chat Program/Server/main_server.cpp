@@ -28,14 +28,29 @@ struct ClientInfo {
 
 int TotalClients = 0;
 ClientInfo* ClientArray[FD_SETSIZE];
+std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
 
 void RemoveClient(int index)
 {
 	ClientInfo* client = ClientArray[index];
 	
-	//TODO
 	//remove client from all vectors in room map
-	
+	for (std::map<std::string, std::vector<ClientInfo*>>::iterator mapIt = m_Rooms.begin();
+		mapIt != m_Rooms.end();
+		mapIt++)
+	{
+		for (std::vector<ClientInfo*>::iterator clientIt = mapIt->second.begin();
+			clientIt < mapIt->second.end();
+			clientIt++)
+		{
+			if (*clientIt == client)
+			{
+				mapIt->second.erase(clientIt);
+				break;
+			}
+		}
+	}
+
 	closesocket(client->socket);
 	printf("Closing socket %d\n", (int)client->socket);
 
@@ -55,9 +70,6 @@ int main(int argc, char** argv)
 	WSADATA wsaData;
 	int iResult;
 	Protocol serverProto = Protocol(DEFAULT_BUFLEN);
-
-	//Multirooming
-	std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
