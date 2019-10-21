@@ -247,7 +247,7 @@ int main(int argc, char** argv)
 				/*char* tmp_buf = new char[var.size()];
 				std::copy(var.begin(), var.end(), tmp_buf);*/
 
-				client->dataBuf.buf = &(client->dataProto.GetBuffer()[0]); //&(var[0]);
+				client->dataBuf.buf = (char *)(client->dataProto.GetBuffer()[0]); //&(var[0]);
 				client->dataBuf.len = DEFAULT_BUFLEN;
 
 				DWORD Flags = 0;

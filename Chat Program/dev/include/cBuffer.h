@@ -5,26 +5,26 @@ class Buffer
 {
 private:
 	std::vector<uint8_t> _buffer;
-
 	int _readIndex;
 	int _writeIndex;
 
 public:
 	Buffer()
 	{
-		this->_buffer = std::vector<uint8_t>(size, 0);
-		this->readIndex = 0;
-		this->writeIndex = 0;
+		this->_buffer = std::vector<uint8_t>(0);
+		this->_readIndex = 0;
+		this->_writeIndex = 0;
 	}
 
 	Buffer(size_t size)
 	{
+		this->_buffer = std::vector<uint8_t>(0);
 		for (unsigned int i = 0; i < size; i++)
 		{
 			this->_buffer.push_back(0);
 		}
-		this->readIndex = 0;
-		this->writeIndex = 0;
+		this->_readIndex = 0;
+		this->_writeIndex = 0;
 	}
 
 	void Clear()
@@ -159,7 +159,7 @@ public:
 		swapped |= this->_buffer[index + 1] << 8;
 		swapped |= this->_buffer[index] << 0;
 
-		this->_readIndex += 2
+		this->_readIndex += 2;
 
 		return swapped;
 	}
@@ -204,7 +204,7 @@ public:
 
 	std::vector<uint8_t> GetBufferContent()
 	{
-		std::vector<char> content;
+		std::vector<uint8_t> content;
 
 		for (size_t i = 0; i < this->_buffer.size(); i++)
 		{

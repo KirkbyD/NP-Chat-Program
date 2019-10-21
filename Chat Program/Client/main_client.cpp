@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 	DWORD Flags = 0;
 
 	
-	std::vector<char> var = dataProto.UserJoinRoom("Room1");
+	std::vector<uint8_t> var = dataProto.UserJoinRoom("Room1");
 	//char* buffer = new char[var.size()];
 	//std::copy(var.begin(), var.end(), buffer);
 
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 	system("Pause");
 
 	//iResult = send(connectSocket, &buffer[0], (int)strlen(buffer), 0);
-	iResult = send(connectSocket, &(var[0]), var.size(), 0);
+	iResult = send(connectSocket, (char *)(var[0]), var.size(), 0);
 
 	if (iResult == SOCKET_ERROR)
 	{

@@ -22,12 +22,12 @@ public:
 
 
 	//change to using bitsets. Called in client based on recieved enum
-	std::vector<char> GetBuffer()
+	std::vector<uint8_t> GetBuffer()
 	{
 		return buffer.GetBufferContent();
 	}
 
-	std::vector<char> UserSendMessage(std::string room, std::string message)
+	std::vector<uint8_t> UserSendMessage(std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -47,7 +47,7 @@ public:
 		return GetBuffer();
 	}
 
-	std::vector<char> UserRecieveMessage(std::string name, std::string room, std::string message)
+	std::vector<uint8_t> UserRecieveMessage(std::string name, std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -71,7 +71,7 @@ public:
 		return GetBuffer();
 	}
 
-	std::vector<char> UserJoinRoom(std::string room)
+	std::vector<uint8_t> UserJoinRoom(std::string room)
 	{
 		buffer.Clear();
 
@@ -87,7 +87,7 @@ public:
 		return GetBuffer();
 	}
 
-	std::vector<char> UserLeaveRoom(std::string room)
+	std::vector<uint8_t> UserLeaveRoom(std::string room)
 	{
 		buffer.Clear();
 
@@ -122,9 +122,6 @@ public:
 		return swapped;
 	}
 
-	//char SwapCharEndian(char c)
-	//{
-	//	char swapped = '';
 
-	//}
+	// swap float endian
 };
