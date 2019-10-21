@@ -6,18 +6,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "cProtocol.h"
+#include <vector>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 512
+#define DEFAULT_BUFLEN 1
 #define DEFAULT_PORT "5150"
 
 int main(int argc, char** argv)
 {
 	WSADATA wsaData;
-	WSABUF dataBuf;
 	int iResult;
 
 	// Initialize Winsock
@@ -94,18 +93,18 @@ int main(int argc, char** argv)
 	printf("Successfully connected to the server on socket %d!\n", (int)connectSocket);
 
 	// #3 write & read
-	Protocol dataProto;
-	DWORD RecvBytes;
-	DWORD Flags = 0;
+	std::vector<uint8_t> vect;
+	vect.push_back('1');
+	vect.push_back('H');
+	vect.push_back('e');
+	vect.push_back('l');
+	vect.push_back('l');
+	vect.push_back('o');
+	vect[0] = vect.size();
 
-	
-	std::vector<uint8_t> var = dataProto.UserJoinRoom("Room1");
+	printf("Sending a packet to the server...\n");
 
-	system("Pause");
-
-	//iResult = send(connectSocket, &buffer[0], (int)strlen(buffer), 0);
-	iResult = send(connectSocket, (char *)(&var[0]), var.size(), 0);
-
+	iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
 	if (iResult == SOCKET_ERROR)
 	{
 		printf("send() failed with error: %d\n", WSAGetLastError());
@@ -116,14 +115,15 @@ int main(int argc, char** argv)
 	printf("Bytes sent: %d\n", iResult);
 
 	// Receive a message from the server before quitting
-	char recvbuf[DEFAULT_BUFLEN];
-	int recvbuflen = DEFAULT_BUFLEN;
+	char header[DEFAULT_BUFLEN];
+	int header_size = DEFAULT_BUFLEN;
 	printf("Waiting to receive data from the server...\n");
 	system("Pause");
-	iResult = recv(connectSocket, recvbuf, recvbuflen, 0);
+	iResult = recv(connectSocket, header, header_size, 0);
+
 	if (iResult > 0)
 	{
-		printf("  >>> %s\n", recvbuf);
+		printf("%s\n", header);
 		printf("Bytes received: %d\n", iResult);
 	}
 	else if (iResult == 0)
@@ -138,12 +138,36 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	//delete[] buffer;
+	std::vector<uint8_t> vect2;
+	for (int i = 0; i < (int)header[0]; i++)
+	{
+		vect2.push_back('0');
+	}
+
+	iResult = recv(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+
+	if (iResult > 0)
+	{
+		printf("%s\n", vect.data());
+		printf("Bytes received: %d\n", iResult);
+	}
+	else if (iResult == 0)
+	{
+		printf("Connection closed\n");
+	}
+	else
+	{
+		printf("recv failed with error: %d\n", WSAGetLastError());
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
 
 	// #4 close
 	closesocket(connectSocket);
 	WSACleanup();
 
 	system("Pause");
+
 	return 0;
 }
