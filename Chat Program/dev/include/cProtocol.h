@@ -99,9 +99,9 @@ public:
 		// [Header] [length] [room_name]
 
 		//packet length
-		buffer.writeInt32LE(0, INT_SIZE * 3 + room.length());
+		buffer.writeInt32LE(0, INT_SIZE * SwapIntEndian(3 + room.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, LEAVE);
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(LEAVE));
 
 		//room
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(room.length()));

@@ -98,8 +98,8 @@ int main(int argc, char** argv)
 	Protocol prot;
 	//prot.UserSendMessage("RoomName", "Hello");
 	//prot.UserRecieveMessage("Someone","RoomName", "Hello");
-	//prot.UserLeaveRoom("RoomName");
-	prot.UserJoinRoom("RoomName");
+	prot.UserLeaveRoom("RoomName");
+	//prot.UserJoinRoom("RoomName");
 	std::vector<uint8_t> vect = prot.GetBuffer();
 
 	printf("Sending a packet to the server...\n");

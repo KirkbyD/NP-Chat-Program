@@ -309,9 +309,6 @@ int main(int argc, char** argv)
 								printf("Room Name Length: %i\n", room_name_length);
 								printf("Room Name: %s\n", room_name.c_str());
 
-
-
-
 								if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
 									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
 								}
@@ -337,10 +334,6 @@ int main(int argc, char** argv)
 								printf("Message ID: %i\n", message_id);
 								printf("Room Name Length: %i\n", room_name_length);
 								printf("Room Name: %s\n", room_name.c_str());
-
-
-
-
 
 								if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
 									std::string room = buf.ReadString(12, buf.readInt32LE(8)).c_str();
