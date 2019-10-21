@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include <vector>
+#include <map>
 
 #include <cProtocol.h>
 
@@ -21,9 +22,6 @@ struct ClientInfo {
 	SOCKET socket;
 
 	// Buffer information (this is basically you buffer class)
-	WSABUF dataBuf;
-	char buffer[DEFAULT_BUFLEN];
-	int bytesRECV;
 };
 
 int TotalClients = 0;
@@ -50,6 +48,9 @@ int main(int argc, char** argv)
 {
 	WSADATA wsaData;
 	int iResult;
+
+	//Multirooming
+	std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -218,7 +219,7 @@ int main(int argc, char** argv)
 
 					ClientInfo* info = new ClientInfo();
 					info->socket = acceptSocket;
-					info->bytesRECV = 0;
+					//info->bytesRECV = 0;
 					ClientArray[TotalClients] = info;
 					TotalClients++;
 					printf("New client connected on socket %d\n", (int)acceptSocket);
@@ -242,8 +243,7 @@ int main(int argc, char** argv)
 				{
 					vect.push_back('0');
 				}
-
-				int iRecvResult = recv(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+				int iRecvResult = recv(client->socket, (char*)vect.data(), 8, 0);
 
 				if (iRecvResult == SOCKET_ERROR)
 				{
@@ -261,6 +261,7 @@ int main(int argc, char** argv)
 				{
 					Buffer buf;
 					buf.ReceiveBufferContent(vect);
+
 					printf("Size of message: %i\n", buf.readInt32LE(0));
 					printf("MESSAGE ID: %i\n", buf.readInt32LE(4));
 
@@ -287,12 +288,56 @@ int main(int argc, char** argv)
 					else
 					{
 						buf.ReceiveBufferContent(8, vect2);
-						printf("Size of message: %i\n", buf.readInt32LE(0));
+						/*printf("Size of message: %i\n", buf.readInt32LE(0));
 						printf("MESSAGE ID: %i\n", buf.readInt32LE(4));
 						printf("Room Name Length: %i\n", buf.readInt32LE(8));
-						printf("Room Name: %s\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());
-					}
+						printf("Room Name: %s\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());*/
 
+
+						//join room !
+						if (buf.readInt32LE(4) == JOIN) {
+							if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
+								m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
+							}
+							else {
+								m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()] = std::vector<ClientInfo*>();
+								m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
+							}
+
+							printf("socket %d joined room: %s\n", (int)client->socket, buf.ReadString(12, buf.readInt32LE(8)).c_str());
+							//broadcast user join message
+						}
+
+						//Leave room
+						if (buf.readInt32LE(4) == LEAVE) {
+							if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
+								std::string room = buf.ReadString(12, buf.readInt32LE(8)).c_str();
+
+								for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room].begin();
+									clientIt < m_Rooms[room].end();
+									clientIt++)
+								{
+									if (*clientIt == client)
+									{
+										m_Rooms[room].erase(clientIt);
+
+										printf("socket %d left room: %s\n", (int)client->socket, room.c_str());
+										//broadcast user leave message
+										break;
+									}
+									else if (clientIt == m_Rooms[room].end() - 1)
+									{
+										printf("socket %d not in room: %s\n", (int)client->socket, room.c_str());
+										//not in room message
+									}
+								}
+							}
+							else {
+								printf("Room: %s does not exist\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());
+								//room desnt exist msg
+							}
+						}
+					}
 				}
 
 

@@ -30,6 +30,8 @@ public:
 	void Clear()
 	{
 		this->_buffer.clear();
+		this->_readIndex = 0;
+		this->_writeIndex = 0;
 	}
 
 	void writeInt32LE(size_t index, int32_t value)
