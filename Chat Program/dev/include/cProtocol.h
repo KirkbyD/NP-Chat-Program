@@ -27,7 +27,7 @@ public:
 		return buffer.GetBufferContent();
 	}
 
-	std::vector<uint8_t> UserSendMessage(std::string room, std::string message)
+	void UserSendMessage(std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -44,10 +44,10 @@ public:
 		buffer.writeInt32LE(INT_SIZE * 3 + room.length(), message.length());
 		buffer.WriteString(INT_SIZE * 4 + room.length(), message);
 
-		return GetBuffer();
+		return;
 	}
 
-	std::vector<uint8_t> UserRecieveMessage(std::string name, std::string room, std::string message)
+	void UserRecieveMessage(std::string name, std::string room, std::string message)
 	{
 		buffer.Clear();
 
@@ -68,26 +68,26 @@ public:
 		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + name.length(), message.length());
 		buffer.WriteString(INT_SIZE * 5 + room.length() + name.length(), message);
 
-		return GetBuffer();
+		return;
 	}
 
-	std::vector<uint8_t> UserJoinRoom(std::string room)
+	void UserJoinRoom(std::string room)
 	{
 		buffer.Clear();
 
 		// [Header] [length] [room_name]
 		//packet length
-		buffer.writeInt32LE(SwapIntEndian(INT_SIZE * 3 + room.length()));
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + room.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, JOIN);
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(JOIN));
 
-		buffer.writeInt32LE(INT_SIZE * 2, room.length());
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(room.length()));
 		buffer.WriteString(INT_SIZE * 3, room);
 
-		return GetBuffer();
+		return;
 	}
 
-	std::vector<uint8_t> UserLeaveRoom(std::string room)
+	void UserLeaveRoom(std::string room)
 	{
 		buffer.Clear();
 
@@ -95,12 +95,12 @@ public:
 		//packet length
 		buffer.writeInt32LE(INT_SIZE * 3 + room.length());
 		//message_id
-		buffer.writeInt32LE(INT_SIZE);
+		buffer.writeInt32LE(INT_SIZE, LEAVE);
 
 		buffer.writeInt32LE(INT_SIZE * 2, room.length());
 		buffer.WriteString(INT_SIZE * 3, room);
 
-		return GetBuffer();
+		return;
 	}
 
 	int SwapIntEndian(int value)

@@ -128,10 +128,15 @@ public:
 	{
 		uint32_t swapped = 0;
 
-		swapped |= this->_buffer[index + 3] << 24;
+		swapped |= this->_buffer[index] << 24;
+		swapped |= this->_buffer[index + 1] << 16;
+		swapped |= this->_buffer[index + 2] << 8;
+		swapped |= this->_buffer[index + 3] << 0;
+
+		/*swapped |= this->_buffer[index + 3] << 24;
 		swapped |= this->_buffer[index + 2] << 16;
 		swapped |= this->_buffer[index + 1] << 8;
-		swapped |= this->_buffer[index] << 0;
+		swapped |= this->_buffer[index] << 0;*/
 
 		this->_readIndex = index + 4;
 
@@ -216,9 +221,44 @@ public:
 
 	void ReceiveBufferContent(std::vector<uint8_t> content)
 	{
+		if (this->_writeIndex + content.size() > this->_buffer.size())
+		{
+			for (size_t i = 0; i < this->_buffer.size() - content.size(); i++)
+			{
+				this->_buffer.push_back(0);
+			}
+		}
 		for (size_t i = 0; i < content.size(); i++)
 		{
-			this->_buffer[i] = content[i];
+			this->_buffer[this->_writeIndex++] = content[i];
+		}
+	}
+
+	void ReceiveBufferContent(size_t index, std::vector<uint8_t> content)
+	{
+		/*if (index + content.size() > this->_buffer.size())
+		{
+			for (size_t i = 0; i < this->_buffer.size() - index - content.size(); i++)
+			{
+				this->_buffer.push_back(0);
+			}
+		}
+		for (size_t i = 0; i < content.size(); i++)
+		{
+			this->_buffer[i + index] = content[i + index];
+		}*/
+
+		this->_writeIndex = index;
+		if (this->_writeIndex + content.size() > this->_buffer.size())
+		{
+			for (size_t i = 0; i < this->_buffer.size() - index - content.size(); i++)
+			{
+				this->_buffer.push_back(0);
+			}
+		}
+		for (size_t i = 0; i < content.size(); i++)
+		{
+			this->_buffer[this->_writeIndex++] = content[i];
 		}
 	}
 };

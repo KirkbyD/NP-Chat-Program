@@ -8,10 +8,12 @@
 
 #include <vector>
 
+#include <cProtocol.h>
+
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 16
+#define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "5150"
 
 // Client structure
@@ -234,12 +236,16 @@ int main(int argc, char** argv)
 			if (FD_ISSET(client->socket, &ReadSet))
 			{
 				total--;
-				client->dataBuf.buf = client->buffer;
-				client->dataBuf.len = DEFAULT_BUFLEN;
 
-				int iResult = recv(client->socket, client->dataBuf.buf, client->dataBuf.len, 0);
+				std::vector<uint8_t> vect;
+				for (int i = 0; i < 8; i++)
+				{
+					vect.push_back('0');
+				}
 
-				if (iResult == SOCKET_ERROR)
+				int iRecvResult = recv(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+				if (iRecvResult == SOCKET_ERROR)
 				{
 					if (WSAGetLastError() == WSAEWOULDBLOCK)
 					{
@@ -253,45 +259,84 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					printf("WSARecv() is OK!\n");
-					if (client->dataBuf.len == 0)
-					{
-						RemoveClient(i);
-					}
-					else if (client->dataBuf.len == SOCKET_ERROR)
-					{
-						printf("recv: There was an error..%d\n", WSAGetLastError());
-						continue;
-					}
-					else
-					{
-						printf("%s\n", client->dataBuf.buf);
-						// RecvBytes > 0, we got data
-						/*iResult = WSASend(
-							client->socket,
-							&(client->dataBuf),
-							1,
-							&RecvBytes,
-							Flags,
-							NULL,
-							NULL
-						);*/
-						int iSendResult = send(client->socket, client->dataBuf.buf, client->dataBuf.len, 0);
+					Buffer buf;
+					buf.ReceiveBufferContent(vect);
+					printf("Size of message: %i\n", buf.readInt32LE(0));
+					printf("MESSAGE ID: %i\n", buf.readInt32LE(4));
 
-						if (iSendResult == SOCKET_ERROR)
+					std::vector<uint8_t> vect2;
+					for (int i = 0; i < buf.readInt32LE(0) - 8; i++)
+					{
+						vect2.push_back('0');
+					}
+
+					int iRecvResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
+
+					if (iRecvResult == SOCKET_ERROR)
+					{
+						if (WSAGetLastError() == WSAEWOULDBLOCK)
 						{
-							printf("send error %d\n", WSAGetLastError());
-						}
-						else if (iSendResult == 0)
-						{
-							printf("Send result is 0\n");
+							// We can ignore this, it isn't an actual error.
 						}
 						else
 						{
-							printf("Successfully sent %d bytes!\n", iSendResult);
+							printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
+							RemoveClient(i);
 						}
 					}
+					else
+					{
+						buf.ReceiveBufferContent(8, vect2);
+						printf("Size of message: %i\n", buf.readInt32LE(0));
+						printf("MESSAGE ID: %i\n", buf.readInt32LE(4));
+						printf("Room Name Length: %i\n", buf.readInt32LE(8));
+						printf("Room Name: %s\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());
+					}
+
 				}
+
+
+
+
+
+
+
+
+
+
+				/*if (iRecvResult == SOCKET_ERROR)
+				{
+					if (WSAGetLastError() == WSAEWOULDBLOCK)
+					{
+						// We can ignore this, it isn't an actual error.
+					}
+					else
+					{
+						printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
+						RemoveClient(i);
+					}
+				}
+				else
+				{
+					printf("%s\n", client->dataBuf.buf);
+
+
+
+					int iSendResult = send(client->socket, client->dataBuf.buf, client->dataBuf.len, 0);
+
+					if (iSendResult == SOCKET_ERROR)
+					{
+						printf("send error %d\n", WSAGetLastError());
+					}
+					else if (iSendResult == 0)
+					{
+						printf("Send result is 0\n");
+					}
+					else
+					{
+						printf("Successfully sent %d bytes!\n", iSendResult);
+					}
+				}*/
 			}
 		}
 

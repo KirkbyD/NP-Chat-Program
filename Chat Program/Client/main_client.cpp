@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include <cProtocol.h>
+
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -93,14 +95,9 @@ int main(int argc, char** argv)
 	printf("Successfully connected to the server on socket %d!\n", (int)connectSocket);
 
 	// #3 write & read
-	std::vector<uint8_t> vect;
-	vect.push_back('1');
-	vect.push_back('H');
-	vect.push_back('e');
-	vect.push_back('l');
-	vect.push_back('l');
-	vect.push_back('o');
-	vect[0] = vect.size();
+	Protocol prot;
+	prot.UserJoinRoom("RoomName");
+	std::vector<uint8_t> vect = prot.GetBuffer();
 
 	printf("Sending a packet to the server...\n");
 
@@ -114,7 +111,7 @@ int main(int argc, char** argv)
 	}
 	printf("Bytes sent: %d\n", iResult);
 
-	// Receive a message from the server before quitting
+	/*// Receive a message from the server before quitting
 	char header[DEFAULT_BUFLEN];
 	int header_size = DEFAULT_BUFLEN;
 	printf("Waiting to receive data from the server...\n");
@@ -161,7 +158,7 @@ int main(int argc, char** argv)
 		closesocket(connectSocket);
 		WSACleanup();
 		return 1;
-	}
+	}*/
 
 	// #4 close
 	closesocket(connectSocket);
