@@ -100,14 +100,7 @@ int main(int argc, char** argv)
 
 	
 	std::vector<uint8_t> var = dataProto.UserJoinRoom("Room1");
-	//char* buffer = new char[var.size()];
-	//std::copy(var.begin(), var.end(), buffer);
 
-	//std::string str(var.begin(), var.end());
-
-	//const char* buffer = /*(const char*)&dataProto.UserJoinRoom("Room1");*/ "testing";
-
-	//printf("Sending a packet to the server... (%s)\n", str);
 	system("Pause");
 
 	//iResult = send(connectSocket, &buffer[0], (int)strlen(buffer), 0);

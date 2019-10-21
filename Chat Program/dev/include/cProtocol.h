@@ -122,6 +122,18 @@ public:
 		return swapped;
 	}
 
+	short SwapShortEndian(int value)
+	{
+		// We need to grab the first byte an move it to the last
+		// Bytes in order: A B
+		char A = value >> 8;
+		char B = value;
 
-	// swap float endian
+		// OR the data into our swapped variable
+		int swapped = 0;
+		swapped |= B << 8;
+		swapped |= A;
+
+		return swapped;
+	}
 };
