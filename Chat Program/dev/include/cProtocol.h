@@ -8,36 +8,33 @@ class Protocol
 {
 private:
 	Buffer buffer;
-	unsigned int message_id;
 
 public:
 	Protocol()
 	{
 		buffer = Buffer(0);
-		message_id = 0;
 	}
 
-	Protocol(unsigned int m_id, unsigned int buffer_size)
+	Protocol(unsigned int buffer_size)
 	{
 		buffer = Buffer(buffer_size);
-		message_id = m_id;
 	}
 
 
 	//change to using bitsets. Called in client based on recieved enum
-	std::vector<uint8_t> GetBuffer()
+	std::vector<char> GetBuffer()
 	{
 		return buffer.GetBufferContent();
 	}
 
-	std::vector<uint8_t> UserSendMessage(std::string room, std::string message)
+	std::vector<char> UserSendMessage(std::string room, std::string message)
 	{
 		buffer.Clear();
 
 		// [Header] [length] [room_name] [length] [message]
 		buffer.writeInt32LE(INT_SIZE * 4 + room.length() + message.length());
 		//buffer.
-		buffer.writeInt32LE(INT_SIZE, message_id++);
+		buffer.writeInt32LE(INT_SIZE);
 
 		//room
 		buffer.writeInt32LE(INT_SIZE * 2, room.length());
@@ -50,14 +47,14 @@ public:
 		return GetBuffer();
 	}
 
-	std::vector<uint8_t> UserRecieveMessage(std::string name, std::string room, std::string message)
+	std::vector<char> UserRecieveMessage(std::string name, std::string room, std::string message)
 	{
 		buffer.Clear();
 
 		// [Header] [length] [name] [length] [room_name] [length] [message]
 		buffer.writeInt32LE(INT_SIZE * 5 + name.length() + room.length() + message.length());
 		//buffer.
-		buffer.writeInt32LE(INT_SIZE, message_id++);
+		buffer.writeInt32LE(INT_SIZE);
 
 		//name
 		buffer.writeInt32LE(INT_SIZE * 2, name.length());
@@ -74,15 +71,15 @@ public:
 		return GetBuffer();
 	}
 
-	std::vector<uint8_t> UserJoinRoom(std::string room)
+	std::vector<char> UserJoinRoom(std::string room)
 	{
 		buffer.Clear();
 
 		// [Header] [length] [room_name]
 		//packet length
-		buffer.writeInt32LE(SwapEndian(INT_SIZE * 3 + room.length()));
+		buffer.writeInt32LE(SwapIntEndian(INT_SIZE * 3 + room.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, message_id++);
+		buffer.writeInt32LE(INT_SIZE, JOIN);
 
 		buffer.writeInt32LE(INT_SIZE * 2, room.length());
 		buffer.WriteString(INT_SIZE * 3, room);
@@ -90,7 +87,7 @@ public:
 		return GetBuffer();
 	}
 
-	std::vector<uint8_t> UserLeaveRoom(std::string room)
+	std::vector<char> UserLeaveRoom(std::string room)
 	{
 		buffer.Clear();
 
@@ -98,7 +95,7 @@ public:
 		//packet length
 		buffer.writeInt32LE(INT_SIZE * 3 + room.length());
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, message_id++);
+		buffer.writeInt32LE(INT_SIZE);
 
 		buffer.writeInt32LE(INT_SIZE * 2, room.length());
 		buffer.WriteString(INT_SIZE * 3, room);
@@ -106,7 +103,7 @@ public:
 		return GetBuffer();
 	}
 
-	int SwapEndian(int value)
+	int SwapIntEndian(int value)
 	{
 		// We need to grab the first byte an move it to the last
 		// Bytes in order: A B C D
@@ -124,4 +121,10 @@ public:
 
 		return swapped;
 	}
+
+	//char SwapCharEndian(char c)
+	//{
+	//	char swapped = '';
+
+	//}
 };

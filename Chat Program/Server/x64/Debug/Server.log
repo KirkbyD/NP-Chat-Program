@@ -1,25 +1,24 @@
 ﻿  main_server.cpp
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:         with
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:         [
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:             _Ty=uint8_t
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(62,20): warning C4244:         ]
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:         with
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:         [
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:             _Ty=uint8_t
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(75,16): warning C4244:         ]
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(25,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(29,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(33,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(44,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(48,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(52,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(56,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(67,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(71,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(75,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(86,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(89,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\Server\main_server.cpp(167,8): warning C4101: 'flags': unreferenced local variable
-  Server.vcxproj -> C:\Users\Oragagashi\Desktop\Programming\NP-Chat-Program\Chat Program\x64\Debug\Server.exe
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(71,20): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(71,20): warning C4244:         with
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(71,20): warning C4244:         [
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(71,20): warning C4244:             _Ty=char
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(71,20): warning C4244:         ]
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(84,16): warning C4244: '=': conversion from 'int16_t' to '_Ty', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(84,16): warning C4244:         with
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(84,16): warning C4244:         [
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(84,16): warning C4244:             _Ty=char
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cBuffer.h(84,16): warning C4244:         ]
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(35,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(40,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(44,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(55,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(60,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(64,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(80,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(84,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(96,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(100,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\Server\main_server.cpp(168,8): warning C4101: 'flags': unreferenced local variable
+  Server.vcxproj -> C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\x64\Debug\Server.exe

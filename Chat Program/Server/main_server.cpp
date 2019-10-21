@@ -22,6 +22,7 @@ struct ClientInfo
 	// Buffer information (this is basically you buffer class)
 	Protocol dataProto;
 	WSABUF dataBuf;
+	Buffer buffer = Buffer(DEFAULT_BUFLEN);
 
 	std::string name = "New Client";
 };
@@ -50,7 +51,7 @@ int main(int argc, char** argv)
 {
 	WSADATA wsaData;
 
-	Protocol protocol = Protocol(0, DEFAULT_BUFLEN);
+	//Protocol protocol = Protocol(0, DEFAULT_BUFLEN);
 	int iResult;
 
 	// Initialize Winsock
@@ -223,7 +224,7 @@ int main(int argc, char** argv)
 
 					ClientInfo* info = new ClientInfo();
 					info->socket = acceptSocket;
-					info->dataProto = protocol;
+					info->dataProto = Protocol(DEFAULT_BUFLEN);
 					ClientArray[TotalClients] = info;
 					TotalClients++;
 					printf("New client connected on socket %d\n", (int)acceptSocket);
@@ -242,12 +243,12 @@ int main(int argc, char** argv)
 			{
 				total--;
 
-				std::vector<std::uint8_t> var = client->dataProto.GetBuffer();
-				char* tmp_buf = new char[var.size()];
-				std::copy(var.begin(), var.end(), tmp_buf);
+				//std::vector<char> var = client->dataProto.GetBuffer();
+				/*char* tmp_buf = new char[var.size()];
+				std::copy(var.begin(), var.end(), tmp_buf);*/
 
-				client->dataBuf.buf = tmp_buf;
-				client->dataBuf.len = client->dataProto.GetBuffer().size();
+				client->dataBuf.buf = &(client->dataProto.GetBuffer()[0]); //&(var[0]);
+				client->dataBuf.len = DEFAULT_BUFLEN;
 
 				DWORD Flags = 0;
 				iResult = WSARecv(
@@ -259,6 +260,9 @@ int main(int argc, char** argv)
 					NULL,
 					NULL
 				);
+
+				//iResult = recv(client->socket, &client->dataBuf.buf[0], client->dataBuf.len, 0);
+
 				//iResult = send(client->socket, (char*)client->dataProto.GetBuffer(), DEFAULT_BUFLEN, 0);
 
 				if (iResult == SOCKET_ERROR)
@@ -315,7 +319,7 @@ int main(int argc, char** argv)
 					}
 				}
 
-				delete[] tmp_buf;
+				//delete[] tmp_buf;
 			}
 		}
 	}

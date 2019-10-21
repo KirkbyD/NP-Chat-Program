@@ -99,21 +99,19 @@ int main(int argc, char** argv)
 	DWORD Flags = 0;
 
 	
-	std::vector<std::uint8_t> var = dataProto.UserJoinRoom("Room1");
+	std::vector<char> var = dataProto.UserJoinRoom("Room1");
 	//char* buffer = new char[var.size()];
 	//std::copy(var.begin(), var.end(), buffer);
 
 	//std::string str(var.begin(), var.end());
-	std::vector<char> writable(var.begin(), var.end());
-	writable.push_back('\0');
 
+	//const char* buffer = /*(const char*)&dataProto.UserJoinRoom("Room1");*/ "testing";
 
-	//const char* buffer = /*(const char*)&dataProto.UserJoinRoom("Room1");*/ str.c_str();
-
-	printf("Sending a packet to the server...\n");
+	//printf("Sending a packet to the server... (%s)\n", str);
 	system("Pause");
 
-	iResult = send(connectSocket, &writable[0], (int)strlen(&writable[0]), 0);
+	//iResult = send(connectSocket, &buffer[0], (int)strlen(buffer), 0);
+	iResult = send(connectSocket, &(var[0]), var.size(), 0);
 
 	if (iResult == SOCKET_ERROR)
 	{
