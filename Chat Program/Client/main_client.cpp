@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 	system("Pause");
 
 	//iResult = send(connectSocket, &buffer[0], (int)strlen(buffer), 0);
-	iResult = send(connectSocket, (char *)(var[0]), var.size(), 0);
+	iResult = send(connectSocket, (char *)(&var[0]), var.size(), 0);
 
 	if (iResult == SOCKET_ERROR)
 	{

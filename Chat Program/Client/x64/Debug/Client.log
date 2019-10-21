@@ -25,7 +25,7 @@ C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProt
 C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(84,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
 C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(96,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
 C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\dev\include\cProtocol.h(100,1): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
-C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\Client\main_client.cpp(114,63): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\Client\main_client.cpp(114,64): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\Client\main_client.cpp(98,8): warning C4101: 'RecvBytes': unreferenced local variable
 C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\Client\main_client.cpp(20,9): warning C4101: 'dataBuf': unreferenced local variable
   Client.vcxproj -> C:\Users\kirkb\Desktop\Networking\NP-Chat-Program\Chat Program\x64\Debug\Client.exe
