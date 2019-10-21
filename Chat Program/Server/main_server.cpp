@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include <vector>
+#include <string>
 #include <map>
 
 #include <cProtocol.h>
@@ -245,13 +246,13 @@ int main(int argc, char** argv)
 				total--;
 
 				std::vector<uint8_t> vect;
-				for (int i = 0; i < 8; i++)
+				for (int i = 0; i < INT_SIZE * 2; i++)
 				{
 					vect.push_back('0');
 				}
-				int iRecvResult = recv(client->socket, (char*)vect.data(), 8, 0);
+				iResult = recv(client->socket, (char*)vect.data(), INT_SIZE * 2, 0);
 
-				if (iRecvResult == SOCKET_ERROR)
+				if (iResult == SOCKET_ERROR)
 				{
 					if (WSAGetLastError() == WSAEWOULDBLOCK)
 					{
@@ -265,7 +266,7 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					if (iRecvResult == 0)
+					if (iResult == 0)
 					{
 						//DISCONNECT FROM ALL MAPS
 						RemoveClient(i);
@@ -283,9 +284,9 @@ int main(int argc, char** argv)
 							vect2.push_back('0');
 						}
 
-						int iRecvResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
+						iResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
 
-						if (iRecvResult == SOCKET_ERROR)
+						if (iResult == SOCKET_ERROR)
 						{
 							if (WSAGetLastError() == WSAEWOULDBLOCK)
 							{
@@ -316,25 +317,32 @@ int main(int argc, char** argv)
 								printf("Room Name Length: %i\n", room_name_length);
 								printf("Room Name: %s\n", room_name.c_str());
 
-								if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
-									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
+								if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
+									m_Rooms[room_name.c_str()].push_back(client);
 								}
 								else {
-									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()] = std::vector<ClientInfo*>();
-									m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()].push_back(client);
+									m_Rooms[room_name.c_str()] = std::vector<ClientInfo*>();
+									m_Rooms[room_name.c_str()].push_back(client);
 								}
 
-								printf("socket %d joined room: %s\n", (int)client->socket, buf.ReadString(12, buf.readInt32LE(8)).c_str());
+								printf("socket %d joined room: %s\n", (int)client->socket, room_name.c_str());
 								
-								//broadcast user join message
-								std::string msg = "User '" + client->socket;
-								msg += "' has joined " + buf.ReadString(12, buf.readInt32LE(8));
-								serverProto.UserRecieveMessage("Server", buf.ReadString(12, buf.readInt32LE(8)).c_str(), msg);
+								std::string msg = "User '" + std::to_string(client->socket) + "' has joined " + room_name;
+								serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
 
 								std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-								for (ClientInfo* tmpClient : m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()]) {
+								for (ClientInfo* tmpClient : m_Rooms[room_name.c_str()]) {
 									iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+									if (iResult == SOCKET_ERROR)
+									{
+										printf("send error %d\n", WSAGetLastError());
+									}
+									else
+									{
+										printf("Bytes sent: %d\n", iResult);
+									}
 								}
 
 								break;
@@ -352,42 +360,45 @@ int main(int argc, char** argv)
 								printf("Room Name Length: %i\n", room_name_length);
 								printf("Room Name: %s\n", room_name.c_str());
 
-								if (m_Rooms.find(buf.ReadString(12, buf.readInt32LE(8)).c_str()) != m_Rooms.end()) {
-									std::string room = buf.ReadString(12, buf.readInt32LE(8)).c_str();
-
-									for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room].begin();
-										clientIt < m_Rooms[room].end();
+								if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
+									for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room_name].begin();
+										clientIt < m_Rooms[room_name].end();
 										clientIt++)
 									{
 										if (*clientIt == client)
 										{
-											m_Rooms[room].erase(clientIt);
+											m_Rooms[room_name].erase(clientIt);
 
-											printf("socket %d left room: %s\n", (int)client->socket, room.c_str());
+											printf("socket %d left room: %s\n", (int)client->socket, room_name.c_str());
 											
-											//broadcast user leave message
-											std::string msg = "User '" + client->socket;
-											msg += "' has left " + buf.ReadString(12, buf.readInt32LE(8));
-											serverProto.UserRecieveMessage("Server", buf.ReadString(12, buf.readInt32LE(8)).c_str(), msg);
+											std::string msg = "User '" + std::to_string(client->socket) + "' has left " + room_name;
+											serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
 
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-											for (ClientInfo* tmpClient : m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()]) {
+											for (ClientInfo* tmpClient : m_Rooms[room_name.c_str()]) {
 												iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+												if (iResult == SOCKET_ERROR)
+												{
+													printf("send error %d\n", WSAGetLastError());
+												}
+												else
+												{
+													printf("Bytes sent: %d\n", iResult);
+												}
 											}
 
 											break;
 										}
-										else if (clientIt == m_Rooms[room].end() - 1)
+										else if (clientIt == m_Rooms[room_name].end() - 1)
 										{
-											printf("socket %d not in room: %s\n", (int)client->socket, room.c_str());
-											//not in room message
+											printf("socket %d not in room: %s\n", (int)client->socket, room_name.c_str());
 										}
 									}
 								}
 								else {
-									printf("Room: %s does not exist\n", buf.ReadString(12, buf.readInt32LE(8)).c_str());
-									//room desnt exist msg
+									printf("Room: %s does not exist\n", room_name.c_str());
 								}
 
 								break;
@@ -410,16 +421,23 @@ int main(int argc, char** argv)
 								printf("Message: %s\n", message.c_str());
 								break;
 
-								//broadcast user join message
-								std::string msg = "[" + room_name + "] " + message;
-								std::string sender = "" + client->socket;
+								std::string sender = std::to_string(client->socket);
 
-								serverProto.UserRecieveMessage(sender, buf.ReadString(12, buf.readInt32LE(8)).c_str(), msg);
+								serverProto.UserRecieveMessage(sender, room_name, message);
 
 								std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-								for (ClientInfo* tmpClient : m_Rooms[buf.ReadString(12, buf.readInt32LE(8)).c_str()]) {
+								for (ClientInfo* tmpClient : m_Rooms[room_name]) {
 									iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+									if (iResult == SOCKET_ERROR)
+									{
+										printf("send error %d\n", WSAGetLastError());
+									}
+									else
+									{
+										printf("Bytes sent: %d\n", iResult);
+									}
 								}
 							}
 							case 3:
@@ -431,52 +449,8 @@ int main(int argc, char** argv)
 						}
 					}
 				}
-
-
-
-
-
-
-
-
-
-
-				/*if (iRecvResult == SOCKET_ERROR)
-				{
-					if (WSAGetLastError() == WSAEWOULDBLOCK)
-					{
-						// We can ignore this, it isn't an actual error.
-					}
-					else
-					{
-						printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
-						RemoveClient(i);
-					}
-				}
-				else
-				{
-					printf("%s\n", client->dataBuf.buf);
-
-
-
-					int iSendResult = send(client->socket, client->dataBuf.buf, client->dataBuf.len, 0);
-
-					if (iSendResult == SOCKET_ERROR)
-					{
-						printf("send error %d\n", WSAGetLastError());
-					}
-					else if (iSendResult == 0)
-					{
-						printf("Send result is 0\n");
-					}
-					else
-					{
-						printf("Successfully sent %d bytes!\n", iSendResult);
-					}
-				}*/
 			}
 		}
-
 	}
 
 

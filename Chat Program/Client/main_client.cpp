@@ -97,14 +97,13 @@ int main(int argc, char** argv)
 	// #3 write & read
 	Protocol prot;
 	//prot.UserSendMessage("RoomName", "Hello");
-	//prot.UserRecieveMessage("Someone","RoomName", "Hello");
-	prot.UserLeaveRoom("RoomName");
-	//prot.UserJoinRoom("RoomName");
-	std::vector<uint8_t> vect = prot.GetBuffer();
+	//prot.UserLeaveRoom("RoomName");
+	prot.UserJoinRoom("RoomName");
+	std::vector<uint8_t> sendVect = prot.GetBuffer();
 
 	printf("Sending a packet to the server...\n");
 
-	iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+	iResult = send(connectSocket, (char*)sendVect.data(), (int)sendVect.size(), 0);
 	if (iResult == SOCKET_ERROR)
 	{
 		printf("send() failed with error: %d\n", WSAGetLastError());
@@ -114,23 +113,24 @@ int main(int argc, char** argv)
 	}
 	printf("Bytes sent: %d\n", iResult);
 
-	/*// Receive a message from the server before quitting
-	char header[DEFAULT_BUFLEN];
-	int header_size = DEFAULT_BUFLEN;
+
+
+
+
+
+	// Receive a message from the server before quitting
 	printf("Waiting to receive data from the server...\n");
 	system("Pause");
-	iResult = recv(connectSocket, header, header_size, 0);
 
-	if (iResult > 0)
+	std::vector<uint8_t> recvVect1;
+	for (int i = 0; i < INT_SIZE * 2; i++)
 	{
-		printf("%s\n", header);
-		printf("Bytes received: %d\n", iResult);
+		recvVect1.push_back('0');
 	}
-	else if (iResult == 0)
-	{
-		printf("Connection closed\n");
-	}
-	else
+
+	iResult = recv(connectSocket, (char*)recvVect1.data(), INT_SIZE * 2, 0);
+
+	if (iResult < 0)
 	{
 		printf("recv failed with error: %d\n", WSAGetLastError());
 		closesocket(connectSocket);
@@ -138,30 +138,44 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	std::vector<uint8_t> vect2;
-	for (int i = 0; i < (int)header[0]; i++)
+	Buffer buf;
+	buf.ReceiveBufferContent(recvVect1);
+	printf("Packet Length: %i\n", buf.readInt32LE(INT_SIZE * 0));
+	printf("Message ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
+
+	std::vector<uint8_t> recvVect2;
+	for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE * 2; i++)
 	{
-		vect2.push_back('0');
+		recvVect2.push_back('0');
 	}
 
-	iResult = recv(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+	iResult = recv(connectSocket, (char*)recvVect2.data(), (int)recvVect2.size(), 0);
 
-	if (iResult > 0)
-	{
-		printf("%s\n", vect.data());
-		printf("Bytes received: %d\n", iResult);
-	}
-	else if (iResult == 0)
-	{
-		printf("Connection closed\n");
-	}
-	else
+	if (iResult < 0)
 	{
 		printf("recv failed with error: %d\n", WSAGetLastError());
 		closesocket(connectSocket);
 		WSACleanup();
 		return 1;
-	}*/
+	}
+
+	buf.ReceiveBufferContent(INT_SIZE * 2, recvVect2);
+
+	if (buf.readInt32LE(INT_SIZE) == 3)
+	{
+		//Recieve
+		int packet_length = buf.readInt32LE(INT_SIZE * 0);
+		int message_id = buf.readInt32LE(INT_SIZE * 1);
+		int name_length = buf.readInt32LE(INT_SIZE * 2);
+		std::string name = buf.ReadString(INT_SIZE * 3, name_length);
+		int room_name_length = buf.readInt32LE(INT_SIZE * 3 + name_length);
+		std::string room_name = buf.ReadString(INT_SIZE * 4 + name_length, room_name_length);
+		int message_length = buf.readInt32LE(INT_SIZE * 4 + name_length + room_name_length);
+		std::string message = buf.ReadString(INT_SIZE * 5 + name_length + room_name_length, message_length);
+
+		printf("[%s] %s: %s\n", room_name.c_str(), name.c_str(), message.c_str());
+	}
+
 
 	// #4 close
 	closesocket(connectSocket);
