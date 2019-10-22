@@ -15,15 +15,11 @@
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "5150"
 
 // Client structure
 struct ClientInfo {
 	SOCKET socket;
-
-	// Buffer information (this is basically you buffer class)
-
 };
 
 int TotalClients = 0;
@@ -69,7 +65,7 @@ int main(int argc, char** argv)
 {
 	WSADATA wsaData;
 	int iResult;
-	Protocol serverProto = Protocol(DEFAULT_BUFLEN);
+	Protocol serverProto = Protocol();
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -181,8 +177,6 @@ int main(int argc, char** argv)
 
 	FD_SET ReadSet;
 	int total;
-	DWORD flags;
-	DWORD RecvBytes;
 
 	printf("Entering accept/recv/send loop...\n");
 	while (true)
@@ -238,7 +232,6 @@ int main(int argc, char** argv)
 
 					ClientInfo* info = new ClientInfo();
 					info->socket = acceptSocket;
-					//info->bytesRECV = 0;
 					ClientArray[TotalClients] = info;
 					TotalClients++;
 					printf("New client connected on socket %d\n", (int)acceptSocket);
