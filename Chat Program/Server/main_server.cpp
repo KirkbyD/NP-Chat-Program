@@ -273,7 +273,6 @@ int main(int argc, char** argv)
 				{
 					if (iResult == 0)
 					{
-						//DISCONNECT FROM ALL MAPS
 						RemoveClient(i);
 					}
 					else
@@ -372,8 +371,6 @@ int main(int argc, char** argv)
 									{
 										if (*clientIt == client)
 										{
-											m_Rooms[room_name].erase(clientIt);
-
 											printf("socket %d left room: %s\n", (int)client->socket, room_name.c_str());
 											
 											std::string msg = "User '" + std::to_string(client->socket) + "' has left " + room_name;
@@ -393,6 +390,7 @@ int main(int argc, char** argv)
 													printf("Bytes sent: %d\n", iResult);
 												}
 											}
+											m_Rooms[room_name].erase(clientIt);
 
 											break;
 										}

@@ -4,6 +4,9 @@ Network Programming
 Authors:	Dylan Kirkby,
 		Ivan Parkhomenko
 
+GitHub:		https://github.com/KirkbyD/NP-Chat-Program
+		Work done on branch 'working'
+
 Project 1, Chat Program
 A chat server and client that can handle multiple connections simultaneously. 
 The server must be done in C++ and must use BSD sockets. The client can be a 
@@ -12,11 +15,12 @@ BSD sockets. This assignment can be done in a group of up to 3 members.
 
 Project created in visual studio 2019 community edition.
 
-Buffer:
+Buffer:		in dev/include
 
-Protocol
+Protocol:	in dev/include
+		Encodes integers by swapping endians via bitshifting.
 
-Server:
+Server:		
 
 Client:
 

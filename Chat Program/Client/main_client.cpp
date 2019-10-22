@@ -6,7 +6,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <sstream>
 #include <vector>
+#include <conio.h>
+#include <iostream>
+#include <string>
 
 #include <cProtocol.h>
 
@@ -14,6 +18,9 @@
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "5150"
+#define ESCAPE 27
+#define DELETE 8
+#define CARRIAGE_RETURN 13
 
 int main(int argc, char** argv)
 {
@@ -108,7 +115,10 @@ int main(int argc, char** argv)
 	int is_Active;
 
 	printf("Entering accept/recv/send loop...\n");
-	while (true)
+
+	std::string message;
+	bool quit = false;
+	while (!quit)
 	{
 		timeval tv = { 0 };
 		tv.tv_sec = 0;
@@ -130,28 +140,69 @@ int main(int argc, char** argv)
 			//printf("select() is successful!\n");
 		}
 
-		//Replace with user input
-		/**********************************************************/
-		// #3.1 write
-		Protocol prot;
-		//prot.UserSendMessage("RoomName", "Hello");
-		//prot.UserLeaveRoom("RoomName");
-		prot.UserJoinRoom("RoomName");
-		std::vector<uint8_t> sendVect = prot.GetBuffer();
-
-		printf("Sending a packet to the server...\n");
-
-		iResult = send(connectSocket, (char*)sendVect.data(), (int)sendVect.size(), 0);
-		if (iResult == SOCKET_ERROR)
+		if (_kbhit())
 		{
-			printf("send() failed with error: %d\n", WSAGetLastError());
-			closesocket(connectSocket);
-			WSACleanup();
-			return 1;
-		}
-		printf("Bytes sent: %d\n", iResult);
-		/**************************************************************/
+			char ch = _getch();
+			if (ch == DELETE)
+			{
+				message.pop_back();
+			}
+			else
+			{
+				message.push_back(ch);
+			}
+			std::cout << message << std::endl;
 
+			if (ch == ESCAPE)
+			{
+				quit = true;
+			}
+
+			if (ch == CARRIAGE_RETURN)
+			{
+				message.pop_back();
+				// parse typing
+				//join - leave - send
+				Protocol prot;
+
+				std::stringstream iss(message);
+				std::vector<std::string> tokens;
+				std::string tmp;
+				while (std::getline(iss, tmp, ' '))
+				{
+					tokens.push_back(tmp);
+				}
+
+				if (tokens[0] == "Join") {
+					prot.UserJoinRoom(tokens[1]);
+				}
+				else if (tokens[0] == "Leave") {
+					prot.UserLeaveRoom(tokens[1]);
+				}
+				else {
+					tmp = "";
+					for (size_t i = 1; i < tokens.size() - 1; i++)
+					{
+						tmp += tokens[i] + " ";
+					}
+					tmp += tokens[tokens.size()-1];
+
+					prot.UserSendMessage(tokens[0], tmp);
+				}
+
+				std::vector<uint8_t> sendVect = prot.GetBuffer();
+				iResult = send(connectSocket, (char*)sendVect.data(), (int)sendVect.size(), 0);
+				if (iResult == SOCKET_ERROR)
+				{
+					printf("send() failed with error: %d\n", WSAGetLastError());
+					closesocket(connectSocket);
+					WSACleanup();
+					return 1;
+				}
+
+				message = "";
+			}
+		}
 
 		if (FD_ISSET(connectSocket, &ReadSet))
 		{
@@ -181,8 +232,8 @@ int main(int argc, char** argv)
 
 			Buffer buf;
 			buf.ReceiveBufferContent(recvVect1);
-			printf("Packet Length: %i\n", buf.readInt32LE(INT_SIZE * 0));
-			printf("Message ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
+			//printf("Packet Length: %i\n", buf.readInt32LE(INT_SIZE * 0));
+			//printf("Message ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
 
 			std::vector<uint8_t> recvVect2;
 			for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE * 2; i++)
