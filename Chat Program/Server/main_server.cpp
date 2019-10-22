@@ -429,18 +429,29 @@ int main(int argc, char** argv)
 
 								std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-								for (ClientInfo* tmpClient : m_Rooms[room_name]) {
-									iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+								if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
+									for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room_name].begin();
+										clientIt < m_Rooms[room_name].end();
+										clientIt++)
+									{
+										if (*clientIt == client)
+										{
+											for (ClientInfo* tmpClient : m_Rooms[room_name]) {
+												iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
 
-									if (iResult == SOCKET_ERROR)
-									{
-										printf("send error %d\n", WSAGetLastError());
-									}
-									else
-									{
-										printf("Bytes sent: %d\n", iResult);
+												if (iResult == SOCKET_ERROR)
+												{
+													printf("send error %d\n", WSAGetLastError());
+												}
+												else
+												{
+													printf("Bytes sent: %d\n", iResult);
+												}
+											}
+										}
 									}
 								}
+
 								break;
 							}
 							case 3:

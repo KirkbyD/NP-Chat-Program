@@ -177,22 +177,25 @@ int main(int argc, char** argv)
 						tokens.push_back(tmp);
 					}
 
-					if (tokens[0] == "Join") {
-						prot.UserJoinRoom(tokens[1]);
-					}
-					else if (tokens[0] == "Leave") {
-						prot.UserLeaveRoom(tokens[1]);
-					}
-					else {
-						tmp = "";
-						for (size_t i = 1; i < tokens.size() - 1; i++)
-						{
-							tmp += tokens[i] + " ";
+					if (tokens.size() > 1)
+					{
+						if (tokens[0] == "Join" || tokens[0] == "join") {
+							prot.UserJoinRoom(tokens[1]);
 						}
-						tmp += tokens[tokens.size() - 1];
+						else if (tokens[0] == "Leave" || tokens[0] == "leave") {
+							prot.UserLeaveRoom(tokens[1]);
+						}
+						else {
+							tmp = "";
+							for (size_t i = 1; i < tokens.size() - 1; i++)
+							{
+								tmp += tokens[i] + " ";
+							}
+							tmp += tokens[tokens.size() - 1];
 
-						prot.UserSendMessage(tokens[0], tmp);
-					}
+							prot.UserSendMessage(tokens[0], tmp);
+						}
+					}					
 				}
 				
 				std::vector<uint8_t> sendVect = prot.GetBuffer();
@@ -204,6 +207,8 @@ int main(int argc, char** argv)
 					WSACleanup();
 					return 1;
 				}
+
+				prot.ClearBuffer();
 
 				message = "";
 			}

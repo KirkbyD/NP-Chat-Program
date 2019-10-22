@@ -143,4 +143,9 @@ public:
 
 		return swapped;
 	}
+
+	void ClearBuffer() 
+	{
+		buffer.Clear();
+	}
 };
