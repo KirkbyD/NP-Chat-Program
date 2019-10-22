@@ -117,6 +117,7 @@ int main(int argc, char** argv)
 	printf("Entering accept/recv/send loop...\n");
 
 	std::string message;
+	Protocol prot;
 	bool quit = false;
 	while (!quit)
 	{
@@ -145,7 +146,8 @@ int main(int argc, char** argv)
 			char ch = _getch();
 			if (ch == DELETE)
 			{
-				message.pop_back();
+				if (!message.empty())
+					message.pop_back();
 			}
 			else
 			{
@@ -161,35 +163,38 @@ int main(int argc, char** argv)
 			if (ch == CARRIAGE_RETURN)
 			{
 				message.pop_back();
-				// parse typing
-				//join - leave - send
-				Protocol prot;
 
-				std::stringstream iss(message);
-				std::vector<std::string> tokens;
-				std::string tmp;
-				while (std::getline(iss, tmp, ' '))
+				if (!message.empty())
 				{
-					tokens.push_back(tmp);
-				}
+					// parse typing
+					//join - leave - send
 
-				if (tokens[0] == "Join") {
-					prot.UserJoinRoom(tokens[1]);
-				}
-				else if (tokens[0] == "Leave") {
-					prot.UserLeaveRoom(tokens[1]);
-				}
-				else {
-					tmp = "";
-					for (size_t i = 1; i < tokens.size() - 1; i++)
+					std::stringstream iss(message);
+					std::vector<std::string> tokens;
+					std::string tmp;
+					while (std::getline(iss, tmp, ' '))
 					{
-						tmp += tokens[i] + " ";
+						tokens.push_back(tmp);
 					}
-					tmp += tokens[tokens.size()-1];
 
-					prot.UserSendMessage(tokens[0], tmp);
+					if (tokens[0] == "Join") {
+						prot.UserJoinRoom(tokens[1]);
+					}
+					else if (tokens[0] == "Leave") {
+						prot.UserLeaveRoom(tokens[1]);
+					}
+					else {
+						tmp = "";
+						for (size_t i = 1; i < tokens.size() - 1; i++)
+						{
+							tmp += tokens[i] + " ";
+						}
+						tmp += tokens[tokens.size() - 1];
+
+						prot.UserSendMessage(tokens[0], tmp);
+					}
 				}
-
+				
 				std::vector<uint8_t> sendVect = prot.GetBuffer();
 				iResult = send(connectSocket, (char*)sendVect.data(), (int)sendVect.size(), 0);
 				if (iResult == SOCKET_ERROR)

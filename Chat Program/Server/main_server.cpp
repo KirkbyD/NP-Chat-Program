@@ -414,7 +414,7 @@ int main(int argc, char** argv)
 								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
 								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
 								int message_length = buf.readInt32LE(INT_SIZE * 3 + room_name_length);
-								std::string message = buf.ReadString(INT_SIZE * 4 + room_name_length, room_name_length);
+								std::string message = buf.ReadString(INT_SIZE * 4 + room_name_length, message_length);
 
 								printf("Packet Length: %i\n", packet_length);
 								printf("Message ID: %i\n", message_id);
@@ -422,7 +422,6 @@ int main(int argc, char** argv)
 								printf("Room Name: %s\n", room_name.c_str());
 								printf("Message Length: %i\n", message_length);
 								printf("Message: %s\n", message.c_str());
-								break;
 
 								std::string sender = std::to_string(client->socket);
 
@@ -442,6 +441,7 @@ int main(int argc, char** argv)
 										printf("Bytes sent: %d\n", iResult);
 									}
 								}
+								break;
 							}
 							case 3:
 							{
