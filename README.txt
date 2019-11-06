@@ -2,7 +2,8 @@ INFO-6016-01-19F
 Network Programming
 
 Authors:	Dylan Kirkby,
-		Ivan Parkhomenko
+		Ivan Parkhomenko,
+		Brian Cowan
 
 GitHub:		https://github.com/KirkbyD/NP-Chat-Program
 		Work done on branch 'working'
