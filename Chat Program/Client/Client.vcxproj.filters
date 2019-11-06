@@ -18,5 +18,13 @@
     <ClCompile Include="main_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="addressbook.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="addressbook.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

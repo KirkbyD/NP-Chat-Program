@@ -11,11 +11,25 @@
 #include <map>
 
 #include <cProtocol.h>
+#include "addressbook.pb.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_PORT "5150"
+
+using namespace protobuf;
+
+void CreatePerson(
+	Person* newPerson,
+	uint64_t id,
+	std::string email,
+	std::string password)
+{
+	newPerson->set_id(id);
+	newPerson->set_email(email);
+	newPerson->set_password(password);
+}
 
 // Client structure
 struct ClientInfo {
@@ -63,6 +77,34 @@ void RemoveClient(int index)
 
 int main(int argc, char** argv)
 {
+	/***************************************Example*****************************************/
+	/***************************************************************************************/
+	AddressBook addressBook;
+
+	Person* newPerson1 = addressBook.add_people();
+	CreatePerson(
+		newPerson1,
+		1,
+		"l_gustafson@fanshaweonline.ca",
+		"password");
+
+	// Serialize the data into a string
+	std::string serializedAddressBook = addressBook.SerializeAsString();
+	std::cout << serializedAddressBook << std::endl;
+	// This is the info you would send over the network
+
+	// Receive the string/data, and deserialize
+	AddressBook received;
+	received.ParseFromString(serializedAddressBook);
+
+	// Check data
+	int numPeople = received.people_size();
+	printf("Received %d people in our address book!\n", numPeople);
+
+	// pause
+	system("Pause");
+	/***************************************************************************************/
+
 	WSADATA wsaData;
 	int iResult;
 	Protocol serverProto = Protocol();
