@@ -1,0 +1,3 @@
+"protoc.exe path" -I="[source folder path]/" --cpp_out="[result folder path]/" "[source folder path]/[filename].proto"
+
+After that copy generated files into project folder.
