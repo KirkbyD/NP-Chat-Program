@@ -141,6 +141,8 @@ int main(int argc, char** argv)
 			//printf("select() is successful!\n");
 		}
 
+		printf("\r%s", message.c_str());
+
 		if (_kbhit())
 		{
 			char ch = _getch();
@@ -153,7 +155,8 @@ int main(int argc, char** argv)
 			{
 				message.push_back(ch);
 			}
-			std::cout << message << std::endl;
+			//std::cout << message << std::endl;
+			printf("\r%100s\r", "");
 
 			if (ch == ESCAPE)
 			{
@@ -209,7 +212,9 @@ int main(int argc, char** argv)
 
 							prot.UserSendMessage(tokens[0], tmp);
 						}
-					}					
+					}			
+
+					printf("\r%100s\r", "");
 				}
 				
 				std::vector<uint8_t> sendVect = prot.GetBuffer();
@@ -223,7 +228,6 @@ int main(int argc, char** argv)
 				}
 
 				prot.ClearBuffer();
-
 				message = "";
 			}
 		}
@@ -289,7 +293,8 @@ int main(int argc, char** argv)
 				int message_length = buf.readInt32LE(INT_SIZE * 4 + name_length + room_name_length);
 				std::string message = buf.ReadString(INT_SIZE * 5 + name_length + room_name_length, message_length);
 
-				printf("[%s] %s: %s\n", room_name.c_str(), name.c_str(), message.c_str());
+				printf("\r%100s", "");
+				printf("\r[%s] %s: %s\n", room_name.c_str(), name.c_str(), message.c_str());
 			}
 		}
 	}
