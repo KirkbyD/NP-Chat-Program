@@ -189,17 +189,25 @@ int main(int argc, char** argv)
 							prot.UserLeaveRoom(tokens[1]);
 						}
 						else if (tokens[0] == "REGISTER" || tokens[0] == "Register" || tokens[0] == "register") {
-							if (tokens.size() == 3)
-								prot.UserRegister(tokens[1], tokens[2]);
+							if (tokens.size() == 4)
+								prot.UserRegister(tokens[1], tokens[2], tokens[3]);
 							else {
-								printf("Please use format \"REGISTER EMAIL PASSWORD\"");
+								printf("Please use format \"REGISTER USERNAME EMAIL PASSWORD\"\n");
 							}
 						}
 						else if (tokens[0] == "AUTHENTICATE" || tokens[0] == "Authenticate" || tokens[0] == "authenticate") {
-							if (tokens.size() == 3)
-								prot.UserAuthenticate(tokens[1], tokens[2]);
+							if (tokens.size() == 3) {
+								if (tokens[1].find('@') != std::string::npos) {
+									//email auth
+									prot.UserEmailAuthenticate(tokens[1], tokens[2]);
+								}
+								else {
+									//username auth
+									prot.UserNameAuthenticate(tokens[1], tokens[2]);
+								}
+							}
 							else {
-								printf("Please use format \"AUTHENTICATE EMAIL PASSWORD\"");
+								printf("Please use format \"AUTHENTICATE EMAIL||USERNAME PASSWORD\"\n");
 							}
 						}
 						else {

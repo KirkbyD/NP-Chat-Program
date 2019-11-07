@@ -2,7 +2,7 @@
 
 #define INT_SIZE sizeof(int32_t)/sizeof(char)
 
-enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, REGISTER, AUTHENTICATE };
+enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, REGISTER, EMAILAUTH, USERNAMEAUTH };
 
 class Protocol
 {
@@ -110,7 +110,32 @@ public:
 		return;
 	}
 
-	void UserRegister(std::string email, std::string password) {
+	void UserRegister(std::string username, std::string email, std::string password) {
+		buffer.Clear();
+
+		// [Header] [length] [email] [length] [password]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 5 + username.length() + email.length() + password.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTER));
+
+		//username
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(username.length()));
+		buffer.WriteString(INT_SIZE * 3, username);
+
+		//email
+		buffer.writeInt32LE(INT_SIZE * 3 + username.length(), SwapIntEndian(email.length()));
+		buffer.WriteString(INT_SIZE * 4 + username.length(), email);
+
+		//password
+		buffer.writeInt32LE(INT_SIZE * 4 + username.length() + email.length(), SwapIntEndian(password.length()));
+		buffer.WriteString(INT_SIZE * 5 + username.length() + email.length(), password);
+
+		return;
+	}
+
+	void UserEmailAuthenticate(std::string email, std::string password) {
 		buffer.Clear();
 
 		// [Header] [length] [email] [length] [password]
@@ -118,7 +143,7 @@ public:
 		//packet length
 		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTER));
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(EMAILAUTH));
 
 		//room
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));
@@ -131,7 +156,7 @@ public:
 		return;
 	}
 
-	void UserAuthenticate(std::string email, std::string password) {
+	void UserNameAuthenticate(std::string email, std::string password) {
 		buffer.Clear();
 
 		// [Header] [length] [email] [length] [password]
@@ -139,7 +164,7 @@ public:
 		//packet length
 		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(AUTHENTICATE));
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(USERNAMEAUTH));
 
 		//room
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));

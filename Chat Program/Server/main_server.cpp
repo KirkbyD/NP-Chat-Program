@@ -503,15 +503,20 @@ int main(int argc, char** argv)
 								//TODO
 								int packet_length = buf.readInt32LE(INT_SIZE * 0);
 								int message_id = buf.readInt32LE(INT_SIZE * 1);
-								int email_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string email = buf.ReadString(INT_SIZE * 3, email_length);
-								int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
-								std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
 
-								printf("REGISTER command recieved: %s, %s", email.c_str(), password.c_str());
+								int user_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string username = buf.ReadString(INT_SIZE * 3, user_length);
+
+								int email_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
+								std::string email = buf.ReadString(INT_SIZE * 4 + user_length, email_length);
+
+								int pass_length = buf.readInt32LE(INT_SIZE * 4 + user_length + email_length);
+								std::string password = buf.ReadString(INT_SIZE * 5 + user_length + email_length, pass_length);
+
+								printf("REGISTER command recieved: user:%s, email:%s, pass:%s", username.c_str(), email.c_str(), password.c_str());
 								break;
 							}
-							case AUTHENTICATE:
+							case EMAILAUTH:
 							{
 								//TODO
 								int packet_length = buf.readInt32LE(INT_SIZE * 0);
@@ -521,7 +526,20 @@ int main(int argc, char** argv)
 								int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
 								std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
 
-								printf("AUTHENTICATE command recieved: %s, %s", email.c_str(), password.c_str());
+								printf("EMAILAUTH command recieved: email:%s, pass:%s", email.c_str(), password.c_str());
+								break;
+							}
+							case USERNAMEAUTH:
+							{
+								//TODO
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int user_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string user = buf.ReadString(INT_SIZE * 3, user_length);
+								int pass_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
+								std::string password = buf.ReadString(INT_SIZE * 4 + user_length, pass_length);
+
+								printf("USERNAMEAUTH command recieved: user:%s, pass:%s", user.c_str(), password.c_str());
 								break;
 							}
 							}
