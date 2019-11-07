@@ -19,17 +19,6 @@
 
 using namespace protobuf;
 
-void CreatePerson(
-	Person* newPerson,
-	uint64_t id,
-	std::string email,
-	std::string password)
-{
-	newPerson->set_id(id);
-	newPerson->set_email(email);
-	newPerson->set_password(password);
-}
-
 // Client structure
 struct ClientInfo {
 	SOCKET socket;
