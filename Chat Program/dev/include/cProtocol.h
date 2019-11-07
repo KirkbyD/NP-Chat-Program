@@ -110,6 +110,48 @@ public:
 		return;
 	}
 
+	void UserRegister(std::string email, std::string password) {
+		buffer.Clear();
+
+		// [Header] [length] [email] [length] [password]
+
+		//packet length
+		buffer.writeInt32LE(REGISTER, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(SEND));
+
+		//room
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));
+		buffer.WriteString(INT_SIZE * 3, email);
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 3 + email.length(), SwapIntEndian(password.length()));
+		buffer.WriteString(INT_SIZE * 4 + email.length(), password);
+
+		return;
+	}
+
+	void UserRegister(std::string email, std::string password) {
+		buffer.Clear();
+
+		// [Header] [length] [email] [length] [password]
+
+		//packet length
+		buffer.writeInt32LE(AUTHENTICATE, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(SEND));
+
+		//room
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));
+		buffer.WriteString(INT_SIZE * 3, email);
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 3 + email.length(), SwapIntEndian(password.length()));
+		buffer.WriteString(INT_SIZE * 4 + email.length(), password);
+
+		return;
+	}
+
 	int SwapIntEndian(int value)
 	{
 		// We need to grab the first byte an move it to the last
