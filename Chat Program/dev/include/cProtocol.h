@@ -2,7 +2,10 @@
 
 #define INT_SIZE sizeof(int32_t)/sizeof(char)
 
-enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, REGISTER, EMAILAUTH, USERNAMEAUTH };
+
+enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, REGISTER, EMAILAUTH, USERNAMEAUTH,
+	CREATEACCOUNTWEB, CREATEACCOUNTWEBSUCCESS, CREATEACCOUNTWEBFAILURE,
+	AUTHENTICATEWEB, AUTHENTICATEWEBSUCCESS, AUTHENTICATEWEBFAILURE };
 
 class Protocol
 {
@@ -173,6 +176,24 @@ public:
 		//message
 		buffer.writeInt32LE(INT_SIZE * 3 + email.length(), SwapIntEndian(password.length()));
 		buffer.WriteString(INT_SIZE * 4 + email.length(), password);
+
+		return;
+	}
+
+	void UserCreateAccountWeb(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [room_name]
+
+		//packet length
+		buffer.writeInt32LE(0, INT_SIZE * SwapIntEndian(3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(CREATEACCOUNTWEB));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
 
 		return;
 	}

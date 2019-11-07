@@ -18,18 +18,9 @@
 
 #define DEFAULT_PORT "5150"
 
-using namespace protobuf;
+#define UINT32_SIZE sizeof(uint32_t)/sizeof(char)
 
-void CreatePerson(
-	Person* newPerson,
-	uint64_t id,
-	std::string email,
-	std::string password)
-{
-	newPerson->set_id(id);
-	newPerson->set_email(email);
-	newPerson->set_password(password);
-}
+using namespace protobuf;
 
 // Client structure
 struct ClientInfo {
@@ -514,6 +505,138 @@ int main(int argc, char** argv)
 								std::string password = buf.ReadString(INT_SIZE * 5 + user_length + email_length, pass_length);
 
 								printf("REGISTER command recieved: user:%s, email:%s, pass:%s", username.c_str(), email.c_str(), password.c_str());
+
+								//Check if registration was successful or it failed
+								/*****************/
+
+								CreateAccountWeb* CAW = new CreateAccountWeb();
+								CAW->set_requestid(1);
+								CAW->set_email(email);
+								CAW->set_plaintextpassword(password);
+
+								int CAWlength = CAW->ByteSizeLong();
+								std::cout << "Size is: " << CAWlength << std::endl;
+								std::string CAWType = "CreateAccountWeb";
+								std::cout << "Message type: " << CAWType << std::endl;
+								std::string serializedCAW = CAW->SerializeAsString();
+								std::cout << serializedCAW << std::endl;
+
+								/*Create header the same way we used to do that*/
+								/*We can get size of message from CAWlength + INT_SIZE * 2*/
+								/*To use id of message we have to add more enums in cProtocol.h*/
+								serverProto.UserCreateAccountWeb(serializedCAW);
+								std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+								/*Send Header + serializedCAW to auth_server*/
+
+								//*******That happens on auth_server*******//
+								
+								Buffer newbuf;
+								newbuf.ReceiveBufferContent(vect);
+
+								int newpacket_length = newbuf.readInt32LE(INT_SIZE * 0);
+								int newmessage_id = newbuf.readInt32LE(INT_SIZE * 1);
+								int newmessage_length = newbuf.readInt32LE(INT_SIZE * 2);
+								std::string newmessage = newbuf.ReadString(INT_SIZE * 3, newmessage_length);
+
+								printf("Size of message: %i\n", newpacket_length);
+								printf("MESSAGE ID: %i\n", newmessage_id);
+								printf("MESSAGE: %s\n", newmessage.c_str());
+
+								CreateAccountWeb* received = new CreateAccountWeb();
+								received->ParseFromString(newmessage);
+
+								std::cout << received->requestid() << std::endl;
+								std::cout << received->email() << std::endl;
+								std::cout << received->plaintextpassword() << std::endl;
+
+								/*Do something with this info*/
+
+								// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
+
+
+								CreateAccountWebSuccess* example1 = new CreateAccountWebSuccess();
+								example1->set_requestid(1);
+								example1->set_userid(1);
+
+								int example1length = example1->ByteSizeLong();
+								std::cout << "Size is: " << example1length << std::endl;
+								std::string serializedexample1 = example1->SerializeAsString();
+								std::cout << serializedexample1 << std::endl;
+
+								serverProto.UserCreateAccountWeb(serializedexample1);
+								std::vector<uint8_t> vect1 = serverProto.GetBuffer();
+
+
+
+								CreateAccountWebFailure* example2 = new CreateAccountWebFailure();
+								example2->set_requestid(1);
+								example2->set_reason(INVALID_PASSWORD);
+
+								int example2length = example2->ByteSizeLong();
+								std::cout << "Size is: " << example2length << std::endl;
+								std::string serializedexample2 = example2->SerializeAsString();
+								std::cout << serializedexample2 << std::endl;
+
+								serverProto.UserCreateAccountWeb(serializedexample2);
+								std::vector<uint8_t> vect2 = serverProto.GetBuffer();
+
+
+
+								//*******That happens on auth_server*******//
+
+								/*Receive data and deserialize into result and reason*/
+								bool result = false;
+								ReasonError reason = INTERNAL_SERVER_ERROR;
+
+								/*Success*/
+								Buffer anotherbuf;
+								anotherbuf.ReceiveBufferContent(vect1);
+
+								int anotherpacket_length = anotherbuf.readInt32LE(INT_SIZE * 0);
+								int anothermessage_id = anotherbuf.readInt32LE(INT_SIZE * 1);
+								int anothermessage_length = anotherbuf.readInt32LE(INT_SIZE * 2);
+								std::string anothermessage = anotherbuf.ReadString(INT_SIZE * 3, anothermessage_length);
+
+								CreateAccountWebSuccess* receivedexample1 = new CreateAccountWebSuccess();
+								receivedexample1->ParseFromString(anothermessage);
+
+								std::cout << receivedexample1->requestid() << std::endl;
+								std::cout << receivedexample1->userid() << std::endl;
+
+								result = true;
+								/*Success*/
+
+								///*Failure*/
+								//Buffer anotherbuf;
+								//anotherbuf.ReceiveBufferContent(vect2);
+
+								//int anotherpacket_length = anotherbuf.readInt32LE(INT_SIZE * 0);
+								//int anothermessage_id = anotherbuf.readInt32LE(INT_SIZE * 1);
+								//int anothermessage_length = anotherbuf.readInt32LE(INT_SIZE * 2);
+								//std::string anothermessage = anotherbuf.ReadString(INT_SIZE * 3, anothermessage_length);
+
+								//CreateAccountWebFailure* receivedexample2 = new CreateAccountWebFailure();
+								//receivedexample2->ParseFromString(serializedexample2);
+
+								//std::cout << receivedexample2->requestid() << std::endl;
+								//std::cout << receivedexample2->reason() << std::endl;
+
+								//result = false;
+								//reason = receivedexample2->reason();
+								///*Failure*/
+								
+
+								if (result)
+								{
+									printf("Registration successful\n");
+								}
+								else
+								{
+									printf("Registration failed because %i\n", reason);
+								}
+								/*****************/
+
 								break;
 							}
 							case EMAILAUTH:

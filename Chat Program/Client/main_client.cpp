@@ -153,7 +153,10 @@ int main(int argc, char** argv)
 			}
 			else
 			{
-				message.push_back(ch);
+				if (ch != ESCAPE)
+				{
+					message.push_back(ch);
+				}
 			}
 			//std::cout << message << std::endl;
 			printf("\r%100s\r", "");

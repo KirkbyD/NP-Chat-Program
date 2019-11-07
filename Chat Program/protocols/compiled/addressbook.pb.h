@@ -48,7 +48,7 @@ struct TableStruct_addressbook_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[6]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -56,87 +56,79 @@ struct TableStruct_addressbook_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_addressbook_2eproto;
 namespace protobuf {
-class AddressBook;
-class AddressBookDefaultTypeInternal;
-extern AddressBookDefaultTypeInternal _AddressBook_default_instance_;
-class Person;
-class PersonDefaultTypeInternal;
-extern PersonDefaultTypeInternal _Person_default_instance_;
-class Person_AuthenticateWeb;
-class Person_AuthenticateWebDefaultTypeInternal;
-extern Person_AuthenticateWebDefaultTypeInternal _Person_AuthenticateWeb_default_instance_;
-class Person_AuthenticateWebFailure;
-class Person_AuthenticateWebFailureDefaultTypeInternal;
-extern Person_AuthenticateWebFailureDefaultTypeInternal _Person_AuthenticateWebFailure_default_instance_;
-class Person_AuthenticateWebSuccess;
-class Person_AuthenticateWebSuccessDefaultTypeInternal;
-extern Person_AuthenticateWebSuccessDefaultTypeInternal _Person_AuthenticateWebSuccess_default_instance_;
-class Person_CreateAccountWeb;
-class Person_CreateAccountWebDefaultTypeInternal;
-extern Person_CreateAccountWebDefaultTypeInternal _Person_CreateAccountWeb_default_instance_;
-class Person_CreateAccountWebFailure;
-class Person_CreateAccountWebFailureDefaultTypeInternal;
-extern Person_CreateAccountWebFailureDefaultTypeInternal _Person_CreateAccountWebFailure_default_instance_;
-class Person_CreateAccountWebSuccess;
-class Person_CreateAccountWebSuccessDefaultTypeInternal;
-extern Person_CreateAccountWebSuccessDefaultTypeInternal _Person_CreateAccountWebSuccess_default_instance_;
+class AuthenticateWeb;
+class AuthenticateWebDefaultTypeInternal;
+extern AuthenticateWebDefaultTypeInternal _AuthenticateWeb_default_instance_;
+class AuthenticateWebFailure;
+class AuthenticateWebFailureDefaultTypeInternal;
+extern AuthenticateWebFailureDefaultTypeInternal _AuthenticateWebFailure_default_instance_;
+class AuthenticateWebSuccess;
+class AuthenticateWebSuccessDefaultTypeInternal;
+extern AuthenticateWebSuccessDefaultTypeInternal _AuthenticateWebSuccess_default_instance_;
+class CreateAccountWeb;
+class CreateAccountWebDefaultTypeInternal;
+extern CreateAccountWebDefaultTypeInternal _CreateAccountWeb_default_instance_;
+class CreateAccountWebFailure;
+class CreateAccountWebFailureDefaultTypeInternal;
+extern CreateAccountWebFailureDefaultTypeInternal _CreateAccountWebFailure_default_instance_;
+class CreateAccountWebSuccess;
+class CreateAccountWebSuccessDefaultTypeInternal;
+extern CreateAccountWebSuccessDefaultTypeInternal _CreateAccountWebSuccess_default_instance_;
 }  // namespace protobuf
 PROTOBUF_NAMESPACE_OPEN
-template<> ::protobuf::AddressBook* Arena::CreateMaybeMessage<::protobuf::AddressBook>(Arena*);
-template<> ::protobuf::Person* Arena::CreateMaybeMessage<::protobuf::Person>(Arena*);
-template<> ::protobuf::Person_AuthenticateWeb* Arena::CreateMaybeMessage<::protobuf::Person_AuthenticateWeb>(Arena*);
-template<> ::protobuf::Person_AuthenticateWebFailure* Arena::CreateMaybeMessage<::protobuf::Person_AuthenticateWebFailure>(Arena*);
-template<> ::protobuf::Person_AuthenticateWebSuccess* Arena::CreateMaybeMessage<::protobuf::Person_AuthenticateWebSuccess>(Arena*);
-template<> ::protobuf::Person_CreateAccountWeb* Arena::CreateMaybeMessage<::protobuf::Person_CreateAccountWeb>(Arena*);
-template<> ::protobuf::Person_CreateAccountWebFailure* Arena::CreateMaybeMessage<::protobuf::Person_CreateAccountWebFailure>(Arena*);
-template<> ::protobuf::Person_CreateAccountWebSuccess* Arena::CreateMaybeMessage<::protobuf::Person_CreateAccountWebSuccess>(Arena*);
+template<> ::protobuf::AuthenticateWeb* Arena::CreateMaybeMessage<::protobuf::AuthenticateWeb>(Arena*);
+template<> ::protobuf::AuthenticateWebFailure* Arena::CreateMaybeMessage<::protobuf::AuthenticateWebFailure>(Arena*);
+template<> ::protobuf::AuthenticateWebSuccess* Arena::CreateMaybeMessage<::protobuf::AuthenticateWebSuccess>(Arena*);
+template<> ::protobuf::CreateAccountWeb* Arena::CreateMaybeMessage<::protobuf::CreateAccountWeb>(Arena*);
+template<> ::protobuf::CreateAccountWebFailure* Arena::CreateMaybeMessage<::protobuf::CreateAccountWebFailure>(Arena*);
+template<> ::protobuf::CreateAccountWebSuccess* Arena::CreateMaybeMessage<::protobuf::CreateAccountWebSuccess>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace protobuf {
 
-enum Person_ReasonError : int {
-  Person_ReasonError_ACCOUNT_ALREADY_EXISTS = 0,
-  Person_ReasonError_INVALID_PASSWORD = 1,
-  Person_ReasonError_INTERNAL_SERVER_ERROR = 2,
-  Person_ReasonError_INVALID_CREDENTIALS = 3
+enum ReasonError : int {
+  ACCOUNT_ALREADY_EXISTS = 0,
+  INVALID_PASSWORD = 1,
+  INTERNAL_SERVER_ERROR = 2,
+  INVALID_CREDENTIALS = 3
 };
-bool Person_ReasonError_IsValid(int value);
-constexpr Person_ReasonError Person_ReasonError_ReasonError_MIN = Person_ReasonError_ACCOUNT_ALREADY_EXISTS;
-constexpr Person_ReasonError Person_ReasonError_ReasonError_MAX = Person_ReasonError_INVALID_CREDENTIALS;
-constexpr int Person_ReasonError_ReasonError_ARRAYSIZE = Person_ReasonError_ReasonError_MAX + 1;
+bool ReasonError_IsValid(int value);
+constexpr ReasonError ReasonError_MIN = ACCOUNT_ALREADY_EXISTS;
+constexpr ReasonError ReasonError_MAX = INVALID_CREDENTIALS;
+constexpr int ReasonError_ARRAYSIZE = ReasonError_MAX + 1;
 
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* Person_ReasonError_descriptor();
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ReasonError_descriptor();
 template<typename T>
-inline const std::string& Person_ReasonError_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, Person_ReasonError>::value ||
+inline const std::string& ReasonError_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, ReasonError>::value ||
     ::std::is_integral<T>::value,
-    "Incorrect type passed to function Person_ReasonError_Name.");
+    "Incorrect type passed to function ReasonError_Name.");
   return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    Person_ReasonError_descriptor(), enum_t_value);
+    ReasonError_descriptor(), enum_t_value);
 }
-inline bool Person_ReasonError_Parse(
-    const std::string& name, Person_ReasonError* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<Person_ReasonError>(
-    Person_ReasonError_descriptor(), name, value);
+inline bool ReasonError_Parse(
+    const std::string& name, ReasonError* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<ReasonError>(
+    ReasonError_descriptor(), name, value);
 }
 // ===================================================================
 
-class Person_CreateAccountWeb :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person.CreateAccountWeb) */ {
+class CreateAccountWeb :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.CreateAccountWeb) */ {
  public:
-  Person_CreateAccountWeb();
-  virtual ~Person_CreateAccountWeb();
+  CreateAccountWeb();
+  virtual ~CreateAccountWeb();
 
-  Person_CreateAccountWeb(const Person_CreateAccountWeb& from);
-  Person_CreateAccountWeb(Person_CreateAccountWeb&& from) noexcept
-    : Person_CreateAccountWeb() {
+  CreateAccountWeb(const CreateAccountWeb& from);
+  CreateAccountWeb(CreateAccountWeb&& from) noexcept
+    : CreateAccountWeb() {
     *this = ::std::move(from);
   }
 
-  inline Person_CreateAccountWeb& operator=(const Person_CreateAccountWeb& from) {
+  inline CreateAccountWeb& operator=(const CreateAccountWeb& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Person_CreateAccountWeb& operator=(Person_CreateAccountWeb&& from) noexcept {
+  inline CreateAccountWeb& operator=(CreateAccountWeb&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -161,37 +153,37 @@ class Person_CreateAccountWeb :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Person_CreateAccountWeb& default_instance();
+  static const CreateAccountWeb& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person_CreateAccountWeb* internal_default_instance() {
-    return reinterpret_cast<const Person_CreateAccountWeb*>(
-               &_Person_CreateAccountWeb_default_instance_);
+  static inline const CreateAccountWeb* internal_default_instance() {
+    return reinterpret_cast<const CreateAccountWeb*>(
+               &_CreateAccountWeb_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  friend void swap(Person_CreateAccountWeb& a, Person_CreateAccountWeb& b) {
+  friend void swap(CreateAccountWeb& a, CreateAccountWeb& b) {
     a.Swap(&b);
   }
-  inline void Swap(Person_CreateAccountWeb* other) {
+  inline void Swap(CreateAccountWeb* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Person_CreateAccountWeb* New() const final {
-    return CreateMaybeMessage<Person_CreateAccountWeb>(nullptr);
+  inline CreateAccountWeb* New() const final {
+    return CreateMaybeMessage<CreateAccountWeb>(nullptr);
   }
 
-  Person_CreateAccountWeb* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person_CreateAccountWeb>(arena);
+  CreateAccountWeb* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CreateAccountWeb>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person_CreateAccountWeb& from);
-  void MergeFrom(const Person_CreateAccountWeb& from);
+  void CopyFrom(const CreateAccountWeb& from);
+  void MergeFrom(const CreateAccountWeb& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -205,10 +197,10 @@ class Person_CreateAccountWeb :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Person_CreateAccountWeb* other);
+  void InternalSwap(CreateAccountWeb* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person.CreateAccountWeb";
+    return "protobuf.CreateAccountWeb";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -290,7 +282,7 @@ class Person_CreateAccountWeb :
   void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protobuf.Person.CreateAccountWeb)
+  // @@protoc_insertion_point(class_scope:protobuf.CreateAccountWeb)
  private:
   class _Internal;
 
@@ -307,23 +299,23 @@ class Person_CreateAccountWeb :
 };
 // -------------------------------------------------------------------
 
-class Person_CreateAccountWebSuccess :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person.CreateAccountWebSuccess) */ {
+class CreateAccountWebSuccess :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.CreateAccountWebSuccess) */ {
  public:
-  Person_CreateAccountWebSuccess();
-  virtual ~Person_CreateAccountWebSuccess();
+  CreateAccountWebSuccess();
+  virtual ~CreateAccountWebSuccess();
 
-  Person_CreateAccountWebSuccess(const Person_CreateAccountWebSuccess& from);
-  Person_CreateAccountWebSuccess(Person_CreateAccountWebSuccess&& from) noexcept
-    : Person_CreateAccountWebSuccess() {
+  CreateAccountWebSuccess(const CreateAccountWebSuccess& from);
+  CreateAccountWebSuccess(CreateAccountWebSuccess&& from) noexcept
+    : CreateAccountWebSuccess() {
     *this = ::std::move(from);
   }
 
-  inline Person_CreateAccountWebSuccess& operator=(const Person_CreateAccountWebSuccess& from) {
+  inline CreateAccountWebSuccess& operator=(const CreateAccountWebSuccess& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Person_CreateAccountWebSuccess& operator=(Person_CreateAccountWebSuccess&& from) noexcept {
+  inline CreateAccountWebSuccess& operator=(CreateAccountWebSuccess&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -348,37 +340,37 @@ class Person_CreateAccountWebSuccess :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Person_CreateAccountWebSuccess& default_instance();
+  static const CreateAccountWebSuccess& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person_CreateAccountWebSuccess* internal_default_instance() {
-    return reinterpret_cast<const Person_CreateAccountWebSuccess*>(
-               &_Person_CreateAccountWebSuccess_default_instance_);
+  static inline const CreateAccountWebSuccess* internal_default_instance() {
+    return reinterpret_cast<const CreateAccountWebSuccess*>(
+               &_CreateAccountWebSuccess_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     1;
 
-  friend void swap(Person_CreateAccountWebSuccess& a, Person_CreateAccountWebSuccess& b) {
+  friend void swap(CreateAccountWebSuccess& a, CreateAccountWebSuccess& b) {
     a.Swap(&b);
   }
-  inline void Swap(Person_CreateAccountWebSuccess* other) {
+  inline void Swap(CreateAccountWebSuccess* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Person_CreateAccountWebSuccess* New() const final {
-    return CreateMaybeMessage<Person_CreateAccountWebSuccess>(nullptr);
+  inline CreateAccountWebSuccess* New() const final {
+    return CreateMaybeMessage<CreateAccountWebSuccess>(nullptr);
   }
 
-  Person_CreateAccountWebSuccess* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person_CreateAccountWebSuccess>(arena);
+  CreateAccountWebSuccess* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CreateAccountWebSuccess>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person_CreateAccountWebSuccess& from);
-  void MergeFrom(const Person_CreateAccountWebSuccess& from);
+  void CopyFrom(const CreateAccountWebSuccess& from);
+  void MergeFrom(const CreateAccountWebSuccess& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -392,10 +384,10 @@ class Person_CreateAccountWebSuccess :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Person_CreateAccountWebSuccess* other);
+  void InternalSwap(CreateAccountWebSuccess* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person.CreateAccountWebSuccess";
+    return "protobuf.CreateAccountWebSuccess";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -449,7 +441,7 @@ class Person_CreateAccountWebSuccess :
   void _internal_set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protobuf.Person.CreateAccountWebSuccess)
+  // @@protoc_insertion_point(class_scope:protobuf.CreateAccountWebSuccess)
  private:
   class _Internal;
 
@@ -465,23 +457,23 @@ class Person_CreateAccountWebSuccess :
 };
 // -------------------------------------------------------------------
 
-class Person_CreateAccountWebFailure :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person.CreateAccountWebFailure) */ {
+class CreateAccountWebFailure :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.CreateAccountWebFailure) */ {
  public:
-  Person_CreateAccountWebFailure();
-  virtual ~Person_CreateAccountWebFailure();
+  CreateAccountWebFailure();
+  virtual ~CreateAccountWebFailure();
 
-  Person_CreateAccountWebFailure(const Person_CreateAccountWebFailure& from);
-  Person_CreateAccountWebFailure(Person_CreateAccountWebFailure&& from) noexcept
-    : Person_CreateAccountWebFailure() {
+  CreateAccountWebFailure(const CreateAccountWebFailure& from);
+  CreateAccountWebFailure(CreateAccountWebFailure&& from) noexcept
+    : CreateAccountWebFailure() {
     *this = ::std::move(from);
   }
 
-  inline Person_CreateAccountWebFailure& operator=(const Person_CreateAccountWebFailure& from) {
+  inline CreateAccountWebFailure& operator=(const CreateAccountWebFailure& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Person_CreateAccountWebFailure& operator=(Person_CreateAccountWebFailure&& from) noexcept {
+  inline CreateAccountWebFailure& operator=(CreateAccountWebFailure&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -506,37 +498,37 @@ class Person_CreateAccountWebFailure :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Person_CreateAccountWebFailure& default_instance();
+  static const CreateAccountWebFailure& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person_CreateAccountWebFailure* internal_default_instance() {
-    return reinterpret_cast<const Person_CreateAccountWebFailure*>(
-               &_Person_CreateAccountWebFailure_default_instance_);
+  static inline const CreateAccountWebFailure* internal_default_instance() {
+    return reinterpret_cast<const CreateAccountWebFailure*>(
+               &_CreateAccountWebFailure_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     2;
 
-  friend void swap(Person_CreateAccountWebFailure& a, Person_CreateAccountWebFailure& b) {
+  friend void swap(CreateAccountWebFailure& a, CreateAccountWebFailure& b) {
     a.Swap(&b);
   }
-  inline void Swap(Person_CreateAccountWebFailure* other) {
+  inline void Swap(CreateAccountWebFailure* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Person_CreateAccountWebFailure* New() const final {
-    return CreateMaybeMessage<Person_CreateAccountWebFailure>(nullptr);
+  inline CreateAccountWebFailure* New() const final {
+    return CreateMaybeMessage<CreateAccountWebFailure>(nullptr);
   }
 
-  Person_CreateAccountWebFailure* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person_CreateAccountWebFailure>(arena);
+  CreateAccountWebFailure* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CreateAccountWebFailure>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person_CreateAccountWebFailure& from);
-  void MergeFrom(const Person_CreateAccountWebFailure& from);
+  void CopyFrom(const CreateAccountWebFailure& from);
+  void MergeFrom(const CreateAccountWebFailure& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -550,10 +542,10 @@ class Person_CreateAccountWebFailure :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Person_CreateAccountWebFailure* other);
+  void InternalSwap(CreateAccountWebFailure* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person.CreateAccountWebFailure";
+    return "protobuf.CreateAccountWebFailure";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -594,20 +586,20 @@ class Person_CreateAccountWebFailure :
   void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // required .protobuf.Person.ReasonError reason = 2;
+  // required .protobuf.ReasonError reason = 2;
   bool has_reason() const;
   private:
   bool _internal_has_reason() const;
   public:
   void clear_reason();
-  ::protobuf::Person_ReasonError reason() const;
-  void set_reason(::protobuf::Person_ReasonError value);
+  ::protobuf::ReasonError reason() const;
+  void set_reason(::protobuf::ReasonError value);
   private:
-  ::protobuf::Person_ReasonError _internal_reason() const;
-  void _internal_set_reason(::protobuf::Person_ReasonError value);
+  ::protobuf::ReasonError _internal_reason() const;
+  void _internal_set_reason(::protobuf::ReasonError value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protobuf.Person.CreateAccountWebFailure)
+  // @@protoc_insertion_point(class_scope:protobuf.CreateAccountWebFailure)
  private:
   class _Internal;
 
@@ -623,23 +615,23 @@ class Person_CreateAccountWebFailure :
 };
 // -------------------------------------------------------------------
 
-class Person_AuthenticateWeb :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person.AuthenticateWeb) */ {
+class AuthenticateWeb :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.AuthenticateWeb) */ {
  public:
-  Person_AuthenticateWeb();
-  virtual ~Person_AuthenticateWeb();
+  AuthenticateWeb();
+  virtual ~AuthenticateWeb();
 
-  Person_AuthenticateWeb(const Person_AuthenticateWeb& from);
-  Person_AuthenticateWeb(Person_AuthenticateWeb&& from) noexcept
-    : Person_AuthenticateWeb() {
+  AuthenticateWeb(const AuthenticateWeb& from);
+  AuthenticateWeb(AuthenticateWeb&& from) noexcept
+    : AuthenticateWeb() {
     *this = ::std::move(from);
   }
 
-  inline Person_AuthenticateWeb& operator=(const Person_AuthenticateWeb& from) {
+  inline AuthenticateWeb& operator=(const AuthenticateWeb& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Person_AuthenticateWeb& operator=(Person_AuthenticateWeb&& from) noexcept {
+  inline AuthenticateWeb& operator=(AuthenticateWeb&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -664,37 +656,37 @@ class Person_AuthenticateWeb :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Person_AuthenticateWeb& default_instance();
+  static const AuthenticateWeb& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person_AuthenticateWeb* internal_default_instance() {
-    return reinterpret_cast<const Person_AuthenticateWeb*>(
-               &_Person_AuthenticateWeb_default_instance_);
+  static inline const AuthenticateWeb* internal_default_instance() {
+    return reinterpret_cast<const AuthenticateWeb*>(
+               &_AuthenticateWeb_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     3;
 
-  friend void swap(Person_AuthenticateWeb& a, Person_AuthenticateWeb& b) {
+  friend void swap(AuthenticateWeb& a, AuthenticateWeb& b) {
     a.Swap(&b);
   }
-  inline void Swap(Person_AuthenticateWeb* other) {
+  inline void Swap(AuthenticateWeb* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Person_AuthenticateWeb* New() const final {
-    return CreateMaybeMessage<Person_AuthenticateWeb>(nullptr);
+  inline AuthenticateWeb* New() const final {
+    return CreateMaybeMessage<AuthenticateWeb>(nullptr);
   }
 
-  Person_AuthenticateWeb* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person_AuthenticateWeb>(arena);
+  AuthenticateWeb* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<AuthenticateWeb>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person_AuthenticateWeb& from);
-  void MergeFrom(const Person_AuthenticateWeb& from);
+  void CopyFrom(const AuthenticateWeb& from);
+  void MergeFrom(const AuthenticateWeb& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -708,10 +700,10 @@ class Person_AuthenticateWeb :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Person_AuthenticateWeb* other);
+  void InternalSwap(AuthenticateWeb* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person.AuthenticateWeb";
+    return "protobuf.AuthenticateWeb";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -793,7 +785,7 @@ class Person_AuthenticateWeb :
   void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protobuf.Person.AuthenticateWeb)
+  // @@protoc_insertion_point(class_scope:protobuf.AuthenticateWeb)
  private:
   class _Internal;
 
@@ -810,23 +802,23 @@ class Person_AuthenticateWeb :
 };
 // -------------------------------------------------------------------
 
-class Person_AuthenticateWebSuccess :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person.AuthenticateWebSuccess) */ {
+class AuthenticateWebSuccess :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.AuthenticateWebSuccess) */ {
  public:
-  Person_AuthenticateWebSuccess();
-  virtual ~Person_AuthenticateWebSuccess();
+  AuthenticateWebSuccess();
+  virtual ~AuthenticateWebSuccess();
 
-  Person_AuthenticateWebSuccess(const Person_AuthenticateWebSuccess& from);
-  Person_AuthenticateWebSuccess(Person_AuthenticateWebSuccess&& from) noexcept
-    : Person_AuthenticateWebSuccess() {
+  AuthenticateWebSuccess(const AuthenticateWebSuccess& from);
+  AuthenticateWebSuccess(AuthenticateWebSuccess&& from) noexcept
+    : AuthenticateWebSuccess() {
     *this = ::std::move(from);
   }
 
-  inline Person_AuthenticateWebSuccess& operator=(const Person_AuthenticateWebSuccess& from) {
+  inline AuthenticateWebSuccess& operator=(const AuthenticateWebSuccess& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Person_AuthenticateWebSuccess& operator=(Person_AuthenticateWebSuccess&& from) noexcept {
+  inline AuthenticateWebSuccess& operator=(AuthenticateWebSuccess&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -851,37 +843,37 @@ class Person_AuthenticateWebSuccess :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Person_AuthenticateWebSuccess& default_instance();
+  static const AuthenticateWebSuccess& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person_AuthenticateWebSuccess* internal_default_instance() {
-    return reinterpret_cast<const Person_AuthenticateWebSuccess*>(
-               &_Person_AuthenticateWebSuccess_default_instance_);
+  static inline const AuthenticateWebSuccess* internal_default_instance() {
+    return reinterpret_cast<const AuthenticateWebSuccess*>(
+               &_AuthenticateWebSuccess_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  friend void swap(Person_AuthenticateWebSuccess& a, Person_AuthenticateWebSuccess& b) {
+  friend void swap(AuthenticateWebSuccess& a, AuthenticateWebSuccess& b) {
     a.Swap(&b);
   }
-  inline void Swap(Person_AuthenticateWebSuccess* other) {
+  inline void Swap(AuthenticateWebSuccess* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Person_AuthenticateWebSuccess* New() const final {
-    return CreateMaybeMessage<Person_AuthenticateWebSuccess>(nullptr);
+  inline AuthenticateWebSuccess* New() const final {
+    return CreateMaybeMessage<AuthenticateWebSuccess>(nullptr);
   }
 
-  Person_AuthenticateWebSuccess* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person_AuthenticateWebSuccess>(arena);
+  AuthenticateWebSuccess* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<AuthenticateWebSuccess>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person_AuthenticateWebSuccess& from);
-  void MergeFrom(const Person_AuthenticateWebSuccess& from);
+  void CopyFrom(const AuthenticateWebSuccess& from);
+  void MergeFrom(const AuthenticateWebSuccess& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -895,10 +887,10 @@ class Person_AuthenticateWebSuccess :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Person_AuthenticateWebSuccess* other);
+  void InternalSwap(AuthenticateWebSuccess* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person.AuthenticateWebSuccess";
+    return "protobuf.AuthenticateWebSuccess";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -973,7 +965,7 @@ class Person_AuthenticateWebSuccess :
   void _internal_set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protobuf.Person.AuthenticateWebSuccess)
+  // @@protoc_insertion_point(class_scope:protobuf.AuthenticateWebSuccess)
  private:
   class _Internal;
 
@@ -990,23 +982,23 @@ class Person_AuthenticateWebSuccess :
 };
 // -------------------------------------------------------------------
 
-class Person_AuthenticateWebFailure :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person.AuthenticateWebFailure) */ {
+class AuthenticateWebFailure :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.AuthenticateWebFailure) */ {
  public:
-  Person_AuthenticateWebFailure();
-  virtual ~Person_AuthenticateWebFailure();
+  AuthenticateWebFailure();
+  virtual ~AuthenticateWebFailure();
 
-  Person_AuthenticateWebFailure(const Person_AuthenticateWebFailure& from);
-  Person_AuthenticateWebFailure(Person_AuthenticateWebFailure&& from) noexcept
-    : Person_AuthenticateWebFailure() {
+  AuthenticateWebFailure(const AuthenticateWebFailure& from);
+  AuthenticateWebFailure(AuthenticateWebFailure&& from) noexcept
+    : AuthenticateWebFailure() {
     *this = ::std::move(from);
   }
 
-  inline Person_AuthenticateWebFailure& operator=(const Person_AuthenticateWebFailure& from) {
+  inline AuthenticateWebFailure& operator=(const AuthenticateWebFailure& from) {
     CopyFrom(from);
     return *this;
   }
-  inline Person_AuthenticateWebFailure& operator=(Person_AuthenticateWebFailure&& from) noexcept {
+  inline AuthenticateWebFailure& operator=(AuthenticateWebFailure&& from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -1031,37 +1023,37 @@ class Person_AuthenticateWebFailure :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const Person_AuthenticateWebFailure& default_instance();
+  static const AuthenticateWebFailure& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person_AuthenticateWebFailure* internal_default_instance() {
-    return reinterpret_cast<const Person_AuthenticateWebFailure*>(
-               &_Person_AuthenticateWebFailure_default_instance_);
+  static inline const AuthenticateWebFailure* internal_default_instance() {
+    return reinterpret_cast<const AuthenticateWebFailure*>(
+               &_AuthenticateWebFailure_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     5;
 
-  friend void swap(Person_AuthenticateWebFailure& a, Person_AuthenticateWebFailure& b) {
+  friend void swap(AuthenticateWebFailure& a, AuthenticateWebFailure& b) {
     a.Swap(&b);
   }
-  inline void Swap(Person_AuthenticateWebFailure* other) {
+  inline void Swap(AuthenticateWebFailure* other) {
     if (other == this) return;
     InternalSwap(other);
   }
 
   // implements Message ----------------------------------------------
 
-  inline Person_AuthenticateWebFailure* New() const final {
-    return CreateMaybeMessage<Person_AuthenticateWebFailure>(nullptr);
+  inline AuthenticateWebFailure* New() const final {
+    return CreateMaybeMessage<AuthenticateWebFailure>(nullptr);
   }
 
-  Person_AuthenticateWebFailure* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person_AuthenticateWebFailure>(arena);
+  AuthenticateWebFailure* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<AuthenticateWebFailure>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person_AuthenticateWebFailure& from);
-  void MergeFrom(const Person_AuthenticateWebFailure& from);
+  void CopyFrom(const AuthenticateWebFailure& from);
+  void MergeFrom(const AuthenticateWebFailure& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -1075,10 +1067,10 @@ class Person_AuthenticateWebFailure :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(Person_AuthenticateWebFailure* other);
+  void InternalSwap(AuthenticateWebFailure* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person.AuthenticateWebFailure";
+    return "protobuf.AuthenticateWebFailure";
   }
   private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
@@ -1119,20 +1111,20 @@ class Person_AuthenticateWebFailure :
   void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value);
   public:
 
-  // required .protobuf.Person.ReasonError reason = 2;
+  // required .protobuf.ReasonError reason = 2;
   bool has_reason() const;
   private:
   bool _internal_has_reason() const;
   public:
   void clear_reason();
-  ::protobuf::Person_ReasonError reason() const;
-  void set_reason(::protobuf::Person_ReasonError value);
+  ::protobuf::ReasonError reason() const;
+  void set_reason(::protobuf::ReasonError value);
   private:
-  ::protobuf::Person_ReasonError _internal_reason() const;
-  void _internal_set_reason(::protobuf::Person_ReasonError value);
+  ::protobuf::ReasonError _internal_reason() const;
+  void _internal_set_reason(::protobuf::ReasonError value);
   public:
 
-  // @@protoc_insertion_point(class_scope:protobuf.Person.AuthenticateWebFailure)
+  // @@protoc_insertion_point(class_scope:protobuf.AuthenticateWebFailure)
  private:
   class _Internal;
 
@@ -1146,379 +1138,6 @@ class Person_AuthenticateWebFailure :
   int reason_;
   friend struct ::TableStruct_addressbook_2eproto;
 };
-// -------------------------------------------------------------------
-
-class Person :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.Person) */ {
- public:
-  Person();
-  virtual ~Person();
-
-  Person(const Person& from);
-  Person(Person&& from) noexcept
-    : Person() {
-    *this = ::std::move(from);
-  }
-
-  inline Person& operator=(const Person& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline Person& operator=(Person&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return GetMetadataStatic().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return GetMetadataStatic().reflection;
-  }
-  static const Person& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const Person* internal_default_instance() {
-    return reinterpret_cast<const Person*>(
-               &_Person_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    6;
-
-  friend void swap(Person& a, Person& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(Person* other) {
-    if (other == this) return;
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline Person* New() const final {
-    return CreateMaybeMessage<Person>(nullptr);
-  }
-
-  Person* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<Person>(arena);
-  }
-  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const Person& from);
-  void MergeFrom(const Person& from);
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* InternalSerializeWithCachedSizesToArray(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  inline void SharedCtor();
-  inline void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(Person* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.Person";
-  }
-  private:
-  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
-    return nullptr;
-  }
-  inline void* MaybeArenaPtr() const {
-    return nullptr;
-  }
-  public:
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-  private:
-  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_addressbook_2eproto);
-    return ::descriptor_table_addressbook_2eproto.file_level_metadata[kIndexInFileMessages];
-  }
-
-  public:
-
-  // nested types ----------------------------------------------------
-
-  typedef Person_CreateAccountWeb CreateAccountWeb;
-  typedef Person_CreateAccountWebSuccess CreateAccountWebSuccess;
-  typedef Person_CreateAccountWebFailure CreateAccountWebFailure;
-  typedef Person_AuthenticateWeb AuthenticateWeb;
-  typedef Person_AuthenticateWebSuccess AuthenticateWebSuccess;
-  typedef Person_AuthenticateWebFailure AuthenticateWebFailure;
-
-  typedef Person_ReasonError ReasonError;
-  static constexpr ReasonError ACCOUNT_ALREADY_EXISTS =
-    Person_ReasonError_ACCOUNT_ALREADY_EXISTS;
-  static constexpr ReasonError INVALID_PASSWORD =
-    Person_ReasonError_INVALID_PASSWORD;
-  static constexpr ReasonError INTERNAL_SERVER_ERROR =
-    Person_ReasonError_INTERNAL_SERVER_ERROR;
-  static constexpr ReasonError INVALID_CREDENTIALS =
-    Person_ReasonError_INVALID_CREDENTIALS;
-  static inline bool ReasonError_IsValid(int value) {
-    return Person_ReasonError_IsValid(value);
-  }
-  static constexpr ReasonError ReasonError_MIN =
-    Person_ReasonError_ReasonError_MIN;
-  static constexpr ReasonError ReasonError_MAX =
-    Person_ReasonError_ReasonError_MAX;
-  static constexpr int ReasonError_ARRAYSIZE =
-    Person_ReasonError_ReasonError_ARRAYSIZE;
-  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
-  ReasonError_descriptor() {
-    return Person_ReasonError_descriptor();
-  }
-  template<typename T>
-  static inline const std::string& ReasonError_Name(T enum_t_value) {
-    static_assert(::std::is_same<T, ReasonError>::value ||
-      ::std::is_integral<T>::value,
-      "Incorrect type passed to function ReasonError_Name.");
-    return Person_ReasonError_Name(enum_t_value);
-  }
-  static inline bool ReasonError_Parse(const std::string& name,
-      ReasonError* value) {
-    return Person_ReasonError_Parse(name, value);
-  }
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kEmailFieldNumber = 2,
-    kPasswordFieldNumber = 3,
-    kIdFieldNumber = 1,
-  };
-  // required string email = 2;
-  bool has_email() const;
-  private:
-  bool _internal_has_email() const;
-  public:
-  void clear_email();
-  const std::string& email() const;
-  void set_email(const std::string& value);
-  void set_email(std::string&& value);
-  void set_email(const char* value);
-  void set_email(const char* value, size_t size);
-  std::string* mutable_email();
-  std::string* release_email();
-  void set_allocated_email(std::string* email);
-  private:
-  const std::string& _internal_email() const;
-  void _internal_set_email(const std::string& value);
-  std::string* _internal_mutable_email();
-  public:
-
-  // required string password = 3;
-  bool has_password() const;
-  private:
-  bool _internal_has_password() const;
-  public:
-  void clear_password();
-  const std::string& password() const;
-  void set_password(const std::string& value);
-  void set_password(std::string&& value);
-  void set_password(const char* value);
-  void set_password(const char* value, size_t size);
-  std::string* mutable_password();
-  std::string* release_password();
-  void set_allocated_password(std::string* password);
-  private:
-  const std::string& _internal_password() const;
-  void _internal_set_password(const std::string& value);
-  std::string* _internal_mutable_password();
-  public:
-
-  // required uint64 id = 1;
-  bool has_id() const;
-  private:
-  bool _internal_has_id() const;
-  public:
-  void clear_id();
-  ::PROTOBUF_NAMESPACE_ID::uint64 id() const;
-  void set_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_id() const;
-  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::uint64 value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:protobuf.Person)
- private:
-  class _Internal;
-
-  // helper for ByteSizeLong()
-  size_t RequiredFieldsByteSizeFallback() const;
-
-  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr email_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
-  ::PROTOBUF_NAMESPACE_ID::uint64 id_;
-  friend struct ::TableStruct_addressbook_2eproto;
-};
-// -------------------------------------------------------------------
-
-class AddressBook :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.AddressBook) */ {
- public:
-  AddressBook();
-  virtual ~AddressBook();
-
-  AddressBook(const AddressBook& from);
-  AddressBook(AddressBook&& from) noexcept
-    : AddressBook() {
-    *this = ::std::move(from);
-  }
-
-  inline AddressBook& operator=(const AddressBook& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline AddressBook& operator=(AddressBook&& from) noexcept {
-    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return GetMetadataStatic().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return GetMetadataStatic().reflection;
-  }
-  static const AddressBook& default_instance();
-
-  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const AddressBook* internal_default_instance() {
-    return reinterpret_cast<const AddressBook*>(
-               &_AddressBook_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    7;
-
-  friend void swap(AddressBook& a, AddressBook& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(AddressBook* other) {
-    if (other == this) return;
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline AddressBook* New() const final {
-    return CreateMaybeMessage<AddressBook>(nullptr);
-  }
-
-  AddressBook* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<AddressBook>(arena);
-  }
-  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const AddressBook& from);
-  void MergeFrom(const AddressBook& from);
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* InternalSerializeWithCachedSizesToArray(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  inline void SharedCtor();
-  inline void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(AddressBook* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "protobuf.AddressBook";
-  }
-  private:
-  inline ::PROTOBUF_NAMESPACE_ID::Arena* GetArenaNoVirtual() const {
-    return nullptr;
-  }
-  inline void* MaybeArenaPtr() const {
-    return nullptr;
-  }
-  public:
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-  private:
-  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_addressbook_2eproto);
-    return ::descriptor_table_addressbook_2eproto.file_level_metadata[kIndexInFileMessages];
-  }
-
-  public:
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kPeopleFieldNumber = 1,
-  };
-  // repeated .protobuf.Person people = 1;
-  int people_size() const;
-  private:
-  int _internal_people_size() const;
-  public:
-  void clear_people();
-  ::protobuf::Person* mutable_people(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::protobuf::Person >*
-      mutable_people();
-  private:
-  const ::protobuf::Person& _internal_people(int index) const;
-  ::protobuf::Person* _internal_add_people();
-  public:
-  const ::protobuf::Person& people(int index) const;
-  ::protobuf::Person* add_people();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::protobuf::Person >&
-      people() const;
-
-  // @@protoc_insertion_point(class_scope:protobuf.AddressBook)
- private:
-  class _Internal;
-
-  ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena _internal_metadata_;
-  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::protobuf::Person > people_;
-  friend struct ::TableStruct_addressbook_2eproto;
-};
 // ===================================================================
 
 
@@ -1528,889 +1147,668 @@ class AddressBook :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// Person_CreateAccountWeb
+// CreateAccountWeb
 
 // required uint64 requestId = 1;
-inline bool Person_CreateAccountWeb::_internal_has_requestid() const {
+inline bool CreateAccountWeb::_internal_has_requestid() const {
   bool value = (_has_bits_[0] & 0x00000004u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWeb::has_requestid() const {
+inline bool CreateAccountWeb::has_requestid() const {
   return _internal_has_requestid();
 }
-inline void Person_CreateAccountWeb::clear_requestid() {
+inline void CreateAccountWeb::clear_requestid() {
   requestid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000004u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWeb::_internal_requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWeb::_internal_requestid() const {
   return requestid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWeb::requestid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWeb.requestId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWeb::requestid() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWeb.requestId)
   return _internal_requestid();
 }
-inline void Person_CreateAccountWeb::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWeb::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000004u;
   requestid_ = value;
 }
-inline void Person_CreateAccountWeb::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWeb::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_requestid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWeb.requestId)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWeb.requestId)
 }
 
 // required string email = 2;
-inline bool Person_CreateAccountWeb::_internal_has_email() const {
+inline bool CreateAccountWeb::_internal_has_email() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWeb::has_email() const {
+inline bool CreateAccountWeb::has_email() const {
   return _internal_has_email();
 }
-inline void Person_CreateAccountWeb::clear_email() {
+inline void CreateAccountWeb::clear_email() {
   email_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _has_bits_[0] &= ~0x00000001u;
 }
-inline const std::string& Person_CreateAccountWeb::email() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWeb.email)
+inline const std::string& CreateAccountWeb::email() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWeb.email)
   return _internal_email();
 }
-inline void Person_CreateAccountWeb::set_email(const std::string& value) {
+inline void CreateAccountWeb::set_email(const std::string& value) {
   _internal_set_email(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWeb.email)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWeb.email)
 }
-inline std::string* Person_CreateAccountWeb::mutable_email() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.CreateAccountWeb.email)
+inline std::string* CreateAccountWeb::mutable_email() {
+  // @@protoc_insertion_point(field_mutable:protobuf.CreateAccountWeb.email)
   return _internal_mutable_email();
 }
-inline const std::string& Person_CreateAccountWeb::_internal_email() const {
+inline const std::string& CreateAccountWeb::_internal_email() const {
   return email_.GetNoArena();
 }
-inline void Person_CreateAccountWeb::_internal_set_email(const std::string& value) {
+inline void CreateAccountWeb::_internal_set_email(const std::string& value) {
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void Person_CreateAccountWeb::set_email(std::string&& value) {
+inline void CreateAccountWeb::set_email(std::string&& value) {
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.CreateAccountWeb.email)
+  // @@protoc_insertion_point(field_set_rvalue:protobuf.CreateAccountWeb.email)
 }
-inline void Person_CreateAccountWeb::set_email(const char* value) {
+inline void CreateAccountWeb::set_email(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.CreateAccountWeb.email)
+  // @@protoc_insertion_point(field_set_char:protobuf.CreateAccountWeb.email)
 }
-inline void Person_CreateAccountWeb::set_email(const char* value, size_t size) {
+inline void CreateAccountWeb::set_email(const char* value, size_t size) {
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.CreateAccountWeb.email)
+  // @@protoc_insertion_point(field_set_pointer:protobuf.CreateAccountWeb.email)
 }
-inline std::string* Person_CreateAccountWeb::_internal_mutable_email() {
+inline std::string* CreateAccountWeb::_internal_mutable_email() {
   _has_bits_[0] |= 0x00000001u;
   return email_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* Person_CreateAccountWeb::release_email() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.CreateAccountWeb.email)
+inline std::string* CreateAccountWeb::release_email() {
+  // @@protoc_insertion_point(field_release:protobuf.CreateAccountWeb.email)
   if (!has_email()) {
     return nullptr;
   }
   _has_bits_[0] &= ~0x00000001u;
   return email_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void Person_CreateAccountWeb::set_allocated_email(std::string* email) {
+inline void CreateAccountWeb::set_allocated_email(std::string* email) {
   if (email != nullptr) {
     _has_bits_[0] |= 0x00000001u;
   } else {
     _has_bits_[0] &= ~0x00000001u;
   }
   email_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), email);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.CreateAccountWeb.email)
+  // @@protoc_insertion_point(field_set_allocated:protobuf.CreateAccountWeb.email)
 }
 
 // required string plaintextPassword = 3;
-inline bool Person_CreateAccountWeb::_internal_has_plaintextpassword() const {
+inline bool CreateAccountWeb::_internal_has_plaintextpassword() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWeb::has_plaintextpassword() const {
+inline bool CreateAccountWeb::has_plaintextpassword() const {
   return _internal_has_plaintextpassword();
 }
-inline void Person_CreateAccountWeb::clear_plaintextpassword() {
+inline void CreateAccountWeb::clear_plaintextpassword() {
   plaintextpassword_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _has_bits_[0] &= ~0x00000002u;
 }
-inline const std::string& Person_CreateAccountWeb::plaintextpassword() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWeb.plaintextPassword)
+inline const std::string& CreateAccountWeb::plaintextpassword() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWeb.plaintextPassword)
   return _internal_plaintextpassword();
 }
-inline void Person_CreateAccountWeb::set_plaintextpassword(const std::string& value) {
+inline void CreateAccountWeb::set_plaintextpassword(const std::string& value) {
   _internal_set_plaintextpassword(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWeb.plaintextPassword)
 }
-inline std::string* Person_CreateAccountWeb::mutable_plaintextpassword() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.CreateAccountWeb.plaintextPassword)
+inline std::string* CreateAccountWeb::mutable_plaintextpassword() {
+  // @@protoc_insertion_point(field_mutable:protobuf.CreateAccountWeb.plaintextPassword)
   return _internal_mutable_plaintextpassword();
 }
-inline const std::string& Person_CreateAccountWeb::_internal_plaintextpassword() const {
+inline const std::string& CreateAccountWeb::_internal_plaintextpassword() const {
   return plaintextpassword_.GetNoArena();
 }
-inline void Person_CreateAccountWeb::_internal_set_plaintextpassword(const std::string& value) {
+inline void CreateAccountWeb::_internal_set_plaintextpassword(const std::string& value) {
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void Person_CreateAccountWeb::set_plaintextpassword(std::string&& value) {
+inline void CreateAccountWeb::set_plaintextpassword(std::string&& value) {
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.CreateAccountWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_rvalue:protobuf.CreateAccountWeb.plaintextPassword)
 }
-inline void Person_CreateAccountWeb::set_plaintextpassword(const char* value) {
+inline void CreateAccountWeb::set_plaintextpassword(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.CreateAccountWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_char:protobuf.CreateAccountWeb.plaintextPassword)
 }
-inline void Person_CreateAccountWeb::set_plaintextpassword(const char* value, size_t size) {
+inline void CreateAccountWeb::set_plaintextpassword(const char* value, size_t size) {
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.CreateAccountWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_pointer:protobuf.CreateAccountWeb.plaintextPassword)
 }
-inline std::string* Person_CreateAccountWeb::_internal_mutable_plaintextpassword() {
+inline std::string* CreateAccountWeb::_internal_mutable_plaintextpassword() {
   _has_bits_[0] |= 0x00000002u;
   return plaintextpassword_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* Person_CreateAccountWeb::release_plaintextpassword() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.CreateAccountWeb.plaintextPassword)
+inline std::string* CreateAccountWeb::release_plaintextpassword() {
+  // @@protoc_insertion_point(field_release:protobuf.CreateAccountWeb.plaintextPassword)
   if (!has_plaintextpassword()) {
     return nullptr;
   }
   _has_bits_[0] &= ~0x00000002u;
   return plaintextpassword_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void Person_CreateAccountWeb::set_allocated_plaintextpassword(std::string* plaintextpassword) {
+inline void CreateAccountWeb::set_allocated_plaintextpassword(std::string* plaintextpassword) {
   if (plaintextpassword != nullptr) {
     _has_bits_[0] |= 0x00000002u;
   } else {
     _has_bits_[0] &= ~0x00000002u;
   }
   plaintextpassword_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), plaintextpassword);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.CreateAccountWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_allocated:protobuf.CreateAccountWeb.plaintextPassword)
 }
 
 // -------------------------------------------------------------------
 
-// Person_CreateAccountWebSuccess
+// CreateAccountWebSuccess
 
 // required uint64 requestId = 1;
-inline bool Person_CreateAccountWebSuccess::_internal_has_requestid() const {
+inline bool CreateAccountWebSuccess::_internal_has_requestid() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWebSuccess::has_requestid() const {
+inline bool CreateAccountWebSuccess::has_requestid() const {
   return _internal_has_requestid();
 }
-inline void Person_CreateAccountWebSuccess::clear_requestid() {
+inline void CreateAccountWebSuccess::clear_requestid() {
   requestid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000001u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWebSuccess::_internal_requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWebSuccess::_internal_requestid() const {
   return requestid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWebSuccess::requestid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWebSuccess.requestId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWebSuccess::requestid() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWebSuccess.requestId)
   return _internal_requestid();
 }
-inline void Person_CreateAccountWebSuccess::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWebSuccess::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000001u;
   requestid_ = value;
 }
-inline void Person_CreateAccountWebSuccess::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWebSuccess::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_requestid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWebSuccess.requestId)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWebSuccess.requestId)
 }
 
 // required uint64 userId = 2;
-inline bool Person_CreateAccountWebSuccess::_internal_has_userid() const {
+inline bool CreateAccountWebSuccess::_internal_has_userid() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWebSuccess::has_userid() const {
+inline bool CreateAccountWebSuccess::has_userid() const {
   return _internal_has_userid();
 }
-inline void Person_CreateAccountWebSuccess::clear_userid() {
+inline void CreateAccountWebSuccess::clear_userid() {
   userid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000002u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWebSuccess::_internal_userid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWebSuccess::_internal_userid() const {
   return userid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWebSuccess::userid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWebSuccess.userId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWebSuccess::userid() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWebSuccess.userId)
   return _internal_userid();
 }
-inline void Person_CreateAccountWebSuccess::_internal_set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWebSuccess::_internal_set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000002u;
   userid_ = value;
 }
-inline void Person_CreateAccountWebSuccess::set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWebSuccess::set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_userid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWebSuccess.userId)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWebSuccess.userId)
 }
 
 // -------------------------------------------------------------------
 
-// Person_CreateAccountWebFailure
+// CreateAccountWebFailure
 
 // required uint64 requestId = 1;
-inline bool Person_CreateAccountWebFailure::_internal_has_requestid() const {
+inline bool CreateAccountWebFailure::_internal_has_requestid() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWebFailure::has_requestid() const {
+inline bool CreateAccountWebFailure::has_requestid() const {
   return _internal_has_requestid();
 }
-inline void Person_CreateAccountWebFailure::clear_requestid() {
+inline void CreateAccountWebFailure::clear_requestid() {
   requestid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000001u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWebFailure::_internal_requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWebFailure::_internal_requestid() const {
   return requestid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_CreateAccountWebFailure::requestid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWebFailure.requestId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 CreateAccountWebFailure::requestid() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWebFailure.requestId)
   return _internal_requestid();
 }
-inline void Person_CreateAccountWebFailure::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWebFailure::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000001u;
   requestid_ = value;
 }
-inline void Person_CreateAccountWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void CreateAccountWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_requestid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWebFailure.requestId)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWebFailure.requestId)
 }
 
-// required .protobuf.Person.ReasonError reason = 2;
-inline bool Person_CreateAccountWebFailure::_internal_has_reason() const {
+// required .protobuf.ReasonError reason = 2;
+inline bool CreateAccountWebFailure::_internal_has_reason() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
-inline bool Person_CreateAccountWebFailure::has_reason() const {
+inline bool CreateAccountWebFailure::has_reason() const {
   return _internal_has_reason();
 }
-inline void Person_CreateAccountWebFailure::clear_reason() {
+inline void CreateAccountWebFailure::clear_reason() {
   reason_ = 0;
   _has_bits_[0] &= ~0x00000002u;
 }
-inline ::protobuf::Person_ReasonError Person_CreateAccountWebFailure::_internal_reason() const {
-  return static_cast< ::protobuf::Person_ReasonError >(reason_);
+inline ::protobuf::ReasonError CreateAccountWebFailure::_internal_reason() const {
+  return static_cast< ::protobuf::ReasonError >(reason_);
 }
-inline ::protobuf::Person_ReasonError Person_CreateAccountWebFailure::reason() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.CreateAccountWebFailure.reason)
+inline ::protobuf::ReasonError CreateAccountWebFailure::reason() const {
+  // @@protoc_insertion_point(field_get:protobuf.CreateAccountWebFailure.reason)
   return _internal_reason();
 }
-inline void Person_CreateAccountWebFailure::_internal_set_reason(::protobuf::Person_ReasonError value) {
-  assert(::protobuf::Person_ReasonError_IsValid(value));
+inline void CreateAccountWebFailure::_internal_set_reason(::protobuf::ReasonError value) {
+  assert(::protobuf::ReasonError_IsValid(value));
   _has_bits_[0] |= 0x00000002u;
   reason_ = value;
 }
-inline void Person_CreateAccountWebFailure::set_reason(::protobuf::Person_ReasonError value) {
+inline void CreateAccountWebFailure::set_reason(::protobuf::ReasonError value) {
   _internal_set_reason(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.CreateAccountWebFailure.reason)
+  // @@protoc_insertion_point(field_set:protobuf.CreateAccountWebFailure.reason)
 }
 
 // -------------------------------------------------------------------
 
-// Person_AuthenticateWeb
+// AuthenticateWeb
 
 // required uint64 requestId = 1;
-inline bool Person_AuthenticateWeb::_internal_has_requestid() const {
+inline bool AuthenticateWeb::_internal_has_requestid() const {
   bool value = (_has_bits_[0] & 0x00000004u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWeb::has_requestid() const {
+inline bool AuthenticateWeb::has_requestid() const {
   return _internal_has_requestid();
 }
-inline void Person_AuthenticateWeb::clear_requestid() {
+inline void AuthenticateWeb::clear_requestid() {
   requestid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000004u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWeb::_internal_requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWeb::_internal_requestid() const {
   return requestid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWeb::requestid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWeb.requestId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWeb::requestid() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWeb.requestId)
   return _internal_requestid();
 }
-inline void Person_AuthenticateWeb::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWeb::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000004u;
   requestid_ = value;
 }
-inline void Person_AuthenticateWeb::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWeb::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_requestid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWeb.requestId)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWeb.requestId)
 }
 
 // required string email = 2;
-inline bool Person_AuthenticateWeb::_internal_has_email() const {
+inline bool AuthenticateWeb::_internal_has_email() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWeb::has_email() const {
+inline bool AuthenticateWeb::has_email() const {
   return _internal_has_email();
 }
-inline void Person_AuthenticateWeb::clear_email() {
+inline void AuthenticateWeb::clear_email() {
   email_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _has_bits_[0] &= ~0x00000001u;
 }
-inline const std::string& Person_AuthenticateWeb::email() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWeb.email)
+inline const std::string& AuthenticateWeb::email() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWeb.email)
   return _internal_email();
 }
-inline void Person_AuthenticateWeb::set_email(const std::string& value) {
+inline void AuthenticateWeb::set_email(const std::string& value) {
   _internal_set_email(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWeb.email)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWeb.email)
 }
-inline std::string* Person_AuthenticateWeb::mutable_email() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.AuthenticateWeb.email)
+inline std::string* AuthenticateWeb::mutable_email() {
+  // @@protoc_insertion_point(field_mutable:protobuf.AuthenticateWeb.email)
   return _internal_mutable_email();
 }
-inline const std::string& Person_AuthenticateWeb::_internal_email() const {
+inline const std::string& AuthenticateWeb::_internal_email() const {
   return email_.GetNoArena();
 }
-inline void Person_AuthenticateWeb::_internal_set_email(const std::string& value) {
+inline void AuthenticateWeb::_internal_set_email(const std::string& value) {
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void Person_AuthenticateWeb::set_email(std::string&& value) {
+inline void AuthenticateWeb::set_email(std::string&& value) {
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.AuthenticateWeb.email)
+  // @@protoc_insertion_point(field_set_rvalue:protobuf.AuthenticateWeb.email)
 }
-inline void Person_AuthenticateWeb::set_email(const char* value) {
+inline void AuthenticateWeb::set_email(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.AuthenticateWeb.email)
+  // @@protoc_insertion_point(field_set_char:protobuf.AuthenticateWeb.email)
 }
-inline void Person_AuthenticateWeb::set_email(const char* value, size_t size) {
+inline void AuthenticateWeb::set_email(const char* value, size_t size) {
   _has_bits_[0] |= 0x00000001u;
   email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.AuthenticateWeb.email)
+  // @@protoc_insertion_point(field_set_pointer:protobuf.AuthenticateWeb.email)
 }
-inline std::string* Person_AuthenticateWeb::_internal_mutable_email() {
+inline std::string* AuthenticateWeb::_internal_mutable_email() {
   _has_bits_[0] |= 0x00000001u;
   return email_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* Person_AuthenticateWeb::release_email() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.AuthenticateWeb.email)
+inline std::string* AuthenticateWeb::release_email() {
+  // @@protoc_insertion_point(field_release:protobuf.AuthenticateWeb.email)
   if (!has_email()) {
     return nullptr;
   }
   _has_bits_[0] &= ~0x00000001u;
   return email_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void Person_AuthenticateWeb::set_allocated_email(std::string* email) {
+inline void AuthenticateWeb::set_allocated_email(std::string* email) {
   if (email != nullptr) {
     _has_bits_[0] |= 0x00000001u;
   } else {
     _has_bits_[0] &= ~0x00000001u;
   }
   email_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), email);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.AuthenticateWeb.email)
+  // @@protoc_insertion_point(field_set_allocated:protobuf.AuthenticateWeb.email)
 }
 
 // required string plaintextPassword = 3;
-inline bool Person_AuthenticateWeb::_internal_has_plaintextpassword() const {
+inline bool AuthenticateWeb::_internal_has_plaintextpassword() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWeb::has_plaintextpassword() const {
+inline bool AuthenticateWeb::has_plaintextpassword() const {
   return _internal_has_plaintextpassword();
 }
-inline void Person_AuthenticateWeb::clear_plaintextpassword() {
+inline void AuthenticateWeb::clear_plaintextpassword() {
   plaintextpassword_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _has_bits_[0] &= ~0x00000002u;
 }
-inline const std::string& Person_AuthenticateWeb::plaintextpassword() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWeb.plaintextPassword)
+inline const std::string& AuthenticateWeb::plaintextpassword() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWeb.plaintextPassword)
   return _internal_plaintextpassword();
 }
-inline void Person_AuthenticateWeb::set_plaintextpassword(const std::string& value) {
+inline void AuthenticateWeb::set_plaintextpassword(const std::string& value) {
   _internal_set_plaintextpassword(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWeb.plaintextPassword)
 }
-inline std::string* Person_AuthenticateWeb::mutable_plaintextpassword() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.AuthenticateWeb.plaintextPassword)
+inline std::string* AuthenticateWeb::mutable_plaintextpassword() {
+  // @@protoc_insertion_point(field_mutable:protobuf.AuthenticateWeb.plaintextPassword)
   return _internal_mutable_plaintextpassword();
 }
-inline const std::string& Person_AuthenticateWeb::_internal_plaintextpassword() const {
+inline const std::string& AuthenticateWeb::_internal_plaintextpassword() const {
   return plaintextpassword_.GetNoArena();
 }
-inline void Person_AuthenticateWeb::_internal_set_plaintextpassword(const std::string& value) {
+inline void AuthenticateWeb::_internal_set_plaintextpassword(const std::string& value) {
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void Person_AuthenticateWeb::set_plaintextpassword(std::string&& value) {
+inline void AuthenticateWeb::set_plaintextpassword(std::string&& value) {
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.AuthenticateWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_rvalue:protobuf.AuthenticateWeb.plaintextPassword)
 }
-inline void Person_AuthenticateWeb::set_plaintextpassword(const char* value) {
+inline void AuthenticateWeb::set_plaintextpassword(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.AuthenticateWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_char:protobuf.AuthenticateWeb.plaintextPassword)
 }
-inline void Person_AuthenticateWeb::set_plaintextpassword(const char* value, size_t size) {
+inline void AuthenticateWeb::set_plaintextpassword(const char* value, size_t size) {
   _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.AuthenticateWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_pointer:protobuf.AuthenticateWeb.plaintextPassword)
 }
-inline std::string* Person_AuthenticateWeb::_internal_mutable_plaintextpassword() {
+inline std::string* AuthenticateWeb::_internal_mutable_plaintextpassword() {
   _has_bits_[0] |= 0x00000002u;
   return plaintextpassword_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* Person_AuthenticateWeb::release_plaintextpassword() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.AuthenticateWeb.plaintextPassword)
+inline std::string* AuthenticateWeb::release_plaintextpassword() {
+  // @@protoc_insertion_point(field_release:protobuf.AuthenticateWeb.plaintextPassword)
   if (!has_plaintextpassword()) {
     return nullptr;
   }
   _has_bits_[0] &= ~0x00000002u;
   return plaintextpassword_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void Person_AuthenticateWeb::set_allocated_plaintextpassword(std::string* plaintextpassword) {
+inline void AuthenticateWeb::set_allocated_plaintextpassword(std::string* plaintextpassword) {
   if (plaintextpassword != nullptr) {
     _has_bits_[0] |= 0x00000002u;
   } else {
     _has_bits_[0] &= ~0x00000002u;
   }
   plaintextpassword_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), plaintextpassword);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.AuthenticateWeb.plaintextPassword)
+  // @@protoc_insertion_point(field_set_allocated:protobuf.AuthenticateWeb.plaintextPassword)
 }
 
 // -------------------------------------------------------------------
 
-// Person_AuthenticateWebSuccess
+// AuthenticateWebSuccess
 
 // required uint64 requestId = 1;
-inline bool Person_AuthenticateWebSuccess::_internal_has_requestid() const {
+inline bool AuthenticateWebSuccess::_internal_has_requestid() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWebSuccess::has_requestid() const {
+inline bool AuthenticateWebSuccess::has_requestid() const {
   return _internal_has_requestid();
 }
-inline void Person_AuthenticateWebSuccess::clear_requestid() {
+inline void AuthenticateWebSuccess::clear_requestid() {
   requestid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000002u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWebSuccess::_internal_requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWebSuccess::_internal_requestid() const {
   return requestid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWebSuccess::requestid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWebSuccess.requestId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWebSuccess::requestid() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWebSuccess.requestId)
   return _internal_requestid();
 }
-inline void Person_AuthenticateWebSuccess::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWebSuccess::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000002u;
   requestid_ = value;
 }
-inline void Person_AuthenticateWebSuccess::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWebSuccess::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_requestid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWebSuccess.requestId)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWebSuccess.requestId)
 }
 
 // required uint64 userId = 2;
-inline bool Person_AuthenticateWebSuccess::_internal_has_userid() const {
+inline bool AuthenticateWebSuccess::_internal_has_userid() const {
   bool value = (_has_bits_[0] & 0x00000004u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWebSuccess::has_userid() const {
+inline bool AuthenticateWebSuccess::has_userid() const {
   return _internal_has_userid();
 }
-inline void Person_AuthenticateWebSuccess::clear_userid() {
+inline void AuthenticateWebSuccess::clear_userid() {
   userid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000004u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWebSuccess::_internal_userid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWebSuccess::_internal_userid() const {
   return userid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWebSuccess::userid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWebSuccess.userId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWebSuccess::userid() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWebSuccess.userId)
   return _internal_userid();
 }
-inline void Person_AuthenticateWebSuccess::_internal_set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWebSuccess::_internal_set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000004u;
   userid_ = value;
 }
-inline void Person_AuthenticateWebSuccess::set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWebSuccess::set_userid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_userid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWebSuccess.userId)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWebSuccess.userId)
 }
 
 // required string creationDate = 3;
-inline bool Person_AuthenticateWebSuccess::_internal_has_creationdate() const {
+inline bool AuthenticateWebSuccess::_internal_has_creationdate() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWebSuccess::has_creationdate() const {
+inline bool AuthenticateWebSuccess::has_creationdate() const {
   return _internal_has_creationdate();
 }
-inline void Person_AuthenticateWebSuccess::clear_creationdate() {
+inline void AuthenticateWebSuccess::clear_creationdate() {
   creationdate_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   _has_bits_[0] &= ~0x00000001u;
 }
-inline const std::string& Person_AuthenticateWebSuccess::creationdate() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWebSuccess.creationDate)
+inline const std::string& AuthenticateWebSuccess::creationdate() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWebSuccess.creationDate)
   return _internal_creationdate();
 }
-inline void Person_AuthenticateWebSuccess::set_creationdate(const std::string& value) {
+inline void AuthenticateWebSuccess::set_creationdate(const std::string& value) {
   _internal_set_creationdate(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWebSuccess.creationDate)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWebSuccess.creationDate)
 }
-inline std::string* Person_AuthenticateWebSuccess::mutable_creationdate() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.AuthenticateWebSuccess.creationDate)
+inline std::string* AuthenticateWebSuccess::mutable_creationdate() {
+  // @@protoc_insertion_point(field_mutable:protobuf.AuthenticateWebSuccess.creationDate)
   return _internal_mutable_creationdate();
 }
-inline const std::string& Person_AuthenticateWebSuccess::_internal_creationdate() const {
+inline const std::string& AuthenticateWebSuccess::_internal_creationdate() const {
   return creationdate_.GetNoArena();
 }
-inline void Person_AuthenticateWebSuccess::_internal_set_creationdate(const std::string& value) {
+inline void AuthenticateWebSuccess::_internal_set_creationdate(const std::string& value) {
   _has_bits_[0] |= 0x00000001u;
   creationdate_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
 }
-inline void Person_AuthenticateWebSuccess::set_creationdate(std::string&& value) {
+inline void AuthenticateWebSuccess::set_creationdate(std::string&& value) {
   _has_bits_[0] |= 0x00000001u;
   creationdate_.SetNoArena(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.AuthenticateWebSuccess.creationDate)
+  // @@protoc_insertion_point(field_set_rvalue:protobuf.AuthenticateWebSuccess.creationDate)
 }
-inline void Person_AuthenticateWebSuccess::set_creationdate(const char* value) {
+inline void AuthenticateWebSuccess::set_creationdate(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   _has_bits_[0] |= 0x00000001u;
   creationdate_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.AuthenticateWebSuccess.creationDate)
+  // @@protoc_insertion_point(field_set_char:protobuf.AuthenticateWebSuccess.creationDate)
 }
-inline void Person_AuthenticateWebSuccess::set_creationdate(const char* value, size_t size) {
+inline void AuthenticateWebSuccess::set_creationdate(const char* value, size_t size) {
   _has_bits_[0] |= 0x00000001u;
   creationdate_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.AuthenticateWebSuccess.creationDate)
+  // @@protoc_insertion_point(field_set_pointer:protobuf.AuthenticateWebSuccess.creationDate)
 }
-inline std::string* Person_AuthenticateWebSuccess::_internal_mutable_creationdate() {
+inline std::string* AuthenticateWebSuccess::_internal_mutable_creationdate() {
   _has_bits_[0] |= 0x00000001u;
   return creationdate_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline std::string* Person_AuthenticateWebSuccess::release_creationdate() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.AuthenticateWebSuccess.creationDate)
+inline std::string* AuthenticateWebSuccess::release_creationdate() {
+  // @@protoc_insertion_point(field_release:protobuf.AuthenticateWebSuccess.creationDate)
   if (!has_creationdate()) {
     return nullptr;
   }
   _has_bits_[0] &= ~0x00000001u;
   return creationdate_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
-inline void Person_AuthenticateWebSuccess::set_allocated_creationdate(std::string* creationdate) {
+inline void AuthenticateWebSuccess::set_allocated_creationdate(std::string* creationdate) {
   if (creationdate != nullptr) {
     _has_bits_[0] |= 0x00000001u;
   } else {
     _has_bits_[0] &= ~0x00000001u;
   }
   creationdate_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), creationdate);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.AuthenticateWebSuccess.creationDate)
+  // @@protoc_insertion_point(field_set_allocated:protobuf.AuthenticateWebSuccess.creationDate)
 }
 
 // -------------------------------------------------------------------
 
-// Person_AuthenticateWebFailure
+// AuthenticateWebFailure
 
 // required uint64 requestId = 1;
-inline bool Person_AuthenticateWebFailure::_internal_has_requestid() const {
+inline bool AuthenticateWebFailure::_internal_has_requestid() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWebFailure::has_requestid() const {
+inline bool AuthenticateWebFailure::has_requestid() const {
   return _internal_has_requestid();
 }
-inline void Person_AuthenticateWebFailure::clear_requestid() {
+inline void AuthenticateWebFailure::clear_requestid() {
   requestid_ = PROTOBUF_ULONGLONG(0);
   _has_bits_[0] &= ~0x00000001u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWebFailure::_internal_requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWebFailure::_internal_requestid() const {
   return requestid_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person_AuthenticateWebFailure::requestid() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWebFailure.requestId)
+inline ::PROTOBUF_NAMESPACE_ID::uint64 AuthenticateWebFailure::requestid() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWebFailure.requestId)
   return _internal_requestid();
 }
-inline void Person_AuthenticateWebFailure::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWebFailure::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _has_bits_[0] |= 0x00000001u;
   requestid_ = value;
 }
-inline void Person_AuthenticateWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+inline void AuthenticateWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::uint64 value) {
   _internal_set_requestid(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWebFailure.requestId)
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWebFailure.requestId)
 }
 
-// required .protobuf.Person.ReasonError reason = 2;
-inline bool Person_AuthenticateWebFailure::_internal_has_reason() const {
+// required .protobuf.ReasonError reason = 2;
+inline bool AuthenticateWebFailure::_internal_has_reason() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
-inline bool Person_AuthenticateWebFailure::has_reason() const {
+inline bool AuthenticateWebFailure::has_reason() const {
   return _internal_has_reason();
 }
-inline void Person_AuthenticateWebFailure::clear_reason() {
+inline void AuthenticateWebFailure::clear_reason() {
   reason_ = 0;
   _has_bits_[0] &= ~0x00000002u;
 }
-inline ::protobuf::Person_ReasonError Person_AuthenticateWebFailure::_internal_reason() const {
-  return static_cast< ::protobuf::Person_ReasonError >(reason_);
+inline ::protobuf::ReasonError AuthenticateWebFailure::_internal_reason() const {
+  return static_cast< ::protobuf::ReasonError >(reason_);
 }
-inline ::protobuf::Person_ReasonError Person_AuthenticateWebFailure::reason() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.AuthenticateWebFailure.reason)
+inline ::protobuf::ReasonError AuthenticateWebFailure::reason() const {
+  // @@protoc_insertion_point(field_get:protobuf.AuthenticateWebFailure.reason)
   return _internal_reason();
 }
-inline void Person_AuthenticateWebFailure::_internal_set_reason(::protobuf::Person_ReasonError value) {
-  assert(::protobuf::Person_ReasonError_IsValid(value));
+inline void AuthenticateWebFailure::_internal_set_reason(::protobuf::ReasonError value) {
+  assert(::protobuf::ReasonError_IsValid(value));
   _has_bits_[0] |= 0x00000002u;
   reason_ = value;
 }
-inline void Person_AuthenticateWebFailure::set_reason(::protobuf::Person_ReasonError value) {
+inline void AuthenticateWebFailure::set_reason(::protobuf::ReasonError value) {
   _internal_set_reason(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.AuthenticateWebFailure.reason)
-}
-
-// -------------------------------------------------------------------
-
-// Person
-
-// required uint64 id = 1;
-inline bool Person::_internal_has_id() const {
-  bool value = (_has_bits_[0] & 0x00000004u) != 0;
-  return value;
-}
-inline bool Person::has_id() const {
-  return _internal_has_id();
-}
-inline void Person::clear_id() {
-  id_ = PROTOBUF_ULONGLONG(0);
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person::_internal_id() const {
-  return id_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::uint64 Person::id() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.id)
-  return _internal_id();
-}
-inline void Person::_internal_set_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  _has_bits_[0] |= 0x00000004u;
-  id_ = value;
-}
-inline void Person::set_id(::PROTOBUF_NAMESPACE_ID::uint64 value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.id)
-}
-
-// required string email = 2;
-inline bool Person::_internal_has_email() const {
-  bool value = (_has_bits_[0] & 0x00000001u) != 0;
-  return value;
-}
-inline bool Person::has_email() const {
-  return _internal_has_email();
-}
-inline void Person::clear_email() {
-  email_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline const std::string& Person::email() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.email)
-  return _internal_email();
-}
-inline void Person::set_email(const std::string& value) {
-  _internal_set_email(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.email)
-}
-inline std::string* Person::mutable_email() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.email)
-  return _internal_mutable_email();
-}
-inline const std::string& Person::_internal_email() const {
-  return email_.GetNoArena();
-}
-inline void Person::_internal_set_email(const std::string& value) {
-  _has_bits_[0] |= 0x00000001u;
-  email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-}
-inline void Person::set_email(std::string&& value) {
-  _has_bits_[0] |= 0x00000001u;
-  email_.SetNoArena(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.email)
-}
-inline void Person::set_email(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  _has_bits_[0] |= 0x00000001u;
-  email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.email)
-}
-inline void Person::set_email(const char* value, size_t size) {
-  _has_bits_[0] |= 0x00000001u;
-  email_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.email)
-}
-inline std::string* Person::_internal_mutable_email() {
-  _has_bits_[0] |= 0x00000001u;
-  return email_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline std::string* Person::release_email() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.email)
-  if (!has_email()) {
-    return nullptr;
-  }
-  _has_bits_[0] &= ~0x00000001u;
-  return email_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline void Person::set_allocated_email(std::string* email) {
-  if (email != nullptr) {
-    _has_bits_[0] |= 0x00000001u;
-  } else {
-    _has_bits_[0] &= ~0x00000001u;
-  }
-  email_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), email);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.email)
-}
-
-// required string password = 3;
-inline bool Person::_internal_has_password() const {
-  bool value = (_has_bits_[0] & 0x00000002u) != 0;
-  return value;
-}
-inline bool Person::has_password() const {
-  return _internal_has_password();
-}
-inline void Person::clear_password() {
-  password_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline const std::string& Person::password() const {
-  // @@protoc_insertion_point(field_get:protobuf.Person.password)
-  return _internal_password();
-}
-inline void Person::set_password(const std::string& value) {
-  _internal_set_password(value);
-  // @@protoc_insertion_point(field_set:protobuf.Person.password)
-}
-inline std::string* Person::mutable_password() {
-  // @@protoc_insertion_point(field_mutable:protobuf.Person.password)
-  return _internal_mutable_password();
-}
-inline const std::string& Person::_internal_password() const {
-  return password_.GetNoArena();
-}
-inline void Person::_internal_set_password(const std::string& value) {
-  _has_bits_[0] |= 0x00000002u;
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value);
-}
-inline void Person::set_password(std::string&& value) {
-  _has_bits_[0] |= 0x00000002u;
-  password_.SetNoArena(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:protobuf.Person.password)
-}
-inline void Person::set_password(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  _has_bits_[0] |= 0x00000002u;
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:protobuf.Person.password)
-}
-inline void Person::set_password(const char* value, size_t size) {
-  _has_bits_[0] |= 0x00000002u;
-  password_.SetNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:protobuf.Person.password)
-}
-inline std::string* Person::_internal_mutable_password() {
-  _has_bits_[0] |= 0x00000002u;
-  return password_.MutableNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline std::string* Person::release_password() {
-  // @@protoc_insertion_point(field_release:protobuf.Person.password)
-  if (!has_password()) {
-    return nullptr;
-  }
-  _has_bits_[0] &= ~0x00000002u;
-  return password_.ReleaseNonDefaultNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-}
-inline void Person::set_allocated_password(std::string* password) {
-  if (password != nullptr) {
-    _has_bits_[0] |= 0x00000002u;
-  } else {
-    _has_bits_[0] &= ~0x00000002u;
-  }
-  password_.SetAllocatedNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), password);
-  // @@protoc_insertion_point(field_set_allocated:protobuf.Person.password)
-}
-
-// -------------------------------------------------------------------
-
-// AddressBook
-
-// repeated .protobuf.Person people = 1;
-inline int AddressBook::_internal_people_size() const {
-  return people_.size();
-}
-inline int AddressBook::people_size() const {
-  return _internal_people_size();
-}
-inline void AddressBook::clear_people() {
-  people_.Clear();
-}
-inline ::protobuf::Person* AddressBook::mutable_people(int index) {
-  // @@protoc_insertion_point(field_mutable:protobuf.AddressBook.people)
-  return people_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::protobuf::Person >*
-AddressBook::mutable_people() {
-  // @@protoc_insertion_point(field_mutable_list:protobuf.AddressBook.people)
-  return &people_;
-}
-inline const ::protobuf::Person& AddressBook::_internal_people(int index) const {
-  return people_.Get(index);
-}
-inline const ::protobuf::Person& AddressBook::people(int index) const {
-  // @@protoc_insertion_point(field_get:protobuf.AddressBook.people)
-  return _internal_people(index);
-}
-inline ::protobuf::Person* AddressBook::_internal_add_people() {
-  return people_.Add();
-}
-inline ::protobuf::Person* AddressBook::add_people() {
-  // @@protoc_insertion_point(field_add:protobuf.AddressBook.people)
-  return _internal_add_people();
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::protobuf::Person >&
-AddressBook::people() const {
-  // @@protoc_insertion_point(field_list:protobuf.AddressBook.people)
-  return people_;
+  // @@protoc_insertion_point(field_set:protobuf.AuthenticateWebFailure.reason)
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -2428,10 +1826,10 @@ AddressBook::people() const {
 
 PROTOBUF_NAMESPACE_OPEN
 
-template <> struct is_proto_enum< ::protobuf::Person_ReasonError> : ::std::true_type {};
+template <> struct is_proto_enum< ::protobuf::ReasonError> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::Person_ReasonError>() {
-  return ::protobuf::Person_ReasonError_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protobuf::ReasonError>() {
+  return ::protobuf::ReasonError_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE
