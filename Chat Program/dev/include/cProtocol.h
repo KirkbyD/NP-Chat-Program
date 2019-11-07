@@ -2,7 +2,7 @@
 
 #define INT_SIZE sizeof(int32_t)/sizeof(char)
 
-enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE };
+enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, REGISTER, AUTHENTICATE };
 
 class Protocol
 {

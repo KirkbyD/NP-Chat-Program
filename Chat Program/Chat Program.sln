@@ -4,8 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{29693F5A-5682-4B73-A5B8-8E1A7EE8F4C6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{038918BF-BCD2-498A-B66B-0AAE2AE0CFBB} = {038918BF-BCD2-498A-B66B-0AAE2AE0CFBB}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{038918BF-BCD2-498A-B66B-0AAE2AE0CFBB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE} = {8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Authentication Server", "Authentication Server\Authentication Server.vcxproj", "{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +39,14 @@ Global
 		{038918BF-BCD2-498A-B66B-0AAE2AE0CFBB}.Release|x64.Build.0 = Release|x64
 		{038918BF-BCD2-498A-B66B-0AAE2AE0CFBB}.Release|x86.ActiveCfg = Release|Win32
 		{038918BF-BCD2-498A-B66B-0AAE2AE0CFBB}.Release|x86.Build.0 = Release|Win32
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Debug|x64.ActiveCfg = Debug|x64
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Debug|x64.Build.0 = Debug|x64
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Debug|x86.Build.0 = Debug|Win32
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Release|x64.ActiveCfg = Release|x64
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Release|x64.Build.0 = Release|x64
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Release|x86.ActiveCfg = Release|Win32
+		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
