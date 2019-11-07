@@ -116,9 +116,9 @@ public:
 		// [Header] [length] [email] [length] [password]
 
 		//packet length
-		buffer.writeInt32LE(REGISTER, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(SEND));
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTER));
 
 		//room
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));
@@ -131,15 +131,15 @@ public:
 		return;
 	}
 
-	void UserRegister(std::string email, std::string password) {
+	void UserAuthenticate(std::string email, std::string password) {
 		buffer.Clear();
 
 		// [Header] [length] [email] [length] [password]
 
 		//packet length
-		buffer.writeInt32LE(AUTHENTICATE, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 4 + email.length() + password.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(SEND));
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(AUTHENTICATE));
 
 		//room
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));

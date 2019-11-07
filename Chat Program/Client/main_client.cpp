@@ -185,6 +185,20 @@ int main(int argc, char** argv)
 						else if (tokens[0] == "Leave" || tokens[0] == "leave") {
 							prot.UserLeaveRoom(tokens[1]);
 						}
+						else if (tokens[0] == "REGISTER" || tokens[0] == "Register" || tokens[0] == "register") {
+							if (tokens.size() == 3)
+								prot.UserRegister(tokens[1], tokens[2]);
+							else {
+								printf("Please use format \"REGISTER EMAIL PASSWORD\"");
+							}
+						}
+						else if (tokens[0] == "AUTHENTICATE" || tokens[0] == "Authenticate" || tokens[0] == "authenticate") {
+							if (tokens.size() == 3)
+								prot.UserAuthenticate(tokens[1], tokens[2]);
+							else {
+								printf("Please use format \"AUTHENTICATE EMAIL PASSWORD\"");
+							}
+						}
 						else {
 							tmp = "";
 							for (size_t i = 1; i < tokens.size() - 1; i++)

@@ -79,30 +79,30 @@ int main(int argc, char** argv)
 {
 	/***************************************Example*****************************************/
 	/***************************************************************************************/
-	AddressBook addressBook;
+	//AddressBook addressBook;
 
-	Person* newPerson1 = addressBook.add_people();
-	CreatePerson(
-		newPerson1,
-		1,
-		"l_gustafson@fanshaweonline.ca",
-		"password");
+	//Person* newPerson1 = addressBook.add_people();
+	//CreatePerson(
+	//	newPerson1,
+	//	1,
+	//	"l_gustafson@fanshaweonline.ca",
+	//	"password");
 
-	// Serialize the data into a string
-	std::string serializedAddressBook = addressBook.SerializeAsString();
-	std::cout << serializedAddressBook << std::endl;
-	// This is the info you would send over the network
+	//// Serialize the data into a string
+	//std::string serializedAddressBook = addressBook.SerializeAsString();
+	//std::cout << serializedAddressBook << std::endl;
+	//// This is the info you would send over the network
 
-	// Receive the string/data, and deserialize
-	AddressBook received;
-	received.ParseFromString(serializedAddressBook);
+	//// Receive the string/data, and deserialize
+	//AddressBook received;
+	//received.ParseFromString(serializedAddressBook);
 
-	// Check data
-	int numPeople = received.people_size();
-	printf("Received %d people in our address book!\n", numPeople);
+	//// Check data
+	//int numPeople = received.people_size();
+	//printf("Received %d people in our address book!\n", numPeople);
 
-	// pause
-	system("Pause");
+	//// pause
+	//system("Pause");
 	/***************************************************************************************/
 
 	WSADATA wsaData;
@@ -350,9 +350,8 @@ int main(int argc, char** argv)
 
 							switch (buf.readInt32LE(INT_SIZE))
 							{
-							case 0:
+							case JOIN:
 							{
-								//Join
 								int packet_length = buf.readInt32LE(INT_SIZE * 0);
 								int message_id = buf.readInt32LE(INT_SIZE * 1);
 								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
@@ -393,9 +392,8 @@ int main(int argc, char** argv)
 
 								break;
 							}
-							case 1:
+							case LEAVE:
 							{
-								//Leave
 								int packet_length = buf.readInt32LE(INT_SIZE * 0);
 								int message_id = buf.readInt32LE(INT_SIZE * 1);
 								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
@@ -448,9 +446,8 @@ int main(int argc, char** argv)
 
 								break;
 							}
-							case 2:
+							case SEND:
 							{
-								//Send
 								int packet_length = buf.readInt32LE(INT_SIZE * 0);
 								int message_id = buf.readInt32LE(INT_SIZE * 1);
 								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
@@ -499,6 +496,32 @@ int main(int argc, char** argv)
 							case 3:
 							{
 								printf("Server should not be told to recieve, fool.");
+								break;
+							}
+							case REGISTER:
+							{
+								//TODO
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int email_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string email = buf.ReadString(INT_SIZE * 3, email_length);
+								int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
+								std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
+
+								printf("REGISTER command recieved: %s, %s", email.c_str(), password.c_str());
+								break;
+							}
+							case AUTHENTICATE:
+							{
+								//TODO
+								int packet_length = buf.readInt32LE(INT_SIZE * 0);
+								int message_id = buf.readInt32LE(INT_SIZE * 1);
+								int email_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string email = buf.ReadString(INT_SIZE * 3, email_length);
+								int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
+								std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
+
+								printf("AUTHENTICATE command recieved: %s, %s", email.c_str(), password.c_str());
 								break;
 							}
 							}

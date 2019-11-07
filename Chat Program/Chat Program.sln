@@ -9,9 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcx
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{038918BF-BCD2-498A-B66B-0AAE2AE0CFBB}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE} = {8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Authentication Server", "Authentication Server\Authentication Server.vcxproj", "{8C5249A7-B5E3-4322-9AB4-CA1FE1330ADE}"
 EndProject
