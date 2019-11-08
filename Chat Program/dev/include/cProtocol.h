@@ -199,6 +199,24 @@ public:
 		return;
 	}
 
+	void ServerRegSuccess(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTERSUCCESS));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
 	void ServerEmailAuthenticate(std::string message)
 	{
 		buffer.Clear();

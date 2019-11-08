@@ -429,6 +429,20 @@ int main(int argc, char** argv)
 									
 										ss.str(std::string());
 										std::cout << "insert operations successful" << std::endl;
+
+										RegistrationSuccess* response = new RegistrationSuccess();
+										response->set_requestid(requester);
+										response->set_username(usrn);
+										std::string serializedResponse = response->SerializeAsString();
+										serverProto.ServerRegSuccess(serializedResponse);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
+										iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+										if (iResult == SOCKET_ERROR) {
+											printf("send() failed with error: %d\n", WSAGetLastError());
+											closesocket(client->socket);
+											WSACleanup();
+											return 1;
+										}
 									}
 									catch (sql::SQLException& exception) {
 										DisplayError(exception);
@@ -510,9 +524,12 @@ int main(int argc, char** argv)
 											// email does not exist
 										}
 
-										std::string hpsw;
 										psw = hash_pass(psw);
+										prepstmt = con->prepareStatement(ss.str());
+										prepstmt->executeUpdate();
 
+										ss.str(std::string());
+										std::cout << "insert operations successful" << std::endl;
 
 										if ((salt + hpsw) == (salt + psw)) {
 											// login credentials accepted
@@ -527,7 +544,6 @@ int main(int argc, char** argv)
 									}
 
 									break;
-
 								}
 								case USERNAMEAUTH:
 								{
@@ -571,7 +587,6 @@ int main(int argc, char** argv)
 											// user does not exist
 										}
 
-										std::string hpsw;
 										psw = hash_pass(psw);
 
 

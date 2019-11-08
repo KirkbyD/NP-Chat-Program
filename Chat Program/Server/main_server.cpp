@@ -228,8 +228,29 @@ int main(int argc, char** argv) {
 	}
 	printf("ioctlsocket() was successful!\n");
 
+	// Change the socket mode on the listening socket from blocking to
+	// non-blocking so the application will not block waiting for requests
+	iResult = ioctlsocket(connectSocket, FIONBIO, &NonBlock);
+	if (iResult == SOCKET_ERROR)
+	{
+		printf("Auth ioctlsocket() failed with error %d\n", WSAGetLastError());
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
+	printf("Auth ioctlsocket() was successful!\n");
+	if (connectSocket == INVALID_SOCKET)
+	{
+		printf("Unable to connect to the Auth server!\n");
+		WSACleanup();
+		return 1;
+	}
+	printf("Successfully connected to the Auth server on socket %d!\n", (int)connectSocket);
+
+
 	FD_SET ReadSet;
 	int total;
+	int is_Active;
 
 	printf("Entering accept/recv/send loop...\n");
 	while (true)
@@ -253,6 +274,17 @@ int main(int argc, char** argv) {
 		//printf("Waiting for select()...\n");
 		total = select(0, &ReadSet, NULL, NULL, &tv);
 		if (total == SOCKET_ERROR)
+		{
+			printf("select() failed with error: %d\n", WSAGetLastError());
+			return 1;
+		}
+		else
+		{
+			//printf("select() is successful!\n");
+		}
+
+		is_Active = select(0, &ReadSet, NULL, NULL, &tv);
+		if (is_Active == SOCKET_ERROR)
 		{
 			printf("select() failed with error: %d\n", WSAGetLastError());
 			return 1;
@@ -298,6 +330,8 @@ int main(int argc, char** argv) {
 		// #3.2 read
 		if (FD_ISSET(connectSocket, &ReadSet))
 		{
+			is_Active--;
+
 			std::vector<uint8_t> recvVect1;
 			for (int i = 0; i < INT_SIZE * 2; i++)
 			{
@@ -346,6 +380,7 @@ int main(int argc, char** argv) {
 
 				/*Send this info back to user*/
 				std::string msg = "Account " + username + " created!";
+				printf("%s\n", msg.c_str());
 				serverProto.UserRecieveMessage("Server: ", "", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();
