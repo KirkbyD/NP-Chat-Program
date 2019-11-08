@@ -185,12 +185,48 @@ public:
 	{
 		buffer.Clear();
 
-		// [Header] [length] [room_name]
+		// [Header] [length] [message]
 
 		//packet length
 		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTER));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerEmailAuthenticate(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(EMAILAUTH));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerNameAuthenticate(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(USERNAMEAUTH));
 
 		//message
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));

@@ -420,7 +420,7 @@ int main(int argc, char** argv)
 								}
 
 								printf("socket %d joined room: %s\n", (int)client->socket, room_name.c_str());
-								
+
 								std::string msg = "User '" + std::to_string(client->socket) + "' has joined " + room_name;
 								serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
 
@@ -459,7 +459,7 @@ int main(int argc, char** argv)
 										if (*clientIt == client)
 										{
 											printf("socket %d left room: %s\n", (int)client->socket, room_name.c_str());
-											
+
 											std::string msg = "User '" + std::to_string(client->socket) + "' has left " + room_name;
 											serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
 
@@ -552,7 +552,7 @@ int main(int argc, char** argv)
 								printf("REGISTER command recieved: user:%s, email:%s, pass:%s\n", username.c_str(), email.c_str(), password.c_str());
 
 								//Check if registration was successful or it failed
-								/*****************/								
+								/*****************/
 								RegisterAccount* Registration = new RegisterAccount();
 
 								Registration->set_requestid(client->socket);
@@ -565,9 +565,6 @@ int main(int argc, char** argv)
 								std::string serializedReg = Registration->SerializeAsString();
 								std::cout << serializedReg << std::endl;
 
-								/*Create header the same way we used to do that*/
-								/*We can get size of message from CAWlength + INT_SIZE * 2*/
-								/*To use id of message we have to add more enums in cProtocol.h*/
 								serverProto.ServerRegister(serializedReg);
 								std::vector<uint8_t> vect = serverProto.GetBuffer();
 
@@ -584,85 +581,137 @@ int main(int argc, char** argv)
 							}
 							case EMAILAUTH:
 							{
-								//TODO
 								int email_length = buf.readInt32LE(INT_SIZE * 2);
 								std::string email = buf.ReadString(INT_SIZE * 3, email_length);
 								int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
 								std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
 
 								printf("EMAILAUTH command recieved: email:%s, pass:%s", email.c_str(), password.c_str());
+
+								//Check if authentication was successful or it failed
+								/*****************/
+								AuthenticateAccount* Authentication = new AuthenticateAccount();
+
+								Authentication->set_requestid(client->socket);
+								Authentication->set_identifier(email);
+								Authentication->set_password(password);
+
+								int AuthLength = Authentication->ByteSizeLong();
+								std::cout << "Size is: " << AuthLength << std::endl;
+								std::string serializedAuth = Authentication->SerializeAsString();
+								std::cout << serializedAuth << std::endl;
+
+								serverProto.ServerEmailAuthenticate(serializedAuth);
+								std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+								/*Send Header + serializedCAW to auth_server*/
+								iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+								if (iResult == SOCKET_ERROR)
+								{
+									printf("send() failed with error: %d\n", WSAGetLastError());
+									closesocket(connectSocket);
+									WSACleanup();
+									return 1;
+								}
 								break;
 							}
 							case USERNAMEAUTH:
 							{
-								//TODO
 								int user_length = buf.readInt32LE(INT_SIZE * 2);
 								std::string user = buf.ReadString(INT_SIZE * 3, user_length);
 								int pass_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
 								std::string password = buf.ReadString(INT_SIZE * 4 + user_length, pass_length);
 
 								printf("USERNAMEAUTH command recieved: user:%s, pass:%s", user.c_str(), password.c_str());
+
+								//Check if authentication was successful or it failed
+								/*****************/
+								AuthenticateAccount* Authentication = new AuthenticateAccount();
+
+								Authentication->set_requestid(client->socket);
+								Authentication->set_identifier(user);
+								Authentication->set_password(password);
+
+								int AuthLength = Authentication->ByteSizeLong();
+								std::cout << "Size is: " << AuthLength << std::endl;
+								std::string serializedAuth = Authentication->SerializeAsString();
+								std::cout << serializedAuth << std::endl;
+
+								serverProto.ServerNameAuthenticate(serializedAuth);
+								std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+								/*Send Header + serializedCAW to auth_server*/
+								iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+								if (iResult == SOCKET_ERROR)
+								{
+									printf("send() failed with error: %d\n", WSAGetLastError());
+									closesocket(connectSocket);
+									WSACleanup();
+									return 1;
+								}
 								break;
 							}
 							case REGISTERSUCCESS:
 							{
-								/*Receive data and deserialize into result and reason*/
-								bool result = false;
-								ReasonError reason = INTERNAL_SERVER_ERROR;
-								std::vector<uint8_t> vect1;
+								int message_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string message = buf.ReadString(INT_SIZE * 3, message_length);
 
-								/*Success*/
-								Buffer anotherbuf;
-								anotherbuf.ReceiveBufferContent(vect1);
+								RegistrationSuccess* RegSuccess = new RegistrationSuccess();
+								RegSuccess->ParseFromString(message);
 
-								int anotherpacket_length = anotherbuf.readInt32LE(INT_SIZE * 0);
-								int anothermessage_id = anotherbuf.readInt32LE(INT_SIZE * 1);
-								int anothermessage_length = anotherbuf.readInt32LE(INT_SIZE * 2);
-								std::string anothermessage = anotherbuf.ReadString(INT_SIZE * 3, anothermessage_length);
+								uint64_t requestid = RegSuccess->requestid();
+								std::string username = RegSuccess->username();
 
-								//CreateAccountWebSuccess* receivedexample1 = new CreateAccountWebSuccess();
-								//receivedexample1->ParseFromString(anothermessage);
-
-								//std::cout << receivedexample1->requestid() << std::endl;
-								//std::cout << receivedexample1->userid() << std::endl;
-
-								result = true;
-								/*Success*/
+								/*Send this info back to user*/
 								break;
 							}
 							case REGISTERFAILURE:
 							{
-								/*Receive data and deserialize into result and reason*/
-								bool result = false;
-								ReasonError reason = INTERNAL_SERVER_ERROR;
-								std::vector<uint8_t> vect1;
+								int message_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string message = buf.ReadString(INT_SIZE * 3, message_length);
 
-								/*Failure*/
-								Buffer anotherbuf;
-								anotherbuf.ReceiveBufferContent(vect2);
+								RequestFailure* RegFailure = new RequestFailure();
+								RegFailure->ParseFromString(message);
 
-								int anotherpacket_length = anotherbuf.readInt32LE(INT_SIZE * 0);
-								int anothermessage_id = anotherbuf.readInt32LE(INT_SIZE * 1);
-								int anothermessage_length = anotherbuf.readInt32LE(INT_SIZE * 2);
-								std::string anothermessage = anotherbuf.ReadString(INT_SIZE * 3, anothermessage_length);
+								uint64_t requestid = RegFailure->requestid();
+								ReasonError reason = RegFailure->reason();
 
-								//CreateAccountWebFailure* receivedexample2 = new CreateAccountWebFailure();
-								//receivedexample2->ParseFromString(anothermessage);
-
-								//std::cout << receivedexample2->requestid() << std::endl;
-								//std::cout << receivedexample2->reason() << std::endl;
-
-								result = false;
-								//reason = receivedexample2->reason();
-								/*Failure*/
+								/*Send this info back to user*/
 								break;
 							}
 							case AUTHSUCCESS:
+							{
+								int message_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string message = buf.ReadString(INT_SIZE * 3, message_length);
+
+								AuthenticationSuccess* AuthSuccess = new AuthenticationSuccess();
+								AuthSuccess->ParseFromString(message);
+
+								uint64_t requestid = AuthSuccess->requestid();
+								std::string username = AuthSuccess->username();
+								std::string creationdate = AuthSuccess->creationdate();
+
+								/*Send this info back to user*/
 								break;
+							}
 							case AUTHFAILURE:
-								break;	
+							{
+								int message_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string message = buf.ReadString(INT_SIZE * 3, message_length);
+
+								RequestFailure* AuthFailure = new RequestFailure();
+								AuthFailure->ParseFromString(message);
+
+								uint64_t requestid = AuthFailure->requestid();
+								ReasonError reason = AuthFailure->reason();
+
+								/*Send this info back to user*/
+								break;
+							}
 							default:
+							{
 								printf("You what mate?\n");
+							}
 							}
 						}
 					}
