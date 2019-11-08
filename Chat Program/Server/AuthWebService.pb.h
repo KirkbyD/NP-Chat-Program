@@ -35,6 +35,7 @@
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
+#include <cassert>
 #define PROTOBUF_INTERNAL_EXPORT_AuthWebService_2eproto
 PROTOBUF_NAMESPACE_OPEN
 namespace internal {
