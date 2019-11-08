@@ -362,238 +362,244 @@ int main(int argc, char** argv)
 
 							switch (message_id)
 							{
-							case REGISTER:
-							{
-								//*******That happens on auth_server*******//
-								int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
-								int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
-								int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
+								case REGISTER:
+								{
+									//*******That happens on auth_server*******//
+									int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
+									int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
+									int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
 
-								printf("Size of message: %i\n", newpacket_length);
-								printf("MESSAGE ID: %i\n", newmessage_id);
-								printf("MESSAGE: %s\n", newmessage.c_str());
+									printf("Size of message: %i\n", newpacket_length);
+									printf("MESSAGE ID: %i\n", newmessage_id);
+									printf("MESSAGE: %s\n", newmessage.c_str());
 
-								RegisterAccount* Registration = new RegisterAccount();
+									RegisterAccount* Registration = new RegisterAccount();
 
-								Registration->ParseFromString(newmessage);
+									Registration->ParseFromString(newmessage);
 
-								std::cout << Registration->requestid() << std::endl;
-								std::cout << Registration->username() << std::endl;
-								std::cout << Registration->email() << std::endl;
-								std::cout << Registration->password() << std::endl;
+									std::cout << Registration->requestid() << std::endl;
+									std::cout << Registration->username() << std::endl;
+									std::cout << Registration->email() << std::endl;
+									std::cout << Registration->password() << std::endl;
 
-								/*Do something with this info*/
+									/*Do something with this info*/
 
-								//TODO SQL
+									//TODO SQL
 
-								// insert new user into db
-								try {
-									std::stringstream ss;
-									std::string usrn = Registration->username();
-									std::string psw = Registration->password();
-									std::string email = Registration->email();
-									unsigned long requester = Registration->requestid();
-									std::string salt = "";
-									unsigned uid;
+									// insert new user into db
+									try {
+										std::stringstream ss;
+										std::string usrn = Registration->username();
+										std::string psw = Registration->password();
+										std::string email = Registration->email();
+										unsigned long requester = Registration->requestid();
+										std::string salt = "";
+										unsigned uid;
 
-									// preform cleaning on the user names here.
-									prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('" + usrn + "', NOW())");
-									prepstmt->executeUpdate();
+										// preform cleaning on the user names here.
+										prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('" + usrn + "', NOW())");
+										prepstmt->executeUpdate();
 
-									prepstmt = con->prepareStatement("SELECT ID FROM users WHERE username = '" + usrn + "'");
-									rslt = prepstmt->executeQuery();
+										prepstmt = con->prepareStatement("SELECT ID FROM users WHERE username = '" + usrn + "'");
+										rslt = prepstmt->executeQuery();
 
-									if (rslt != 0) {
-										while (rslt->next()) {
-											uid = rslt->getInt(1);
-											std::cout << rslt->getString(1) << std::endl;
+										if (rslt != 0) {
+											while (rslt->next()) {
+												uid = rslt->getInt(1);
+												std::cout << rslt->getString(1) << std::endl;
+											}
 										}
-									}
-									else {
-										// no rows returned.
-									}
+										else {
+											// no rows returned.
+										}
 									
-									psw = hash_pass(psw);
+										psw = hash_pass(psw);
 
-									size_t RAND_SIZE = 128;
-									GenerateRandomNumber(RAND_SIZE, salt);
-									salt = hash_pass(salt);
+										size_t RAND_SIZE = 128;
+										GenerateRandomNumber(RAND_SIZE, salt);
+										salt = hash_pass(salt);
 
-									// stringstream for inserting into the web_auth table.
-									ss << "INSERT INTO web_auth (User_ID, email, password, salt) VALUES (";
-									ss << uid << ", '" << email << "', '" << psw << "', '" << salt << "');";
+										// stringstream for inserting into the web_auth table.
+										ss << "INSERT INTO web_auth (User_ID, email, password, salt) VALUES (";
+										ss << uid << ", '" << email << "', '" << psw << "', '" << salt << "');";
 
-									prepstmt = con->prepareStatement(ss.str());
-									prepstmt->executeUpdate();
+										prepstmt = con->prepareStatement(ss.str());
+										prepstmt->executeUpdate();
 									
-									ss.str(std::string());
-									std::cout << "insert operations successful" << std::endl;
-								}
-								catch (sql::SQLException& exception) {
-									DisplayError(exception);
-									//return 1;
-								}
+										ss.str(std::string());
+										std::cout << "insert operations successful" << std::endl;
+									}
+									catch (sql::SQLException& exception) {
+										DisplayError(exception);
+										//return 1;
+									}
 
-								// if the above inserts are succuessful then return the result of the inserts
+									// if the above inserts are succuessful then return the result of the inserts
 
 
-								//// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
-								//CreateAccountWebSuccess* example1 = new CreateAccountWebSuccess();
-								//example1->set_requestid(1);
-								//example1->set_userid(1);
+									//// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
+									//CreateAccountWebSuccess* example1 = new CreateAccountWebSuccess();
+									//example1->set_requestid(1);
+									//example1->set_userid(1);
 
-								//int example1length = example1->ByteSizeLong();
-								//std::cout << "Size is: " << example1length << std::endl;
-								//std::string serializedexample1 = example1->SerializeAsString();
-								//std::cout << serializedexample1 << std::endl;
+									//int example1length = example1->ByteSizeLong();
+									//std::cout << "Size is: " << example1length << std::endl;
+									//std::string serializedexample1 = example1->SerializeAsString();
+									//std::cout << serializedexample1 << std::endl;
 
-								//serverProto.UserRegister(serializedexample1);
-								//std::vector<uint8_t> vect1 = serverProto.GetBuffer();
+									//serverProto.UserRegister(serializedexample1);
+									//std::vector<uint8_t> vect1 = serverProto.GetBuffer();
 															   
-								//CreateAccountWebFailure* example2 = new CreateAccountWebFailure();
-								//example2->set_requestid(1);
-								//example2->set_reason(INVALID_PASSWORD);
+									//CreateAccountWebFailure* example2 = new CreateAccountWebFailure();
+									//example2->set_requestid(1);
+									//example2->set_reason(INVALID_PASSWORD);
 
-								//int example2length = example2->ByteSizeLong();
-								//std::cout << "Size is: " << example2length << std::endl;
-								//std::string serializedexample2 = example2->SerializeAsString();
-								//std::cout << serializedexample2.c_str() << std::endl;
+									//int example2length = example2->ByteSizeLong();
+									//std::cout << "Size is: " << example2length << std::endl;
+									//std::string serializedexample2 = example2->SerializeAsString();
+									//std::cout << serializedexample2.c_str() << std::endl;
 
-								//serverProto.UserRegister(serializedexample2);
-								//std::vector<uint8_t> vect2 = serverProto.GetBuffer();
-								////*******That happens on auth_server*******//
+									//serverProto.UserRegister(serializedexample2);
+									//std::vector<uint8_t> vect2 = serverProto.GetBuffer();
+									////*******That happens on auth_server*******//
 
-								break;
-							}
-							case EMAILAUTH:
-								int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
-								int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
-								int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
+									break;
+								}
+								case EMAILAUTH:
+								{
+									int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
+									int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
+									int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
 
-								printf("Size of message: %i\n", newpacket_length);
-								printf("MESSAGE ID: %i\n", newmessage_id);
-								printf("MESSAGE: %s\n", newmessage.c_str());
+									printf("Size of message: %i\n", newpacket_length);
+									printf("MESSAGE ID: %i\n", newmessage_id);
+									printf("MESSAGE: %s\n", newmessage.c_str());
 
-								AuthenticateAccount* AuthLogin = new AuthenticateAccount();
+									AuthenticateAccount* AuthLogin = new AuthenticateAccount();
 
-								AuthLogin->ParseFromString(newmessage);
+									AuthLogin->ParseFromString(newmessage);
 
-								std::cout << AuthLogin->requestid() << std::endl;
-								std::cout << AuthLogin->identifier() << std::endl;
-								std::cout << AuthLogin->password() << std::endl;
+									std::cout << AuthLogin->requestid() << std::endl;
+									std::cout << AuthLogin->identifier() << std::endl;
+									std::cout << AuthLogin->password() << std::endl;
 
-								try {
-									std::stringstream ss;
-									unsigned long requester = AuthLogin->requestid();
-									std::string usrn = AuthLogin->identifier();
-									std::string psw = AuthLogin->password();
-									std::string salt = "";
-									std::string hpsw = "";
+									try {
+										std::stringstream ss;
+										unsigned long requester = AuthLogin->requestid();
+										std::string email = AuthLogin->identifier();
+										std::string psw = AuthLogin->password();
+										std::string salt = "";
+										std::string hpsw = "";
+										std::string usrn = "";
 
-									// preform cleaning on the user names here.
-									ss << "SELECT password, salt FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE u.username = '" << usrn << "'";
-									prepstmt = con->prepareStatement(ss.str());
-									rslt = prepstmt->executeQuery();
+										// preform cleaning on the user names here.
+										ss << "SELECT password, salt, username FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE wa.email = '" << email << "'";
+										prepstmt = con->prepareStatement(ss.str());
+										rslt = prepstmt->executeQuery();
 
-									if (rslt != 0) {
-										while (rslt->next()) {
-											hpsw = rslt->getString(1);
-											salt = rslt->getString(2);
+										if (rslt != 0) {
+											while (rslt->next()) {
+												hpsw = rslt->getString(1);
+												salt = rslt->getString(2);
+												usrn = rslt->getString(3);
+											}
 										}
+										else {
+											// email does not exist
+										}
+
+										std::string hpsw;
+										psw = hash_pass(psw);
+
+
+										if ((salt + hpsw) == (salt + psw)) {
+											// login credentials accepted
+										}
+										else {
+											// login credentials rejected
+										}
+
 									}
-									else {
-										// user does not exist
+									catch (sql::SQLException& exception) {
+										DisplayError(exception);
 									}
 
-									std::string hpsw;
-									psw = hash_pass(psw);
+									break;
+
+								}
+								case USERNAMEAUTH:
+								{
+									int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
+									int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
+									int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
+
+									printf("Size of message: %i\n", newpacket_length);
+									printf("MESSAGE ID: %i\n", newmessage_id);
+									printf("MESSAGE: %s\n", newmessage.c_str());
+
+									AuthenticateAccount* AuthLogin = new AuthenticateAccount();
+
+									AuthLogin->ParseFromString(newmessage);
+
+									std::cout << AuthLogin->requestid() << std::endl;
+									std::cout << AuthLogin->identifier() << std::endl;
+									std::cout << AuthLogin->password() << std::endl;
+
+									try {
+										std::stringstream ss;
+										unsigned long requester = AuthLogin->requestid();
+										std::string usrn = AuthLogin->identifier();
+										std::string psw = AuthLogin->password();
+										std::string salt = "";
+										std::string hpsw = "";
+
+										// preform cleaning on the user names here.
+										ss << "SELECT password, salt FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE u.username = '" << usrn << "'";
+										prepstmt = con->prepareStatement(ss.str());
+										rslt = prepstmt->executeQuery();
+
+										if (rslt != 0) {
+											while (rslt->next()) {
+												hpsw = rslt->getString(1);
+												salt = rslt->getString(2);
+											}
+										}
+										else {
+											// user does not exist
+										}
+
+										std::string hpsw;
+										psw = hash_pass(psw);
 
 
-									if ((salt + hpsw) == (salt + psw)) {
-										// login credentials accepted
+										if ((salt + hpsw) == (salt + psw)) {
+											// login credentials accepted
+										}
+										else {
+											// login credentials rejected
+										}
+
 									}
-									else {
-										// login credentials rejected
+									catch (sql::SQLException& exception) {
+										DisplayError(exception);
 									}
 
+
+									break;
 								}
-								catch (sql::SQLException& exception) {
-									DisplayError(exception);
+								default:
+									printf("You what mate?\n");
+									break;
 								}
-
-
-								break;
-							case USERNAMEAUTH:
-								int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
-								int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
-								int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
-
-								printf("Size of message: %i\n", newpacket_length);
-								printf("MESSAGE ID: %i\n", newmessage_id);
-								printf("MESSAGE: %s\n", newmessage.c_str());
-
-								RegisterAccount* Registration = new RegisterAccount();
-
-								Registration->ParseFromString(newmessage);
-
-								std::cout << Registration->requestid() << std::endl;
-								std::cout << Registration->email() << std::endl;
-								std::cout << Registration->password() << std::endl;
-
-								try {
-									std::stringstream ss;
-									unsigned long requester = AuthLogin->requestid();
-									std::string email = AuthLogin->identifier();
-									std::string psw = AuthLogin->password();
-									std::string salt = "";
-									std::string hpsw = "";
-									std::string usrn = "";
-
-								// preform cleaning on the user names here.
-								ss << "SELECT password, salt, username FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE wa.email = '" << email << "'";
-								prepstmt = con->prepareStatement(ss.str());
-								rslt = prepstmt->executeQuery();
-
-								if (rslt != 0) {
-									while (rslt->next()) {
-										hpsw = rslt->getString(1);
-										salt = rslt->getString(2);
-										usrn = rslt->getString(3);
-									}
-								}
-								else {
-									// email does not exist
-								}
-
-								std::string hpsw;
-								psw = hash_pass(psw);
-
-
-								if ((salt + hpsw) == (salt + psw)) {
-									// login credentials accepted
-								}
-								else {
-									// login credentials rejected
-								}
-
-								}
-								catch (sql::SQLException& exception) {
-									DisplayError(exception);
-								}
-
-								break;
-							default:
-								printf("You what mate?\n");
 							}
 						}
 					}
 				}
 			}
 		}
-	}
 
 
 
