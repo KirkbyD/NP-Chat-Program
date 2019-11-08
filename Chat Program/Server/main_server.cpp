@@ -296,6 +296,7 @@ int main(int argc, char** argv) {
 
 		//Read from auth server
 		// #3.2 read
+		if (FD_ISSET(connectSocket, &ReadSet))
 		{
 			std::vector<uint8_t> recvVect1;
 			for (int i = 0; i < INT_SIZE * 2; i++)
@@ -554,269 +555,267 @@ int main(int argc, char** argv) {
 							int packet_length = buf.readInt32LE(INT_SIZE * 0);
 							int message_id = buf.readInt32LE(INT_SIZE * 1);
 
-							if (!client->loggedIn
-								&& (message_id != REGISTER
-									&& message_id != EMAILAUTH
-									&& message_id != USERNAMEAUTH))
-								break;
+							if (client->loggedIn
+								|| message_id == REGISTER
+								|| message_id == EMAILAUTH
+								|| message_id == USERNAMEAUTH) {
+								switch (message_id) {
+								case JOIN:
+								{
+									int room_name_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
 
-							switch (message_id)
-							{
-							case JOIN:
-							{
-								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
+									printf("Packet Length: %i\n", packet_length);
+									printf("Message ID: %i\n", message_id);
+									printf("Room Name Length: %i\n", room_name_length);
+									printf("Room Name: %s\n", room_name.c_str());
 
-								printf("Packet Length: %i\n", packet_length);
-								printf("Message ID: %i\n", message_id);
-								printf("Room Name Length: %i\n", room_name_length);
-								printf("Room Name: %s\n", room_name.c_str());
+									if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
+										m_Rooms[room_name.c_str()].push_back(client);
+									}
+									else {
+										m_Rooms[room_name.c_str()] = std::vector<ClientInfo*>();
+										m_Rooms[room_name.c_str()].push_back(client);
+									}
 
-								if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
-									m_Rooms[room_name.c_str()].push_back(client);
+									printf("socket %s joined room: %s\n", client->username.c_str(), room_name.c_str());
+
+									std::string msg = "User " + client->username + " has joined " + room_name;
+									serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
+
+									std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+									for (ClientInfo* tmpClient : m_Rooms[room_name.c_str()]) {
+										iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+										if (iResult == SOCKET_ERROR)
+										{
+											printf("send error %d\n", WSAGetLastError());
+										}
+										else
+										{
+											printf("Bytes sent: %d\n", iResult);
+										}
+									}
+
+									break;
 								}
-								else {
-									m_Rooms[room_name.c_str()] = std::vector<ClientInfo*>();
-									m_Rooms[room_name.c_str()].push_back(client);
+								case LEAVE:
+								{
+									int room_name_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
+
+									printf("Packet Length: %i\n", packet_length);
+									printf("Message ID: %i\n", message_id);
+									printf("Room Name Length: %i\n", room_name_length);
+									printf("Room Name: %s\n", room_name.c_str());
+
+									if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
+										for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room_name].begin();
+											clientIt < m_Rooms[room_name].end();
+											clientIt++)
+										{
+											if (*clientIt == client)
+											{
+												printf("socket %s left room: %s\n", client->username.c_str(), room_name.c_str());
+
+												std::string msg = "User " + client->username + " has left " + room_name;
+												serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
+
+												std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+												for (ClientInfo* tmpClient : m_Rooms[room_name.c_str()]) {
+													iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+													if (iResult == SOCKET_ERROR)
+													{
+														printf("send error %d\n", WSAGetLastError());
+													}
+													else
+													{
+														printf("Bytes sent: %d\n", iResult);
+													}
+												}
+												m_Rooms[room_name].erase(clientIt);
+
+												break;
+											}
+											else if (clientIt == m_Rooms[room_name].end() - 1)
+											{
+												printf("socket %d not in room: %s\n", (int)client->socket, room_name.c_str());
+											}
+										}
+									}
+									else {
+										printf("Room: %s does not exist\n", room_name.c_str());
+									}
+
+									break;
 								}
+								case SEND:
+								{
+									int room_name_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
+									int message_length = buf.readInt32LE(INT_SIZE * 3 + room_name_length);
+									std::string message = buf.ReadString(INT_SIZE * 4 + room_name_length, message_length);
 
-								printf("socket %s joined room: %s\n", client->username.c_str(), room_name.c_str());
+									printf("Packet Length: %i\n", packet_length);
+									printf("Message ID: %i\n", message_id);
+									printf("Room Name Length: %i\n", room_name_length);
+									printf("Room Name: %s\n", room_name.c_str());
+									printf("Message Length: %i\n", message_length);
+									printf("Message: %s\n", message.c_str());
 
-								std::string msg = "User " + client->username + " has joined " + room_name;
-								serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
+									std::string sender = client->username;
 
-								std::vector<uint8_t> vect = serverProto.GetBuffer();
+									serverProto.UserRecieveMessage(sender, room_name, message);
 
-								for (ClientInfo* tmpClient : m_Rooms[room_name.c_str()]) {
-									iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+									std::vector<uint8_t> vect = serverProto.GetBuffer();
 
+									if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
+										for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room_name].begin();
+											clientIt < m_Rooms[room_name].end();
+											clientIt++)
+										{
+											if (*clientIt == client)
+											{
+												for (ClientInfo* tmpClient : m_Rooms[room_name]) {
+													iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
+
+													if (iResult == SOCKET_ERROR)
+													{
+														printf("send error %d\n", WSAGetLastError());
+													}
+													else
+													{
+														printf("Bytes sent: %d\n", iResult);
+													}
+												}
+											}
+										}
+									}
+
+									break;
+								}
+								case REGISTER:
+								{
+									int user_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string username = buf.ReadString(INT_SIZE * 3, user_length);
+
+									int email_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
+									std::string email = buf.ReadString(INT_SIZE * 4 + user_length, email_length);
+
+									int pass_length = buf.readInt32LE(INT_SIZE * 4 + user_length + email_length);
+									std::string password = buf.ReadString(INT_SIZE * 5 + user_length + email_length, pass_length);
+
+									printf("REGISTER command recieved: user:%s, email:%s, pass:%s\n", username.c_str(), email.c_str(), password.c_str());
+
+									//Check if registration was successful or it failed
+									/*****************/
+									RegisterAccount* Registration = new RegisterAccount();
+
+									Registration->set_requestid(client->socket);
+									Registration->set_username(username);
+									Registration->set_email(email);
+									Registration->set_password(password);
+
+									int RegLength = Registration->ByteSizeLong();
+									std::cout << "Size is: " << RegLength << std::endl;
+									std::string serializedReg = Registration->SerializeAsString();
+									std::cout << serializedReg << std::endl;
+
+									serverProto.ServerRegister(serializedReg);
+									std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+									/*Send Header + serializedCAW to auth_server*/
+									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
 									if (iResult == SOCKET_ERROR)
 									{
-										printf("send error %d\n", WSAGetLastError());
+										printf("send() failed with error: %d\n", WSAGetLastError());
+										closesocket(connectSocket);
+										WSACleanup();
+										return 1;
 									}
-									else
-									{
-										printf("Bytes sent: %d\n", iResult);
-									}
+									break;
 								}
-
-								break;
-							}
-							case LEAVE:
-							{
-								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
-
-								printf("Packet Length: %i\n", packet_length);
-								printf("Message ID: %i\n", message_id);
-								printf("Room Name Length: %i\n", room_name_length);
-								printf("Room Name: %s\n", room_name.c_str());
-
-								if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
-									for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room_name].begin();
-										clientIt < m_Rooms[room_name].end();
-										clientIt++)
-									{
-										if (*clientIt == client)
-										{
-											printf("socket %s left room: %s\n", client->username.c_str(), room_name.c_str());
-
-											std::string msg = "User " + client->username + " has left " + room_name;
-											serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
-
-											std::vector<uint8_t> vect = serverProto.GetBuffer();
-
-											for (ClientInfo* tmpClient : m_Rooms[room_name.c_str()]) {
-												iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
-
-												if (iResult == SOCKET_ERROR)
-												{
-													printf("send error %d\n", WSAGetLastError());
-												}
-												else
-												{
-													printf("Bytes sent: %d\n", iResult);
-												}
-											}
-											m_Rooms[room_name].erase(clientIt);
-
-											break;
-										}
-										else if (clientIt == m_Rooms[room_name].end() - 1)
-										{
-											printf("socket %d not in room: %s\n", (int)client->socket, room_name.c_str());
-										}
-									}
-								}
-								else {
-									printf("Room: %s does not exist\n", room_name.c_str());
-								}
-
-								break;
-							}
-							case SEND:
-							{
-								int room_name_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string room_name = buf.ReadString(INT_SIZE * 3, room_name_length);
-								int message_length = buf.readInt32LE(INT_SIZE * 3 + room_name_length);
-								std::string message = buf.ReadString(INT_SIZE * 4 + room_name_length, message_length);
-
-								printf("Packet Length: %i\n", packet_length);
-								printf("Message ID: %i\n", message_id);
-								printf("Room Name Length: %i\n", room_name_length);
-								printf("Room Name: %s\n", room_name.c_str());
-								printf("Message Length: %i\n", message_length);
-								printf("Message: %s\n", message.c_str());
-
-								std::string sender = client->username;
-
-								serverProto.UserRecieveMessage(sender, room_name, message);
-
-								std::vector<uint8_t> vect = serverProto.GetBuffer();
-
-								if (m_Rooms.find(room_name.c_str()) != m_Rooms.end()) {
-									for (std::vector<ClientInfo*>::iterator clientIt = m_Rooms[room_name].begin();
-										clientIt < m_Rooms[room_name].end();
-										clientIt++)
-									{
-										if (*clientIt == client)
-										{
-											for (ClientInfo* tmpClient : m_Rooms[room_name]) {
-												iResult = send(tmpClient->socket, (char*)vect.data(), (int)vect.size(), 0);
-
-												if (iResult == SOCKET_ERROR)
-												{
-													printf("send error %d\n", WSAGetLastError());
-												}
-												else
-												{
-													printf("Bytes sent: %d\n", iResult);
-												}
-											}
-										}
-									}
-								}
-
-								break;
-							}
-							case REGISTER:
-							{
-								int user_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string username = buf.ReadString(INT_SIZE * 3, user_length);
-
-								int email_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
-								std::string email = buf.ReadString(INT_SIZE * 4 + user_length, email_length);
-
-								int pass_length = buf.readInt32LE(INT_SIZE * 4 + user_length + email_length);
-								std::string password = buf.ReadString(INT_SIZE * 5 + user_length + email_length, pass_length);
-
-								printf("REGISTER command recieved: user:%s, email:%s, pass:%s\n", username.c_str(), email.c_str(), password.c_str());
-
-								//Check if registration was successful or it failed
-								/*****************/
-								RegisterAccount* Registration = new RegisterAccount();
-
-								Registration->set_requestid(client->socket);
-								Registration->set_username(username);
-								Registration->set_email(email);
-								Registration->set_password(password);
-
-								int RegLength = Registration->ByteSizeLong();
-								std::cout << "Size is: " << RegLength << std::endl;
-								std::string serializedReg = Registration->SerializeAsString();
-								std::cout << serializedReg << std::endl;
-
-								serverProto.ServerRegister(serializedReg);
-								std::vector<uint8_t> vect = serverProto.GetBuffer();
-
-								/*Send Header + serializedCAW to auth_server*/
-								iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
-								if (iResult == SOCKET_ERROR)
+								case EMAILAUTH:
 								{
-									printf("send() failed with error: %d\n", WSAGetLastError());
-									closesocket(connectSocket);
-									WSACleanup();
-									return 1;
+									int email_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string email = buf.ReadString(INT_SIZE * 3, email_length);
+									int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
+									std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
+
+									printf("EMAILAUTH command recieved: email:%s, pass:%s", email.c_str(), password.c_str());
+
+									//Check if authentication was successful or it failed
+									/*****************/
+									AuthenticateAccount* Authentication = new AuthenticateAccount();
+
+									Authentication->set_requestid(client->socket);
+									Authentication->set_identifier(email);
+									Authentication->set_password(password);
+
+									int AuthLength = Authentication->ByteSizeLong();
+									std::cout << "Size is: " << AuthLength << std::endl;
+									std::string serializedAuth = Authentication->SerializeAsString();
+									std::cout << serializedAuth << std::endl;
+
+									serverProto.ServerEmailAuthenticate(serializedAuth);
+									std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+									/*Send Header + serializedCAW to auth_server*/
+									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+									if (iResult == SOCKET_ERROR)
+									{
+										printf("send() failed with error: %d\n", WSAGetLastError());
+										closesocket(connectSocket);
+										WSACleanup();
+										return 1;
+									}
+									break;
 								}
-								break;
-							}
-							case EMAILAUTH:
-							{
-								int email_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string email = buf.ReadString(INT_SIZE * 3, email_length);
-								int pass_length = buf.readInt32LE(INT_SIZE * 3 + email_length);
-								std::string password = buf.ReadString(INT_SIZE * 4 + email_length, pass_length);
-
-								printf("EMAILAUTH command recieved: email:%s, pass:%s", email.c_str(), password.c_str());
-
-								//Check if authentication was successful or it failed
-								/*****************/
-								AuthenticateAccount* Authentication = new AuthenticateAccount();
-
-								Authentication->set_requestid(client->socket);
-								Authentication->set_identifier(email);
-								Authentication->set_password(password);
-
-								int AuthLength = Authentication->ByteSizeLong();
-								std::cout << "Size is: " << AuthLength << std::endl;
-								std::string serializedAuth = Authentication->SerializeAsString();
-								std::cout << serializedAuth << std::endl;
-
-								serverProto.ServerEmailAuthenticate(serializedAuth);
-								std::vector<uint8_t> vect = serverProto.GetBuffer();
-
-								/*Send Header + serializedCAW to auth_server*/
-								iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
-								if (iResult == SOCKET_ERROR)
+								case USERNAMEAUTH:
 								{
-									printf("send() failed with error: %d\n", WSAGetLastError());
-									closesocket(connectSocket);
-									WSACleanup();
-									return 1;
+									int user_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string user = buf.ReadString(INT_SIZE * 3, user_length);
+									int pass_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
+									std::string password = buf.ReadString(INT_SIZE * 4 + user_length, pass_length);
+
+									printf("USERNAMEAUTH command recieved: user:%s, pass:%s", user.c_str(), password.c_str());
+
+									//Check if authentication was successful or it failed
+									/*****************/
+									AuthenticateAccount* Authentication = new AuthenticateAccount();
+
+									Authentication->set_requestid(client->socket);
+									Authentication->set_identifier(user);
+									Authentication->set_password(password);
+
+									int AuthLength = Authentication->ByteSizeLong();
+									std::cout << "Size is: " << AuthLength << std::endl;
+									std::string serializedAuth = Authentication->SerializeAsString();
+									std::cout << serializedAuth << std::endl;
+
+									serverProto.ServerNameAuthenticate(serializedAuth);
+									std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+									/*Send Header + serializedCAW to auth_server*/
+									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+									if (iResult == SOCKET_ERROR)
+									{
+										printf("send() failed with error: %d\n", WSAGetLastError());
+										closesocket(connectSocket);
+										WSACleanup();
+										return 1;
+									}
+									break;
 								}
-								break;
-							}
-							case USERNAMEAUTH:
-							{
-								int user_length = buf.readInt32LE(INT_SIZE * 2);
-								std::string user = buf.ReadString(INT_SIZE * 3, user_length);
-								int pass_length = buf.readInt32LE(INT_SIZE * 3 + user_length);
-								std::string password = buf.ReadString(INT_SIZE * 4 + user_length, pass_length);
-
-								printf("USERNAMEAUTH command recieved: user:%s, pass:%s", user.c_str(), password.c_str());
-
-								//Check if authentication was successful or it failed
-								/*****************/
-								AuthenticateAccount* Authentication = new AuthenticateAccount();
-
-								Authentication->set_requestid(client->socket);
-								Authentication->set_identifier(user);
-								Authentication->set_password(password);
-
-								int AuthLength = Authentication->ByteSizeLong();
-								std::cout << "Size is: " << AuthLength << std::endl;
-								std::string serializedAuth = Authentication->SerializeAsString();
-								std::cout << serializedAuth << std::endl;
-
-								serverProto.ServerNameAuthenticate(serializedAuth);
-								std::vector<uint8_t> vect = serverProto.GetBuffer();
-
-								/*Send Header + serializedCAW to auth_server*/
-								iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
-								if (iResult == SOCKET_ERROR)
+								default:
 								{
-									printf("send() failed with error: %d\n", WSAGetLastError());
-									closesocket(connectSocket);
-									WSACleanup();
-									return 1;
+									printf("You what mate?\n");
+									break;
 								}
-								break;
-							}
-							default:
-							{
-								printf("You what mate?\n");
-								break;
-							}
+								}
 							}
 						}
 					}
