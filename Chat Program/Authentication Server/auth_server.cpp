@@ -11,7 +11,7 @@
 #include <map>
 
 #include <cProtocol.h>
-#include "addressbook.pb.h"
+#include "AuthWebService.pb.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -309,12 +309,14 @@ int main(int argc, char** argv)
 								printf("MESSAGE ID: %i\n", newmessage_id);
 								printf("MESSAGE: %s\n", newmessage.c_str());
 
-								CreateAccountWeb* received = new CreateAccountWeb();
-								received->ParseFromString(newmessage);
+								RegisterAccount* Registration = new RegisterAccount();
 
-								std::cout << received->requestid() << std::endl;
-								std::cout << received->email() << std::endl;
-								std::cout << received->plaintextpassword() << std::endl;
+								Registration->ParseFromString(newmessage);
+
+								std::cout << Registration->requestid() << std::endl;
+								std::cout << Registration->username() << std::endl;
+								std::cout << Registration->email() << std::endl;
+								std::cout << Registration->password() << std::endl;
 
 								/*Do something with this info*/
 

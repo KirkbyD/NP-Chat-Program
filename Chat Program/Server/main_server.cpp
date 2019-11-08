@@ -11,7 +11,7 @@
 #include <map>
 
 #include <cProtocol.h>
-#include "addressbook.pb.h"
+#include "AuthWebService.pb.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -552,25 +552,23 @@ int main(int argc, char** argv)
 								printf("REGISTER command recieved: user:%s, email:%s, pass:%s\n", username.c_str(), email.c_str(), password.c_str());
 
 								//Check if registration was successful or it failed
-								/*****************/
+								/*****************/								
+								RegisterAccount* Registration = new RegisterAccount();
 
-								CreateAccountWeb* CAW = new CreateAccountWeb();
-								CAW->set_requestid(client->socket);
-								//CAW->set_username(username);
-								CAW->set_email(email);
-								CAW->set_plaintextpassword(password);
+								Registration->set_requestid(client->socket);
+								Registration->set_username(username);
+								Registration->set_email(email);
+								Registration->set_password(password);
 
-								int CAWlength = CAW->ByteSizeLong();
-								std::cout << "Size is: " << CAWlength << std::endl;
-								std::string CAWType = "CreateAccountWeb";
-								std::cout << "Message type: " << CAWType << std::endl;
-								std::string serializedCAW = CAW->SerializeAsString();
-								std::cout << serializedCAW << std::endl;
+								int RegLength = Registration->ByteSizeLong();
+								std::cout << "Size is: " << RegLength << std::endl;
+								std::string serializedReg = Registration->SerializeAsString();
+								std::cout << serializedReg << std::endl;
 
 								/*Create header the same way we used to do that*/
 								/*We can get size of message from CAWlength + INT_SIZE * 2*/
 								/*To use id of message we have to add more enums in cProtocol.h*/
-								serverProto.ServerRegister(serializedCAW);
+								serverProto.ServerRegister(serializedReg);
 								std::vector<uint8_t> vect = serverProto.GetBuffer();
 
 								/*Send Header + serializedCAW to auth_server*/
@@ -622,11 +620,11 @@ int main(int argc, char** argv)
 								int anothermessage_length = anotherbuf.readInt32LE(INT_SIZE * 2);
 								std::string anothermessage = anotherbuf.ReadString(INT_SIZE * 3, anothermessage_length);
 
-								CreateAccountWebSuccess* receivedexample1 = new CreateAccountWebSuccess();
-								receivedexample1->ParseFromString(anothermessage);
+								//CreateAccountWebSuccess* receivedexample1 = new CreateAccountWebSuccess();
+								//receivedexample1->ParseFromString(anothermessage);
 
-								std::cout << receivedexample1->requestid() << std::endl;
-								std::cout << receivedexample1->userid() << std::endl;
+								//std::cout << receivedexample1->requestid() << std::endl;
+								//std::cout << receivedexample1->userid() << std::endl;
 
 								result = true;
 								/*Success*/
@@ -648,14 +646,14 @@ int main(int argc, char** argv)
 								int anothermessage_length = anotherbuf.readInt32LE(INT_SIZE * 2);
 								std::string anothermessage = anotherbuf.ReadString(INT_SIZE * 3, anothermessage_length);
 
-								CreateAccountWebFailure* receivedexample2 = new CreateAccountWebFailure();
-								receivedexample2->ParseFromString(anothermessage);
+								//CreateAccountWebFailure* receivedexample2 = new CreateAccountWebFailure();
+								//receivedexample2->ParseFromString(anothermessage);
 
-								std::cout << receivedexample2->requestid() << std::endl;
-								std::cout << receivedexample2->reason() << std::endl;
+								//std::cout << receivedexample2->requestid() << std::endl;
+								//std::cout << receivedexample2->reason() << std::endl;
 
 								result = false;
-								reason = receivedexample2->reason();
+								//reason = receivedexample2->reason();
 								/*Failure*/
 								break;
 							}

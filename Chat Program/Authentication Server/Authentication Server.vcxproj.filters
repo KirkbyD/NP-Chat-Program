@@ -18,12 +18,12 @@
     <ClCompile Include="auth_server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="addressbook.pb.cc">
+    <ClCompile Include="AuthWebService.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="addressbook.pb.h">
+    <ClInclude Include="AuthWebService.pb.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
