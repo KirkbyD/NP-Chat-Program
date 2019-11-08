@@ -10,6 +10,8 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <iomanip>
+#include <random>
 
 #include <jdbc/cppconn/driver.h>
 #include <jdbc/cppconn/exception.h>
@@ -19,6 +21,8 @@
 
 #include <cProtocol.h>
 #include "AuthWebService.pb.h"
+
+#include <openssl/sha.h>
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -60,6 +64,30 @@ void DisplayError(sql::SQLException exception) {
 	std::cout << "# ERR: " << exception.what();
 	std::cout << "(MySQL error code: " << exception.getErrorCode();
 	std::cout << ", SQLState: " << exception.getSQLState() << ")" << std::endl;
+}
+
+
+std::string hash_pass(const std::string str) {
+	unsigned char hash[SHA256_DIGEST_LENGTH];
+	SHA256_CTX sha256;
+	SHA256_Init(&sha256);
+	SHA256_Update(&sha256, str.c_str(), str.size());
+	SHA256_Final(hash, &sha256);
+	std::stringstream ss;
+	for (size_t i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+		ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+	}
+	return ss.str();
+}
+
+void GenerateRandomNumber(size_t num, std::string &outstr) {
+	std::random_device rd;
+	std::uniform_int_distribution<unsigned> dist(0, 256);
+	std::stringstream ss;
+	for (size_t i = 0; i < num; ++i) {
+		ss << (char)dist(rd);
+	}
+	outstr = ss.str();
 }
 
 
@@ -369,10 +397,7 @@ int main(int argc, char** argv)
 									std::string psw = Registration->password();
 									std::string email = Registration->email();
 									unsigned long requester = Registration->requestid();
-									unsigned long long salt = 0x34FB7A3C; // this should really be a random number
-									std::string shpsw = "";
-									std::string hpsw = "";
-									std::string s = "";
+									std::string salt = "";
 
 									unsigned uid;
 
@@ -399,6 +424,11 @@ int main(int argc, char** argv)
 										// no rows returned.
 									}
 									
+									psw = hash_pass(psw);
+
+									size_t RAND_SIZE = 128;
+									GenerateRandomNumber(RAND_SIZE, salt);
+									salt = hash_pass(salt);
 
 									// stringstream for inserting into the web_auth table.
 									ss << "INSERT INTO web_auth (User_ID, email, password, salt) VALUES (";
