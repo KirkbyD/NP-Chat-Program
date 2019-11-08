@@ -70,36 +70,7 @@ void RemoveClient(int index)
 	// TODO: Delete Client
 }
 
-int main(int argc, char** argv)
-{
-	/***************************************Example*****************************************/
-	/***************************************************************************************/
-	//AddressBook addressBook;
-
-	//Person* newPerson1 = addressBook.add_people();
-	//CreatePerson(
-	//	newPerson1,
-	//	1,
-	//	"l_gustafson@fanshaweonline.ca",
-	//	"password");
-
-	//// Serialize the data into a string
-	//std::string serializedAddressBook = addressBook.SerializeAsString();
-	//std::cout << serializedAddressBook << std::endl;
-	//// This is the info you would send over the network
-
-	//// Receive the string/data, and deserialize
-	//AddressBook received;
-	//received.ParseFromString(serializedAddressBook);
-
-	//// Check data
-	//int numPeople = received.people_size();
-	//printf("Received %d people in our address book!\n", numPeople);
-
-	//// pause
-	//system("Pause");
-	/***************************************************************************************/
-
+int main(int argc, char** argv) {
 	WSADATA wsaData;
 	int iResult;
 	Protocol serverProto = Protocol();
@@ -464,6 +435,8 @@ int main(int argc, char** argv)
 						else
 						{
 							printf("Bytes sent: %d\n", iResult);
+							ClientArray[i]->loggedIn = true;
+							ClientArray[i]->username = username;
 						}
 						break;
 					}
@@ -607,9 +580,9 @@ int main(int argc, char** argv)
 									m_Rooms[room_name.c_str()].push_back(client);
 								}
 
-								printf("socket %d joined room: %s\n", (int)client->socket, room_name.c_str());
+								printf("socket %s joined room: %s\n", client->username.c_str(), room_name.c_str());
 
-								std::string msg = "User '" + std::to_string(client->socket) + "' has joined " + room_name;
+								std::string msg = "User " + client->username + " has joined " + room_name;
 								serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
 
 								std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -646,9 +619,9 @@ int main(int argc, char** argv)
 									{
 										if (*clientIt == client)
 										{
-											printf("socket %d left room: %s\n", (int)client->socket, room_name.c_str());
+											printf("socket %s left room: %s\n", client->username.c_str(), room_name.c_str());
 
-											std::string msg = "User '" + std::to_string(client->socket) + "' has left " + room_name;
+											std::string msg = "User " + client->username + " has left " + room_name;
 											serverProto.UserRecieveMessage("Server", room_name.c_str(), msg);
 
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -695,7 +668,7 @@ int main(int argc, char** argv)
 								printf("Message Length: %i\n", message_length);
 								printf("Message: %s\n", message.c_str());
 
-								std::string sender = std::to_string(client->socket);
+								std::string sender = client->username;
 
 								serverProto.UserRecieveMessage(sender, room_name, message);
 
