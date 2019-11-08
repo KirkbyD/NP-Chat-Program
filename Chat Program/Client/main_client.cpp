@@ -248,11 +248,6 @@ int main(int argc, char** argv)
 			is_Active--;
 
 			// #3.2 read
-
-			/*// Receive a message from the server before quitting
-			printf("Waiting to receive data from the server...\n");
-			system("Pause");*/
-
 			std::vector<uint8_t> recvVect1;
 			for (int i = 0; i < INT_SIZE * 2; i++)
 			{
@@ -271,17 +266,12 @@ int main(int argc, char** argv)
 
 			Buffer buf;
 			buf.ReceiveBufferContent(recvVect1);
-			//printf("Packet Length: %i\n", buf.readInt32LE(INT_SIZE * 0));
-			//printf("Message ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
-
 			std::vector<uint8_t> recvVect2;
 			for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE * 2; i++)
 			{
 				recvVect2.push_back('0');
 			}
-
 			iResult = recv(connectSocket, (char*)recvVect2.data(), (int)recvVect2.size(), 0);
-
 			if (iResult < 0)
 			{
 				printf("recv failed with error: %d\n", WSAGetLastError());
