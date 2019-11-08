@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <sstream>
 
 #include <jdbc/cppconn/driver.h>
 #include <jdbc/cppconn/exception.h>
@@ -362,24 +363,59 @@ int main(int argc, char** argv)
 								try {
 									//pstmt = con->prepareStatement("INSERT INTO employees (Employee, Department_ID) VALUES('Brian', 5);");
 
+									std::stringstream ss;
+
 									std::string usrn = Registration->username();
 									std::string psw = Registration->password();
+									std::string email = Registration->email();
+									unsigned long requester = Registration->requestid();
+									unsigned long long salt = 0x34FB7A3C; // this should really be a random number
+									std::string shpsw = "";
+									std::string hpsw = "";
+									std::string s = "";
+
+									unsigned uid;
+
 									// hash password
 									// create salt
 									// append hashed password to salt
 									// send password
 									// send salt
 
-									prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('', date)");
+									// preform cleaning on the user names here.
+									prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('" + usrn + "', NOW())");
+									prepstmt->executeUpdate();
 
-									//int result = pstmt->executeUpdate();
+									prepstmt = con->prepareStatement("SELECT ID FROM users WHERE username = '" + usrn + "'");
+									rslt = prepstmt->executeQuery();
 
-									//printf("%d Number of rows affected.\n", result);
+									if (rslt != 0) {
+										while (rslt->next()) {
+											uid = rslt->getInt(1);
+											std::cout << rslt->getString(1) << std::endl;
+										}
+									}
+									else {
+										// no rows returned.
+									}
+									
+
+									// stringstream for inserting into the web_auth table.
+									ss << "INSERT INTO web_auth (User_ID, email, password, salt) VALUES (";
+									ss << uid << ", '" << email << "', '" << psw << "', '" << salt << "');";
+
+									prepstmt = con->prepareStatement(ss.str());
+									prepstmt->executeUpdate();
+									
+									ss.str(std::string());
+									std::cout << "insert operations successful" << std::endl;
 								}
 								catch (sql::SQLException& exception) {
 									DisplayError(exception);
 									//return 1;
 								}
+
+								// if the above inserts are succuessful then return the result of the inserts
 
 
 								//// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
