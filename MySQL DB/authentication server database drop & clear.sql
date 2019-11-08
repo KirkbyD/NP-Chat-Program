@@ -1,3 +1,5 @@
 DROP SCHEMA IF EXISTS `authservdb`;
+SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `authservdb`.`web_auth`;
-DROP TABLE IF EXISTS `authservdb`.`web_auth`;
+DROP TABLE IF EXISTS `authservdb`.`user`;
+SET FOREIGN_KEY_CHECKS = 1;
