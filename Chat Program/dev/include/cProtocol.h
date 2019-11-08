@@ -3,9 +3,10 @@
 #define INT_SIZE sizeof(int32_t)/sizeof(char)
 
 
-enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, REGISTER, EMAILAUTH, USERNAMEAUTH,
-	CREATEACCOUNTWEB, CREATEACCOUNTWEBSUCCESS, CREATEACCOUNTWEBFAILURE,
-	AUTHENTICATEWEB, AUTHENTICATEWEBSUCCESS, AUTHENTICATEWEBFAILURE };
+enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, 
+	REGISTER, EMAILAUTH, USERNAMEAUTH,
+	REGISTERSUCCESS, REGISTERFAILURE,
+	AUTHSUCCESS, AUTHFAILURE };
 
 class Protocol
 {
@@ -180,16 +181,16 @@ public:
 		return;
 	}
 
-	void UserCreateAccountWeb(std::string message)
+	void ServerRegister(std::string message)
 	{
 		buffer.Clear();
 
 		// [Header] [length] [room_name]
 
 		//packet length
-		buffer.writeInt32LE(0, INT_SIZE * SwapIntEndian(3 + message.length()));
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
 		//message_id
-		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(CREATEACCOUNTWEB));
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTER));
 
 		//message
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));

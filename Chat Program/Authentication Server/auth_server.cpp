@@ -10,18 +10,19 @@
 #include <string>
 #include <map>
 
+#include <cProtocol.h>
 #include "addressbook.pb.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 
-#define DEFAULT_PORT "5150"
+#define DEFAULT_PORT "5149"
 
 using namespace protobuf;
 
 // Client structure
 struct ClientInfo {
-	SOCKET socket;
+	SOCKET socket = NULL;
 };
 
 int TotalClients = 0;
@@ -30,24 +31,7 @@ std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
 
 void RemoveClient(int index)
 {
-	ClientInfo* client = ClientArray[index];
-
-	//remove client from all vectors in room map
-	for (std::map<std::string, std::vector<ClientInfo*>>::iterator mapIt = m_Rooms.begin();
-		mapIt != m_Rooms.end();
-		mapIt++)
-	{
-		for (std::vector<ClientInfo*>::iterator clientIt = mapIt->second.begin();
-			clientIt < mapIt->second.end();
-			clientIt++)
-		{
-			if (*clientIt == client)
-			{
-				mapIt->second.erase(clientIt);
-				break;
-			}
-		}
-	}
+	ClientInfo* client = ClientArray[index]; //SHOULD ONLY EVER BE 0 so maybe do that later
 
 	closesocket(client->socket);
 	printf("Closing socket %d\n", (int)client->socket);
@@ -67,7 +51,7 @@ int main(int argc, char** argv)
 {
 	WSADATA wsaData;
 	int iResult;
-	//Protocol serverProto = Protocol();
+	Protocol serverProto = Protocol();
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -253,11 +237,11 @@ int main(int argc, char** argv)
 				total--;
 
 				std::vector<uint8_t> vect;
-				/*for (int i = 0; i < INT_SIZE * 2; i++)
+				for (int i = 0; i < INT_SIZE * 2; i++)
 				{
 					vect.push_back('0');
 				}
-				iResult = recv(client->socket, (char*)vect.data(), INT_SIZE * 2, 0);*/
+				iResult = recv(client->socket, (char*)vect.data(), INT_SIZE * 2, 0);
 
 				if (iResult == SOCKET_ERROR)
 				{
@@ -279,7 +263,7 @@ int main(int argc, char** argv)
 					}
 					else
 					{
-						/*Buffer buf;
+						Buffer buf;
 						buf.ReceiveBufferContent(vect);
 						printf("Size of message: %i\n", buf.readInt32LE(INT_SIZE * 0));
 						printf("MESSAGE ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
@@ -288,9 +272,9 @@ int main(int argc, char** argv)
 						for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE * 2; i++)
 						{
 							vect2.push_back('0');
-						}*/
+						}
 
-						//iResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
+						iResult = recv(client->socket, (char*)vect2.data(), (int)vect2.size(), 0);
 
 						if (iResult == SOCKET_ERROR)
 						{
@@ -306,16 +290,70 @@ int main(int argc, char** argv)
 						}
 						else
 						{
-							//buf.ReceiveBufferContent(INT_SIZE * 2, vect2);
+							buf.ReceiveBufferContent(INT_SIZE * 2, vect2);
 
-							switch (0 /*buf.readInt32LE(INT_SIZE)*/)
+							int packet_length = buf.readInt32LE(INT_SIZE * 0);
+							int message_id = buf.readInt32LE(INT_SIZE * 1);
+
+							switch (message_id)
 							{
-							case 0:	//REGISTER
+							case REGISTER:
+							{
+								//*******That happens on auth_server*******//
+								int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
+								int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
+								int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
+								std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
+
+								printf("Size of message: %i\n", newpacket_length);
+								printf("MESSAGE ID: %i\n", newmessage_id);
+								printf("MESSAGE: %s\n", newmessage.c_str());
+
+								CreateAccountWeb* received = new CreateAccountWeb();
+								received->ParseFromString(newmessage);
+
+								std::cout << received->requestid() << std::endl;
+								std::cout << received->email() << std::endl;
+								std::cout << received->plaintextpassword() << std::endl;
+
+								/*Do something with this info*/
+
+								//TODO SQL
+
+								//// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
+								//CreateAccountWebSuccess* example1 = new CreateAccountWebSuccess();
+								//example1->set_requestid(1);
+								//example1->set_userid(1);
+
+								//int example1length = example1->ByteSizeLong();
+								//std::cout << "Size is: " << example1length << std::endl;
+								//std::string serializedexample1 = example1->SerializeAsString();
+								//std::cout << serializedexample1 << std::endl;
+
+								//serverProto.UserRegister(serializedexample1);
+								//std::vector<uint8_t> vect1 = serverProto.GetBuffer();
+															   
+								//CreateAccountWebFailure* example2 = new CreateAccountWebFailure();
+								//example2->set_requestid(1);
+								//example2->set_reason(INVALID_PASSWORD);
+
+								//int example2length = example2->ByteSizeLong();
+								//std::cout << "Size is: " << example2length << std::endl;
+								//std::string serializedexample2 = example2->SerializeAsString();
+								//std::cout << serializedexample2.c_str() << std::endl;
+
+								//serverProto.UserRegister(serializedexample2);
+								//std::vector<uint8_t> vect2 = serverProto.GetBuffer();
+								////*******That happens on auth_server*******//
+
 								break;
-							case 1:	//LOGIN
+							}
+							case EMAILAUTH:
 								break;
-							case 2:	//DISCONNECT
+							case USERNAMEAUTH:
 								break;
+							default:
+								printf("You what mate?\n");
 							}
 						}
 					}
