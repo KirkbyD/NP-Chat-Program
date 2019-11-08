@@ -10,6 +10,12 @@
 #include <string>
 #include <map>
 
+#include <jdbc/cppconn/driver.h>
+#include <jdbc/cppconn/exception.h>
+#include <jdbc/cppconn/resultset.h>
+#include <jdbc/cppconn/statement.h>
+#include <jdbc/cppconn/prepared_statement.h>
+
 #include <cProtocol.h>
 #include "AuthWebService.pb.h"
 
@@ -47,8 +53,38 @@ void RemoveClient(int index)
 	// TODO: Delete Client
 }
 
+void DisplayError(sql::SQLException exception) {
+	std::cout << "# ERR: SQL Exception in " << __FILE__;
+	std::cout << "(" << __FUNCTION__ << ") on line " << __LINE__ << std::endl;
+	std::cout << "# ERR: " << exception.what();
+	std::cout << "(MySQL error code: " << exception.getErrorCode();
+	std::cout << ", SQLState: " << exception.getSQLState() << ")" << std::endl;
+}
+
+
 int main(int argc, char** argv)
 {
+	sql::Driver* driver = nullptr;
+	sql::Connection* con = nullptr;
+	sql::Statement* stmt = nullptr;
+	sql::PreparedStatement* prepstmt = nullptr;
+	sql::ResultSet* rslt;
+
+	std::string server = "127.0.0.1:3306";
+	std::string username = "auth_serv";
+	std::string password = "password";
+	std::string schema = "authservdb";
+
+	try {
+		driver = get_driver_instance();
+		con = driver->connect(server, username, password);
+		con->setSchema(schema);
+	}
+	catch (sql::SQLException& exception) {
+		DisplayError(exception);
+		return 1;
+	}
+
 	WSADATA wsaData;
 	int iResult;
 	Protocol serverProto = Protocol();
@@ -321,6 +357,30 @@ int main(int argc, char** argv)
 								/*Do something with this info*/
 
 								//TODO SQL
+
+								// insert new user into db
+								try {
+									//pstmt = con->prepareStatement("INSERT INTO employees (Employee, Department_ID) VALUES('Brian', 5);");
+
+									std::string usrn = Registration->username();
+									std::string psw = Registration->password();
+									// hash password
+									// create salt
+									// append hashed password to salt
+									// send password
+									// send salt
+
+									prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('', date)");
+
+									//int result = pstmt->executeUpdate();
+
+									//printf("%d Number of rows affected.\n", result);
+								}
+								catch (sql::SQLException& exception) {
+									DisplayError(exception);
+									//return 1;
+								}
+
 
 								//// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
 								//CreateAccountWebSuccess* example1 = new CreateAccountWebSuccess();
