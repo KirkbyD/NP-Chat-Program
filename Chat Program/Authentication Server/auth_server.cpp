@@ -580,16 +580,17 @@ int main(int argc, char** argv)
 									std::cout << AuthLogin->identifier() << std::endl;
 									std::cout << AuthLogin->password() << std::endl;
 
-									try {
-										std::stringstream ss;
-										unsigned long requester = AuthLogin->requestid();
-										std::string usrn = AuthLogin->identifier();
-										std::string psw = AuthLogin->password();
-										std::string salt = "";
-										std::string hpsw = "";
+									std::stringstream ss;
+									unsigned long requester = AuthLogin->requestid();
+									std::string usrn = AuthLogin->identifier();
+									std::string psw = AuthLogin->password();
+									std::string creationdate = "";
+									std::string salt = "";
+									std::string hpsw = "";
 
+									try {
 										// preform cleaning on the user names here.
-										ss << "SELECT password, salt FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE u.username = '" << usrn << "'";
+										ss << "SELECT password, salt, creation_date FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE u.username = '" << usrn << "'";
 										prepstmt = con->prepareStatement(ss.str());
 										rslt = prepstmt->executeQuery();
 
@@ -597,6 +598,7 @@ int main(int argc, char** argv)
 											while (rslt->next()) {
 												hpsw = rslt->getString(1);
 												salt = rslt->getString(2);
+												creationdate = rslt->getString(3);
 											}
 										}
 										else {
@@ -604,7 +606,6 @@ int main(int argc, char** argv)
 											RequestFailure* response = new RequestFailure();
 											response->set_requestid(requester);
 											response->set_reason(INVALID_CREDENTIALS);
-											//response->set_creationdate();											
 											std::string serializedResponse = response->SerializeAsString();
 											serverProto.ServerAuthFailure(serializedResponse);
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -625,7 +626,7 @@ int main(int argc, char** argv)
 											AuthenticationSuccess* response = new AuthenticationSuccess();
 											response->set_requestid(requester);
 											response->set_username(usrn);
-											//response->set_creationdate();										
+											response->set_creationdate(creationdate);
 											std::string serializedResponse = response->SerializeAsString();
 											serverProto.ServerAuthSuccess(serializedResponse);
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -642,7 +643,6 @@ int main(int argc, char** argv)
 											RequestFailure* response = new RequestFailure();
 											response->set_requestid(requester);
 											response->set_reason(INVALID_PASSWORD);
-											//response->set_creationdate();											
 											std::string serializedResponse = response->SerializeAsString();
 											serverProto.ServerAuthFailure(serializedResponse);
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
