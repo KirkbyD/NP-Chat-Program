@@ -34,10 +34,35 @@ struct ClientInfo {
 int TotalClients = 0;
 ClientInfo* ClientArray[FD_SETSIZE];
 std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
+Protocol serverProto = Protocol();
 
 void RemoveClient(int index)
 {
 	ClientInfo* client = ClientArray[index];
+
+	if (client->loggedIn) {
+		Disconnect* disconnect = new Disconnect();
+
+		disconnect->set_requestid(client->socket);
+		disconnect->set_username(client->username);
+
+		int discLength = disconnect->ByteSizeLong();
+		std::cout << "Size is: " << discLength << std::endl;
+		std::string serializeddisc = disconnect->SerializeAsString();
+		std::cout << serializeddisc << std::endl;
+
+		serverProto.ServerDisconnect(serializeddisc);
+		std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+		int iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+		if (iResult == SOCKET_ERROR)
+		{
+			printf("send() failed with error: %d\n", WSAGetLastError());
+			closesocket(client->socket);
+			WSACleanup();
+			return 1;
+		}
+	}
 	
 	//remove client from all vectors in room map
 	for (std::map<std::string, std::vector<ClientInfo*>>::iterator mapIt = m_Rooms.begin();
@@ -73,7 +98,6 @@ void RemoveClient(int index)
 int main(int argc, char** argv) {
 	WSADATA wsaData;
 	int iResult;
-	Protocol serverProto = Protocol();
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
