@@ -420,7 +420,7 @@ int main(int argc, char** argv) {
 
 				/*Send this info back to user*/
 				std::string msg = "Account created failed: " + reason;
-				serverProto.UserRecieveMessage("Server: ", "", msg);
+				serverProto.UserRecieveMessage("", "Server", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();
 
@@ -457,7 +457,7 @@ int main(int argc, char** argv) {
 
 				/*Send this info back to user*/
 				std::string msg = "Welcome " + username + " (user since " + creationdate + ")";
-				serverProto.UserRecieveMessage("Server: ", "", msg);
+				serverProto.UserRecieveMessage("", "Server", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();
 
@@ -494,7 +494,7 @@ int main(int argc, char** argv) {
 
 				/*Send this info back to user*/
 				std::string msg = "Authentication failed: " + reason;
-				serverProto.UserRecieveMessage("Server: ", "", msg);
+				serverProto.UserRecieveMessage("", "Server", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();
 
@@ -734,7 +734,7 @@ int main(int argc, char** argv) {
 									}
 
 									break;
-								}
+								}	
 								case REGISTER:
 								{
 									int user_length = buf.readInt32LE(INT_SIZE * 2);
@@ -747,9 +747,7 @@ int main(int argc, char** argv) {
 									std::string password = buf.ReadString(INT_SIZE * 5 + user_length + email_length, pass_length);
 
 									printf("REGISTER command recieved: user:%s, email:%s, pass:%s\n", username.c_str(), email.c_str(), password.c_str());
-
-									//Check if registration was successful or it failed
-									/*****************/
+																		
 									RegisterAccount* Registration = new RegisterAccount();
 
 									Registration->set_requestid(client->socket);
@@ -809,7 +807,7 @@ int main(int argc, char** argv) {
 										closesocket(connectSocket);
 										WSACleanup();
 										return 1;
-									}
+									}									
 									break;
 								}
 								case USERNAMEAUTH:
@@ -823,28 +821,62 @@ int main(int argc, char** argv) {
 
 									//Check if authentication was successful or it failed
 									/*****************/
-									AuthenticateAccount* Authentication = new AuthenticateAccount();
+									bool alreadyOn = false;
+									//Check if already logged in
+									for (ClientInfo* compClient : ClientArray) {
+										if (compClient != nullptr
+											&& compClient->username == user) {
+											//tell 'em off, Charlie
+											std::string msg = "User " + user + " already logged in!";
+											printf("%s\n", msg.c_str());
+											serverProto.UserRecieveMessage("", "Server", msg);
 
-									Authentication->set_requestid(client->socket);
-									Authentication->set_identifier(user);
-									Authentication->set_password(password);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-									int AuthLength = Authentication->ByteSizeLong();
-									std::cout << "Size is: " << AuthLength << std::endl;
-									std::string serializedAuth = Authentication->SerializeAsString();
-									std::cout << serializedAuth << std::endl;
+											for (size_t i = 0; i < FD_SETSIZE; i++)
+											{
+												if (ClientArray[i] != NULL
+													&& ClientArray[i]->socket == client->socket) {
+													iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+													alreadyOn = true;
+													if (iResult == SOCKET_ERROR)
+													{
+														printf("send error %d\n", WSAGetLastError());
+													}
+													else
+													{
+														printf("Bytes sent: %d\n", iResult);
+													}
+													break;
+												}
+											}
+										}
+									}
 
-									serverProto.ServerNameAuthenticate(serializedAuth);
-									std::vector<uint8_t> vect = serverProto.GetBuffer();
+									if (!alreadyOn) {
+										AuthenticateAccount* Authentication = new AuthenticateAccount();
 
-									/*Send Header + serializedCAW to auth_server*/
-									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
-									if (iResult == SOCKET_ERROR)
-									{
-										printf("send() failed with error: %d\n", WSAGetLastError());
-										closesocket(connectSocket);
-										WSACleanup();
-										return 1;
+										Authentication->set_requestid(client->socket);
+										Authentication->set_identifier(user);
+										Authentication->set_password(password);
+
+										int AuthLength = Authentication->ByteSizeLong();
+										std::cout << "Size is: " << AuthLength << std::endl;
+										std::string serializedAuth = Authentication->SerializeAsString();
+										std::cout << serializedAuth << std::endl;
+
+										serverProto.ServerNameAuthenticate(serializedAuth);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+										/*Send Header + serializedCAW to auth_server*/
+										iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+										if (iResult == SOCKET_ERROR)
+										{
+											printf("send() failed with error: %d\n", WSAGetLastError());
+											closesocket(connectSocket);
+											WSACleanup();
+											return 1;
+										}
 									}
 									break;
 								}

@@ -385,18 +385,18 @@ int main(int argc, char** argv)
 
 									/*Do something with this info*/
 
-									//TODO SQL
+									//TODO SQL	check if exists first
 
 									// insert new user into db
-									try {
-										std::stringstream ss;
-										std::string usrn = Registration->username();
-										std::string psw = Registration->password();
-										std::string email = Registration->email();
-										unsigned long requester = Registration->requestid();
-										std::string salt = "";
-										unsigned uid;
+									std::stringstream ss;
+									std::string usrn = Registration->username();
+									std::string psw = Registration->password();
+									std::string email = Registration->email();
+									unsigned long requester = Registration->requestid();
+									std::string salt = "";
+									unsigned uid;
 
+									try {
 										// preform cleaning on the user names here.
 										prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('" + usrn + "', NOW())");
 										prepstmt->executeUpdate();
@@ -447,6 +447,20 @@ int main(int argc, char** argv)
 									catch (sql::SQLException& exception) {
 										DisplayError(exception);
 										//return 1;
+										RequestFailure* response = new RequestFailure();
+										response->set_requestid(requester);
+										response->set_reason(INTERNAL_SERVER_ERROR);
+										//response->set_creationdate();											
+										std::string serializedResponse = response->SerializeAsString();
+										serverProto.ServerRegFail(serializedResponse);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
+										iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+										if (iResult == SOCKET_ERROR) {
+											printf("send() failed with error: %d\n", WSAGetLastError());
+											closesocket(client->socket);
+											WSACleanup();
+											return 1;
+										}
 									}
 
 									// if the above inserts are succuessful then return the result of the inserts
@@ -522,6 +536,20 @@ int main(int argc, char** argv)
 										}
 										else {
 											// email does not exist
+											RequestFailure* response = new RequestFailure();
+											response->set_requestid(requester);
+											response->set_reason(INVALID_CREDENTIALS);
+											//response->set_creationdate();											
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerAuthFailure(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
 										}
 
 										psw = hash_pass(psw);
@@ -533,9 +561,36 @@ int main(int argc, char** argv)
 
 										if ((salt + hpsw) == (salt + psw)) {
 											// login credentials accepted
+											AuthenticationSuccess* response = new AuthenticationSuccess();
+											response->set_requestid(requester);
+											response->set_username(usrn);
+											//response->set_creationdate();											
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerAuthSuccess(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
 										}
 										else {
 											// login credentials rejected
+											RequestFailure* response = new RequestFailure();
+											response->set_requestid(requester);
+											response->set_reason(INVALID_PASSWORD);
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerAuthFailure(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
 										}
 
 									}
@@ -585,6 +640,20 @@ int main(int argc, char** argv)
 										}
 										else {
 											// user does not exist
+											RequestFailure* response = new RequestFailure();
+											response->set_requestid(requester);
+											response->set_reason(INVALID_CREDENTIALS);
+											//response->set_creationdate();											
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerAuthFailure(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
 										}
 
 										psw = hash_pass(psw);
@@ -592,9 +661,37 @@ int main(int argc, char** argv)
 
 										if ((salt + hpsw) == (salt + psw)) {
 											// login credentials accepted
+											AuthenticationSuccess* response = new AuthenticationSuccess();
+											response->set_requestid(requester);
+											response->set_username(usrn);
+											//response->set_creationdate();										
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerAuthSuccess(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
 										}
 										else {
 											// login credentials rejected
+											RequestFailure* response = new RequestFailure();
+											response->set_requestid(requester);
+											response->set_reason(INVALID_PASSWORD);
+											//response->set_creationdate();											
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerAuthFailure(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
 										}
 
 									}
