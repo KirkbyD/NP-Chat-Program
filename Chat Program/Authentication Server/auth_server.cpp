@@ -481,17 +481,17 @@ int main(int argc, char** argv)
 									std::cout << AuthLogin->identifier() << std::endl;
 									std::cout << AuthLogin->password() << std::endl;
 
+									std::stringstream ss;
+									unsigned long requester = AuthLogin->requestid();
+									std::string email = AuthLogin->identifier();
+									std::string psw = AuthLogin->password();
+									std::string creationdate = "";
+									std::string salt = "";
+									std::string hpsw = "";
+									std::string usrn = "";
 									try {
-										std::stringstream ss;
-										unsigned long requester = AuthLogin->requestid();
-										std::string email = AuthLogin->identifier();
-										std::string psw = AuthLogin->password();
-										std::string salt = "";
-										std::string hpsw = "";
-										std::string usrn = "";
-
 										// preform cleaning on the user names here.
-										ss << "SELECT password, salt, username FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE wa.email = '" << email << "'";
+										ss << "SELECT wa.password, wa.salt, wa.username, u.creation_date FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE wa.email = '" << email << "'";
 										prepstmt = con->prepareStatement(ss.str());
 										rslt = prepstmt->executeQuery();
 
@@ -500,6 +500,7 @@ int main(int argc, char** argv)
 												hpsw = rslt->getString(1);
 												salt = rslt->getString(2);
 												usrn = rslt->getString(3);
+												creationdate = rslt->getString(4);
 											}
 										}
 										else {
@@ -507,7 +508,6 @@ int main(int argc, char** argv)
 											RequestFailure* response = new RequestFailure();
 											response->set_requestid(requester);
 											response->set_reason(INVALID_CREDENTIALS);
-											//response->set_creationdate();											
 											std::string serializedResponse = response->SerializeAsString();
 											serverProto.ServerAuthFailure(serializedResponse);
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -520,19 +520,12 @@ int main(int argc, char** argv)
 											}
 										}
 
-										psw = hash_pass(psw);
-										prepstmt = con->prepareStatement(ss.str());
-										prepstmt->executeUpdate();
-
-										ss.str(std::string());
-										std::cout << "insert operations successful" << std::endl;
-
 										if ((salt + hpsw) == (salt + psw)) {
 											// login credentials accepted
 											AuthenticationSuccess* response = new AuthenticationSuccess();
 											response->set_requestid(requester);
 											response->set_username(usrn);
-											//response->set_creationdate();											
+											response->set_creationdate(creationdate);
 											std::string serializedResponse = response->SerializeAsString();
 											serverProto.ServerAuthSuccess(serializedResponse);
 											std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -565,7 +558,7 @@ int main(int argc, char** argv)
 									catch (sql::SQLException& exception) {
 										DisplayError(exception);
 									}
-
+									ss.str(std::string());
 									break;
 								}
 								case USERNAMEAUTH:
