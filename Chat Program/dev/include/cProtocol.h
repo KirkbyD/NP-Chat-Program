@@ -216,6 +216,24 @@ public:
 
 		return;
 	}
+	
+	void ServerRegFail(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(REGISTERFAILURE));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
 
 	void ServerEmailAuthenticate(std::string message)
 	{
@@ -245,6 +263,42 @@ public:
 		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(USERNAMEAUTH));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerAuthSuccess(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(AUTHSUCCESS));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerAuthFailure(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(AUTHFAILURE));
 
 		//message
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
