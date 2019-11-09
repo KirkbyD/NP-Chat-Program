@@ -249,6 +249,7 @@ int main(int argc, char** argv) {
 
 
 	FD_SET ReadSet;
+	FD_SET AuthSet;
 	int total;
 	int is_Active;
 
@@ -259,9 +260,11 @@ int main(int argc, char** argv) {
 		tv.tv_sec = 1;
 		// Initialize our read set
 		FD_ZERO(&ReadSet);
+		FD_ZERO(&AuthSet);
 
 		// Always look for connection attempts
 		FD_SET(listenSocket, &ReadSet);
+		FD_SET(connectSocket, &AuthSet);
 
 		// Set read notification for each socket.
 		for (int i = 0; i < TotalClients; i++)
@@ -283,7 +286,7 @@ int main(int argc, char** argv) {
 			//printf("select() is successful!\n");
 		}
 
-		is_Active = select(0, &ReadSet, NULL, NULL, &tv);
+		is_Active = select(0, &AuthSet, NULL, NULL, &tv);
 		if (is_Active == SOCKET_ERROR)
 		{
 			printf("select() failed with error: %d\n", WSAGetLastError());
@@ -328,7 +331,7 @@ int main(int argc, char** argv) {
 
 		//Read from auth server
 		// #3.2 read
-		if (FD_ISSET(connectSocket, &ReadSet))
+		if (FD_ISSET(connectSocket, &AuthSet))
 		{
 			is_Active--;
 
