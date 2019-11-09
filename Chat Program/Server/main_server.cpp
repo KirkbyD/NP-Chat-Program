@@ -785,29 +785,56 @@ int main(int argc, char** argv) {
 
 									//Check if authentication was successful or it failed
 									/*****************/
-									AuthenticateAccount* Authentication = new AuthenticateAccount();
+									if (client->loggedIn) {
+										//tell 'em off, Charlie
+										std::string msg = "You are already logged in!";
+										printf("%s\n", msg.c_str());
+										serverProto.UserRecieveMessage("", "Server", msg);
 
-									Authentication->set_requestid(client->socket);
-									Authentication->set_identifier(email);
-									Authentication->set_password(password);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-									int AuthLength = Authentication->ByteSizeLong();
-									std::cout << "Size is: " << AuthLength << std::endl;
-									std::string serializedAuth = Authentication->SerializeAsString();
-									std::cout << serializedAuth << std::endl;
+										for (size_t i = 0; i < FD_SETSIZE; i++)
+										{
+											if (ClientArray[i] != NULL
+												&& ClientArray[i]->socket == client->socket) {
+												iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+												if (iResult == SOCKET_ERROR)
+												{
+													printf("send error %d\n", WSAGetLastError());
+												}
+												else
+												{
+													printf("Bytes sent: %d\n", iResult);
+												}
+												break;
+											}
+										}
+									}
+									else {
+										AuthenticateAccount* Authentication = new AuthenticateAccount();
 
-									serverProto.ServerEmailAuthenticate(serializedAuth);
-									std::vector<uint8_t> vect = serverProto.GetBuffer();
+										Authentication->set_requestid(client->socket);
+										Authentication->set_identifier(email);
+										Authentication->set_password(password);
 
-									/*Send Header + serializedCAW to auth_server*/
-									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
-									if (iResult == SOCKET_ERROR)
-									{
-										printf("send() failed with error: %d\n", WSAGetLastError());
-										closesocket(connectSocket);
-										WSACleanup();
-										return 1;
-									}									
+										int AuthLength = Authentication->ByteSizeLong();
+										std::cout << "Size is: " << AuthLength << std::endl;
+										std::string serializedAuth = Authentication->SerializeAsString();
+										std::cout << serializedAuth << std::endl;
+
+										serverProto.ServerEmailAuthenticate(serializedAuth);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+										/*Send Header + serializedCAW to auth_server*/
+										iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+										if (iResult == SOCKET_ERROR)
+										{
+											printf("send() failed with error: %d\n", WSAGetLastError());
+											closesocket(connectSocket);
+											WSACleanup();
+											return 1;
+										}
+									}
 									break;
 								}
 								case USERNAMEAUTH:
@@ -821,39 +848,66 @@ int main(int argc, char** argv) {
 
 									//Check if authentication was successful or it failed
 									/*****************/
-									bool alreadyOn = false;
+									bool userAlreadyOn = false;
 									//Check if already logged in
-									for (ClientInfo* compClient : ClientArray) {
-										if (compClient != nullptr
-											&& compClient->username == user) {
-											//tell 'em off, Charlie
-											std::string msg = "User " + user + " already logged in!";
-											printf("%s\n", msg.c_str());
-											serverProto.UserRecieveMessage("", "Server", msg);
+									if (client->loggedIn) {
+										//tell 'em off, Charlie
+										std::string msg = "You are already logged in!";
+										printf("%s\n", msg.c_str());
+										serverProto.UserRecieveMessage("", "Server", msg);
 
-											std::vector<uint8_t> vect = serverProto.GetBuffer();
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-											for (size_t i = 0; i < FD_SETSIZE; i++)
-											{
-												if (ClientArray[i] != NULL
-													&& ClientArray[i]->socket == client->socket) {
-													iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
-													alreadyOn = true;
-													if (iResult == SOCKET_ERROR)
-													{
-														printf("send error %d\n", WSAGetLastError());
+										for (size_t i = 0; i < FD_SETSIZE; i++)
+										{
+											if (ClientArray[i] != NULL
+												&& ClientArray[i]->socket == client->socket) {
+												iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+												if (iResult == SOCKET_ERROR)
+												{
+													printf("send error %d\n", WSAGetLastError());
+												}
+												else
+												{
+													printf("Bytes sent: %d\n", iResult);
+												}
+												break;
+											}
+										}
+									}
+									else {
+										for (ClientInfo* compClient : ClientArray) {
+											if (compClient != nullptr
+												&& compClient->username == user) {
+												//tell 'em off, Charlie
+												std::string msg = "User " + user + " already logged in!";
+												printf("%s\n", msg.c_str());
+												serverProto.UserRecieveMessage("", "Server", msg);
+
+												std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+												for (size_t i = 0; i < FD_SETSIZE; i++)
+												{
+													if (ClientArray[i] != NULL
+														&& ClientArray[i]->socket == client->socket) {
+														iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+														userAlreadyOn = true;
+														if (iResult == SOCKET_ERROR)
+														{
+															printf("send error %d\n", WSAGetLastError());
+														}
+														else
+														{
+															printf("Bytes sent: %d\n", iResult);
+														}
+														break;
 													}
-													else
-													{
-														printf("Bytes sent: %d\n", iResult);
-													}
-													break;
 												}
 											}
 										}
 									}
 
-									if (!alreadyOn) {
+									if (!userAlreadyOn && !client->loggedIn) {
 										AuthenticateAccount* Authentication = new AuthenticateAccount();
 
 										Authentication->set_requestid(client->socket);
