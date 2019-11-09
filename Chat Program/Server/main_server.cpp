@@ -479,7 +479,8 @@ int main(int argc, char** argv) {
 						}
 						break;
 					}
-				}				break;
+				}
+				break;
 			}
 			case AUTHFAILURE:
 			{
@@ -494,6 +495,80 @@ int main(int argc, char** argv) {
 
 				/*Send this info back to user*/
 				std::string msg = "Authentication failed: " + reason;
+				serverProto.UserRecieveMessage("", "Server", msg);
+
+				std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+				for (size_t i = 0; i < FD_SETSIZE; i++)
+				{
+					if (ClientArray[i] != NULL
+						&& ClientArray[i]->socket == requestid) {
+						iResult = send(requestid, (char*)vect.data(), (int)vect.size(), 0);
+
+						if (iResult == SOCKET_ERROR)
+						{
+							printf("send error %d\n", WSAGetLastError());
+						}
+						else
+						{
+							printf("Bytes sent: %d\n", iResult);
+						}
+						break;
+					}
+				}
+				break;
+			}
+			case DISCSUCCESS:
+			{
+				int message_length = buf.readInt32LE(INT_SIZE * 2);
+				std::string message = buf.ReadString(INT_SIZE * 3, message_length);
+
+				DisconnectSuccess* discSuccess = new DisconnectSuccess();
+				discSuccess->ParseFromString(message);
+
+				uint64_t requestid = discSuccess->requestid();
+				std::string username = discSuccess->username();
+
+				/*Send this info back to user*/
+				std::string msg = username + " was disconnected successfully";
+				serverProto.UserRecieveMessage("", "Server", msg);
+
+				std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+				for (size_t i = 0; i < FD_SETSIZE; i++)
+				{
+					if (ClientArray[i] != NULL
+						&& ClientArray[i]->socket == requestid) {
+						iResult = send(requestid, (char*)vect.data(), (int)vect.size(), 0);
+
+						if (iResult == SOCKET_ERROR)
+						{
+							printf("send error %d\n", WSAGetLastError());
+						}
+						else
+						{
+							printf("Bytes sent: %d\n", iResult);
+							ClientArray[i]->loggedIn = false;
+							ClientArray[i]->username = "";
+						}
+						break;
+					}
+				}
+				break;
+			}
+			case DISCFAILURE:
+			{
+				int message_length = buf.readInt32LE(INT_SIZE * 2);
+				std::string message = buf.ReadString(INT_SIZE * 3, message_length);
+
+				RequestFailure* AuthFailure = new RequestFailure();
+				AuthFailure->ParseFromString(message);
+
+				uint64_t requestid = AuthFailure->requestid();
+				ReasonError reason = AuthFailure->reason();
+
+				/*Send this info back to user*/
+				std::string msg = "Disconnect failed: " + reason;
 				serverProto.UserRecieveMessage("", "Server", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -763,7 +838,6 @@ int main(int argc, char** argv) {
 									serverProto.ServerRegister(serializedReg);
 									std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-									/*Send Header + serializedCAW to auth_server*/
 									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
 									if (iResult == SOCKET_ERROR)
 									{
@@ -783,8 +857,6 @@ int main(int argc, char** argv) {
 
 									printf("EMAILAUTH command recieved: email:%s, pass:%s", email.c_str(), password.c_str());
 
-									//Check if authentication was successful or it failed
-									/*****************/
 									if (client->loggedIn) {
 										//tell 'em off, Charlie
 										std::string msg = "You are already logged in!";
@@ -825,7 +897,6 @@ int main(int argc, char** argv) {
 										serverProto.ServerEmailAuthenticate(serializedAuth);
 										std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-										/*Send Header + serializedCAW to auth_server*/
 										iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
 										if (iResult == SOCKET_ERROR)
 										{
@@ -846,9 +917,9 @@ int main(int argc, char** argv) {
 
 									printf("USERNAMEAUTH command recieved: user:%s, pass:%s", user.c_str(), password.c_str());
 
-									//Check if authentication was successful or it failed
-									/*****************/
+
 									bool userAlreadyOn = false;
+
 									//Check if already logged in
 									if (client->loggedIn) {
 										//tell 'em off, Charlie
@@ -922,7 +993,6 @@ int main(int argc, char** argv) {
 										serverProto.ServerNameAuthenticate(serializedAuth);
 										std::vector<uint8_t> vect = serverProto.GetBuffer();
 
-										/*Send Header + serializedCAW to auth_server*/
 										iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
 										if (iResult == SOCKET_ERROR)
 										{
@@ -931,6 +1001,33 @@ int main(int argc, char** argv) {
 											WSACleanup();
 											return 1;
 										}
+									}
+									break;
+								}
+								case DISCONNECT:
+								{
+									printf("DISCONNECT command recieved");
+
+									Disconnect* disconnect = new Disconnect();
+
+									disconnect->set_requestid(client->socket);
+									disconnect->set_username(client->username);
+
+									int discLength = disconnect->ByteSizeLong();
+									std::cout << "Size is: " << discLength << std::endl;
+									std::string serializeddisc = disconnect->SerializeAsString();
+									std::cout << serializeddisc << std::endl;
+
+									serverProto.ServerDisconnect(serializeddisc);
+									std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+									iResult = send(connectSocket, (char*)vect.data(), (int)vect.size(), 0);
+									if (iResult == SOCKET_ERROR)
+									{
+										printf("send() failed with error: %d\n", WSAGetLastError());
+										closesocket(connectSocket);
+										WSACleanup();
+										return 1;
 									}
 									break;
 								}

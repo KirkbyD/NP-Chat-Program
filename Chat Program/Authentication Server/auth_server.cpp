@@ -364,7 +364,6 @@ int main(int argc, char** argv)
 							{
 								case REGISTER:
 								{
-									//*******That happens on auth_server*******//
 									int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
 									int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
 									int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
@@ -382,8 +381,6 @@ int main(int argc, char** argv)
 									std::cout << Registration->username() << std::endl;
 									std::cout << Registration->email() << std::endl;
 									std::cout << Registration->password() << std::endl;
-
-									/*Do something with this info*/
 
 									//TODO SQL	check if exists first
 
@@ -462,35 +459,6 @@ int main(int argc, char** argv)
 											return 1;
 										}
 									}
-
-									// if the above inserts are succuessful then return the result of the inserts
-
-
-									//// Now create and send CreateAccountWebSuccess or CreateAccountWebFailure message back
-									//CreateAccountWebSuccess* example1 = new CreateAccountWebSuccess();
-									//example1->set_requestid(1);
-									//example1->set_userid(1);
-
-									//int example1length = example1->ByteSizeLong();
-									//std::cout << "Size is: " << example1length << std::endl;
-									//std::string serializedexample1 = example1->SerializeAsString();
-									//std::cout << serializedexample1 << std::endl;
-
-									//serverProto.UserRegister(serializedexample1);
-									//std::vector<uint8_t> vect1 = serverProto.GetBuffer();
-															   
-									//CreateAccountWebFailure* example2 = new CreateAccountWebFailure();
-									//example2->set_requestid(1);
-									//example2->set_reason(INVALID_PASSWORD);
-
-									//int example2length = example2->ByteSizeLong();
-									//std::cout << "Size is: " << example2length << std::endl;
-									//std::string serializedexample2 = example2->SerializeAsString();
-									//std::cout << serializedexample2.c_str() << std::endl;
-
-									//serverProto.UserRegister(serializedexample2);
-									//std::vector<uint8_t> vect2 = serverProto.GetBuffer();
-									////*******That happens on auth_server*******//
 
 									break;
 								}
@@ -697,6 +665,73 @@ int main(int argc, char** argv)
 									}
 									catch (sql::SQLException& exception) {
 										DisplayError(exception);
+									}
+
+
+									break;
+								}
+								case DISCONNECT:
+								{
+									int newpacket_length = buf.readInt32LE(INT_SIZE * 0);
+									int newmessage_id = buf.readInt32LE(INT_SIZE * 1);
+									int newmessage_length = buf.readInt32LE(INT_SIZE * 2);
+									std::string newmessage = buf.ReadString(INT_SIZE * 3, newmessage_length);
+
+									printf("Size of message: %i\n", newpacket_length);
+									printf("MESSAGE ID: %i\n", newmessage_id);
+									printf("MESSAGE: %s\n", newmessage.c_str());
+
+									Disconnect* disconnect = new Disconnect();
+
+									disconnect->ParseFromString(newmessage);
+
+									std::cout << disconnect->requestid() << std::endl;
+									std::cout << disconnect->username() << std::endl;
+
+									unsigned long requester = disconnect->requestid();
+									std::string usrn = disconnect->username();
+
+									try {
+										std::stringstream ss;
+
+										// preform cleaning on the user names here.
+										ss << "UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE username = '" << usrn << "'";
+										prepstmt = con->prepareStatement(ss.str());
+										rslt = prepstmt->executeQuery();
+
+										// login credentials accepted
+										DisconnectSuccess* response = new DisconnectSuccess();
+										response->set_requestid(requester);
+										response->set_username(usrn);
+										//response->set_creationdate();										
+										std::string serializedResponse = response->SerializeAsString();
+										serverProto.ServerAuthSuccess(serializedResponse);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
+										iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+										if (iResult == SOCKET_ERROR) {
+											printf("send() failed with error: %d\n", WSAGetLastError());
+											closesocket(client->socket);
+											WSACleanup();
+											return 1;
+										}
+									}
+									catch (sql::SQLException& exception) {
+										DisplayError(exception);
+										//return 1;
+										RequestFailure* response = new RequestFailure();
+										response->set_requestid(requester);
+										response->set_reason(INTERNAL_SERVER_ERROR);
+										//response->set_creationdate();											
+										std::string serializedResponse = response->SerializeAsString();
+										serverProto.ServerRegFail(serializedResponse);
+										std::vector<uint8_t> vect = serverProto.GetBuffer();
+										iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+										if (iResult == SOCKET_ERROR) {
+											printf("send() failed with error: %d\n", WSAGetLastError());
+											closesocket(client->socket);
+											WSACleanup();
+											return 1;
+										}
 									}
 
 

@@ -6,7 +6,8 @@
 enum MESSAGE_ID { JOIN, LEAVE, SEND, RECIEVE, 
 	REGISTER, EMAILAUTH, USERNAMEAUTH,
 	REGISTERSUCCESS, REGISTERFAILURE,
-	AUTHSUCCESS, AUTHFAILURE };
+	AUTHSUCCESS, AUTHFAILURE,
+	DISCONNECT, DISCSUCCESS, DISCFAILURE };
 
 class Protocol
 {
@@ -170,13 +171,26 @@ public:
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(USERNAMEAUTH));
 
-		//room
+		//email
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(email.length()));
 		buffer.WriteString(INT_SIZE * 3, email);
 
-		//message
+		//password
 		buffer.writeInt32LE(INT_SIZE * 3 + email.length(), SwapIntEndian(password.length()));
 		buffer.WriteString(INT_SIZE * 4 + email.length(), password);
+
+		return;
+	}
+
+	void UserDisconnect() {
+		buffer.Clear();
+
+		// [Header]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 2));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(DISCONNECT));
 
 		return;
 	}
@@ -299,6 +313,60 @@ public:
 		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
 		//message_id
 		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(AUTHFAILURE));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerDisconnect(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(DISCONNECT));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerDiscSuccess(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(DISCSUCCESS));
+
+		//message
+		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));
+		buffer.WriteString(INT_SIZE * 3, message);
+
+		return;
+	}
+
+	void ServerDiscFailure(std::string message)
+	{
+		buffer.Clear();
+
+		// [Header] [length] [message]
+
+		//packet length
+		buffer.writeInt32LE(0, SwapIntEndian(INT_SIZE * 3 + message.length()));
+		//message_id
+		buffer.writeInt32LE(INT_SIZE, SwapIntEndian(DISCFAILURE));
 
 		//message
 		buffer.writeInt32LE(INT_SIZE * 2, SwapIntEndian(message.length()));

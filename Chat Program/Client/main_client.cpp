@@ -213,6 +213,13 @@ int main(int argc, char** argv)
 								printf("Please use format \"AUTHENTICATE EMAIL||USERNAME PASSWORD\"\n");
 							}
 						}
+						else if (tokens[0] == "DISCONNECT" || tokens[0] == "Disconnect" || tokens[0] == "disconnect") {
+							if (tokens.size() == 4)
+								prot.UserDisconnect();
+							else {
+								printf("Please use format \"DISCONNECT\"\n");
+							}
+						}
 						else {
 							tmp = "";
 							for (size_t i = 1; i < tokens.size() - 1; i++)
