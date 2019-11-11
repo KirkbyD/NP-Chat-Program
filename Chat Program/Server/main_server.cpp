@@ -36,6 +36,19 @@ ClientInfo* ClientArray[FD_SETSIZE];
 std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
 Protocol serverProto = Protocol();
 
+std::string ErrorParse(int reason) {
+	switch (reason) {
+	case 0:
+		return "INTERNAL_SERVER_ERROR";
+	case 1:
+		return "ACCOUNT_ALREADY_EXISTS";
+	case 2:
+		return "INVALID_PASSWORD";
+	case 3:
+		return "INVALID_CREDENTIALS";
+	}
+}
+
 int RemoveClient(int index)
 {
 	ClientInfo* client = ClientArray[index];
@@ -443,9 +456,10 @@ int main(int argc, char** argv) {
 
 				uint64_t requestid = RegFailure->requestid();
 				ReasonError reason = RegFailure->reason();
+				std::string reasonstring = ErrorParse(reason);
 
 				/*Send this info back to user*/
-				std::string msg = "Account created failed: " + reason;
+				std::string msg = "Account creation failed: " + reasonstring;
 				serverProto.UserRecieveMessage("", "Server", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();
@@ -518,9 +532,10 @@ int main(int argc, char** argv) {
 
 				uint64_t requestid = AuthFailure->requestid();
 				ReasonError reason = AuthFailure->reason();
+				std::string reasonstring = ErrorParse(reason);
 
 				/*Send this info back to user*/
-				std::string msg = "Authentication failed: " + reason;
+				std::string msg = "Authentication failed: " + reasonstring;
 				serverProto.UserRecieveMessage("", "Server", msg);
 
 				std::vector<uint8_t> vect = serverProto.GetBuffer();

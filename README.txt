@@ -31,20 +31,39 @@ Buffer:		in dev/include
 Protocol:	in dev/include
 		Encodes integers by swapping endians via bitshifting.
 
-Server:		Accepts 'Join', 'Leave', and 'Send' message types.
+Auth Server:	Accepts command types 'Authenticate', and 'Register'
+
+Chat Server:	Accepts 'Join', 'Leave', and 'Send' message types.
 		Dispatches 'Recieve' type messages to clients.
 
+		Now also recieves types 'Authenticate', 'Register', and 'Disconnect' from the client.
+		These are parsed then sent to the Auth server via google protobuff inside our custom buffer for the length prefix header.
+
+		Now also recieves from the Auth server
+		Messages type: 
+			'RegistrationSuccess', 'RegistrationFailure', 
+			'AuthenticationSuccess', 'AuthenticationFailure',
+			'DisconnectSuccess', and 'DisconnectFailure'
+
 Client:
-	Commands
-	Quotation marks in commands are unnecessary. 
-	Room names will not handle spaces. Sending messages will.
-		Join "Roomname"
-		join "Roomname"
-			Joins a Room on the server, creates it if not present.
+	Commands:
+	Register username emil password
+		Attempts to register account to database
+	
+	Authenticate usernanme/email passwordx
+		Attempts to log in to with an account.
+		The presence of an '@' character denotes that an email is being used.
 
-		Leave "Roomname"
-		leave "Roomname"
-			Leaves room on the server, does not destroy empty rooms at this time.
+	Require Authentication:
+	Join "Roomname"
+		Joins a Room on the server, creates it if not present.
+		Will not handle spaces in room name.
 
-		"Roomname" "Message message message."
-			Broadcasts message to chosen room, if it exists.
+	Leave "Roomname"
+		Leaves room on the server, does not destroy empty rooms at this time.
+
+	"Roomname" "Message message message."
+		Broadcasts message to chosen room, if it exists and the user is authenticated.
+		
+	Disconnect
+		Attempts to log the client out if they are authenticated.

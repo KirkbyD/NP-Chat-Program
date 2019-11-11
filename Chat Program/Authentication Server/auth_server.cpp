@@ -409,6 +409,7 @@ int main(int argc, char** argv)
 										}
 										else {
 											// no rows returned.
+
 										}
 									
 										psw = hash_pass(psw);
@@ -594,12 +595,10 @@ int main(int argc, char** argv)
 										prepstmt = con->prepareStatement(ss.str());
 										rslt = prepstmt->executeQuery();
 
-										if (rslt != 0) {
-											while (rslt->next()) {
-												hpsw = rslt->getString(1);
-												salt = rslt->getString(2);
-												creationdate = rslt->getString(3);
-											}
+										if (rslt->next()) {
+											hpsw = rslt->getString(1);
+											salt = rslt->getString(2);
+											creationdate = rslt->getString(3);
 										}
 										else {
 											// user does not exist
@@ -616,6 +615,7 @@ int main(int argc, char** argv)
 												WSACleanup();
 												return 1;
 											}
+											break;
 										}
 
 										psw = hash_pass(psw);
