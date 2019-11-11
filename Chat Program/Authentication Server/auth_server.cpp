@@ -415,6 +415,26 @@ int main(int argc, char** argv)
 											break;
 										}
 
+										prepstmt = con->prepareStatement("SELECT ID FROM web_auth WHERE email = '" + email + "'");
+										rslt = prepstmt->executeQuery();
+										if (rslt->next()) {
+											RequestFailure* response = new RequestFailure();
+											response->set_requestid(requester);
+											response->set_reason(ACCOUNT_ALREADY_EXISTS);
+											//response->set_creationdate();											
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerRegFail(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
+											break;
+										}
+
 										// preform cleaning on the user names here.
 										prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('" + usrn + "', NOW())");
 										prepstmt->executeUpdate();

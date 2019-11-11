@@ -191,14 +191,16 @@ int main(int argc, char** argv)
 						else if (tokens[0] == "Leave" || tokens[0] == "leave") {
 							prot.UserLeaveRoom(tokens[1]);
 						}
-						else if (tokens[0] == "REGISTER" || tokens[0] == "Register" || tokens[0] == "register") {
+						else if (tokens[0] == "REGISTER" || tokens[0] == "Register" || tokens[0] == "register" ||
+								tokens[0] == "REG" || tokens[0] == "Reg" || tokens[0] == "reg") {
 							if (tokens.size() == 4)
 								prot.UserRegister(tokens[1], tokens[2], tokens[3]);
 							else {
 								printf("Please use format \"REGISTER USERNAME EMAIL PASSWORD\"\n");
 							}
 						}
-						else if (tokens[0] == "AUTHENTICATE" || tokens[0] == "Authenticate" || tokens[0] == "authenticate") {
+						else if (tokens[0] == "AUTHENTICATE" || tokens[0] == "Authenticate" || tokens[0] == "authenticate" ||
+								tokens[0] == "AUTH" || tokens[0] == "Auth" || tokens[0] == "auth") {
 							if (tokens.size() == 3) {
 								if (tokens[1].find('@') != std::string::npos) {
 									//email auth
@@ -213,7 +215,8 @@ int main(int argc, char** argv)
 								printf("Please use format \"AUTHENTICATE EMAIL||USERNAME PASSWORD\"\n");
 							}
 						}
-						else if (tokens[0] == "DISCONNECT" || tokens[0] == "Disconnect" || tokens[0] == "disconnect") {
+						else if (tokens[0] == "DISCONNECT" || tokens[0] == "Disconnect" || tokens[0] == "disconnect" ||
+								tokens[0] == "DISC" || tokens[0] == "Disc" || tokens[0] == "disc") {
 							if (tokens.size() == 1)
 								prot.UserDisconnect();
 							else {
