@@ -496,13 +496,10 @@ int main(int argc, char** argv)
 										prepstmt = con->prepareStatement(ss.str());
 										rslt = prepstmt->executeQuery();
 
-										if (rslt != 0) {
-											while (rslt->next()) {
-												hpsw = rslt->getString(1);
-												salt = rslt->getString(2);
-												usrn = rslt->getString(3);
-												creationdate = rslt->getString(4);
-											}
+										if (rslt->next()) {
+											hpsw = rslt->getString(1);
+											salt = rslt->getString(2);
+											creationdate = rslt->getString(3);
 										}
 										else {
 											// email does not exist
@@ -519,6 +516,7 @@ int main(int argc, char** argv)
 												WSACleanup();
 												return 1;
 											}
+											break;
 										}
 
 										if ((salt + hpsw) == (salt + psw)) {
