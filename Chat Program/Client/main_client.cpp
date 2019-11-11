@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 						tokens.push_back(tmp);
 					}
 
-					if (tokens.size() > 1)
+					if (tokens.size() > 0)
 					{
 						if (tokens[0] == "Join" || tokens[0] == "join") {
 							prot.UserJoinRoom(tokens[1]);
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
 							}
 						}
 						else if (tokens[0] == "DISCONNECT" || tokens[0] == "Disconnect" || tokens[0] == "disconnect") {
-							if (tokens.size() == 4)
+							if (tokens.size() == 1)
 								prot.UserDisconnect();
 							else {
 								printf("Please use format \"DISCONNECT\"\n");

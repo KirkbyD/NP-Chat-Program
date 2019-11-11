@@ -698,7 +698,7 @@ int main(int argc, char** argv)
 										response->set_username(usrn);
 										//response->set_creationdate();										
 										std::string serializedResponse = response->SerializeAsString();
-										serverProto.ServerAuthSuccess(serializedResponse);
+										serverProto.ServerDiscSuccess(serializedResponse);
 										std::vector<uint8_t> vect = serverProto.GetBuffer();
 										iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
 										if (iResult == SOCKET_ERROR) {
@@ -716,7 +716,7 @@ int main(int argc, char** argv)
 										response->set_reason(INTERNAL_SERVER_ERROR);
 										//response->set_creationdate();											
 										std::string serializedResponse = response->SerializeAsString();
-										serverProto.ServerRegFail(serializedResponse);
+										serverProto.ServerDiscFailure(serializedResponse);
 										std::vector<uint8_t> vect = serverProto.GetBuffer();
 										iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
 										if (iResult == SOCKET_ERROR) {

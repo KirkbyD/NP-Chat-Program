@@ -36,7 +36,7 @@ ClientInfo* ClientArray[FD_SETSIZE];
 std::map<std::string, std::vector<ClientInfo*>> m_Rooms;
 Protocol serverProto = Protocol();
 
-void RemoveClient(int index)
+int RemoveClient(int index)
 {
 	ClientInfo* client = ClientArray[index];
 
@@ -62,6 +62,8 @@ void RemoveClient(int index)
 			WSACleanup();
 			return 1;
 		}
+
+		return 0;
 	}
 	
 	//remove client from all vectors in room map
@@ -634,11 +636,11 @@ int main(int argc, char** argv) {
 				total--;
 
 				std::vector<uint8_t> vect;
-				for (int i = 0; i < INT_SIZE * 2; i++)
+				for (int i = 0; i < INT_SIZE; i++)
 				{
 					vect.push_back('0');
 				}
-				iResult = recv(client->socket, (char*)vect.data(), INT_SIZE * 2, 0);
+				iResult = recv(client->socket, (char*)vect.data(), INT_SIZE, 0);
 
 				if (iResult == SOCKET_ERROR)
 				{
@@ -649,24 +651,31 @@ int main(int argc, char** argv) {
 					else
 					{
 						printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
-						RemoveClient(i);
+						if (RemoveClient(i) != 0)
+						{
+							return 1;
+						}
 					}
 				}
 				else
 				{
 					if (iResult == 0)
 					{
-						RemoveClient(i);
+						if (RemoveClient(i) != 0)
+						{
+							return 1;
+						}
 					}
 					else
 					{
 						Buffer buf;
 						buf.ReceiveBufferContent(vect);
 						printf("Size of message: %i\n", buf.readInt32LE(INT_SIZE * 0));
-						printf("MESSAGE ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
+						//printf("MESSAGE ID: %i\n", buf.readInt32LE(INT_SIZE * 1));
+
 
 						std::vector<uint8_t> vect2;
-						for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE * 2; i++)
+						for (int i = 0; i < buf.readInt32LE(0) - INT_SIZE; i++)
 						{
 							vect2.push_back('0');
 						}
@@ -682,12 +691,15 @@ int main(int argc, char** argv) {
 							else
 							{
 								printf("WSARecv failed on socket %d with error: %d\n", (int)client->socket, WSAGetLastError());
-								RemoveClient(i);
+								if (RemoveClient(i) != 0)
+								{
+									return 1;
+								}
 							}
 						}
 						else
 						{
-							buf.ReceiveBufferContent(INT_SIZE * 2, vect2);
+							buf.ReceiveBufferContent(INT_SIZE, vect2);
 
 							int packet_length = buf.readInt32LE(INT_SIZE * 0);
 							int message_id = buf.readInt32LE(INT_SIZE * 1);
