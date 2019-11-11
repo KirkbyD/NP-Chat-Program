@@ -8,14 +8,28 @@ Authors:	Dylan Kirkby,
 GitHub:		https://github.com/KirkbyD/NP-Chat-Program
 		Work done on branch 'working'
 
-Project 2, Chat Program
+
+Project 1, Chat Program
 A chat server and client that can handle multiple connections simultaneously. 
 The server must be done in C++ and must use BSD sockets. The client can be a 
 simple text based interface, or you can use a GUI. The client must also use 
 BSD sockets. This assignment can be done in a group of up to 3 members.
 
+Project 2, Authentication Service
+Building on top of the Chat Program from project 1. Create an authentication 
+service that provides a way for your chat server to register and authenticate 
+users. This authentication service should be reusable
+
+
 Project created in visual studio 2019 community edition.
-Runs ONLY IN release x64!!!!!
+Runs ONLY IN release x64.
+
+
+To prepare your database for chat application run commands from .sql files in folder "MySQL DB" in the next order:
+1) "authentication server database drop & clear.sql"
+2) "authentication server database setup.sql"
+3) "authentication user creation and privileges script.sql"
+
 
 To run:
 Use Visual Studio 2019 Community Edition.
@@ -29,16 +43,11 @@ Arrange them in the next order:
 To open multiple instances of the client, while running the solution, 
 right click client projects and select 'Debug' -> 'Start New Instance'
 
-To prepare your database for chat application run commands from .sql files in folder "MySQL DB" in the next order:
-1) "authentication server database drop & clear.sql"
-2) "authentication server database setup.sql"
-3) "authentication user creation and privleges script.sql"
-
 Buffer:		in dev/include
 Protocol:	in dev/include
 		Encodes integers by swapping endians via bitshifting.
 
-Auth Server:	Accepts command types 'Authenticate' with username or email, and 'Register'
+Auth Server:	Accepts command types 'Authenticate' with username or email, 'Register', and 'Logout'
 
 Chat Server:	Accepts 'Join', 'Leave', and 'Send' message types.
 		Dispatches 'Recieve' type messages to clients.
@@ -57,7 +66,7 @@ Client:
 	Register username emil password
 		Attempts to register account to database
 	
-	Authenticate usernanme/email password
+	Authenticate username/email password
 		Attempts to log in to with an account.
 		The presence of an '@' character denotes that an email is being used.
 
