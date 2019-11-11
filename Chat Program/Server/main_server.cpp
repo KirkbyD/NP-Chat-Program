@@ -495,6 +495,40 @@ int main(int argc, char** argv) {
 				std::string username = AuthSuccess->username();
 				std::string creationdate = AuthSuccess->creationdate();
 
+				bool userAlreadyOn = false;
+				for (ClientInfo* compClient : ClientArray) {
+					if (compClient != nullptr
+						&& compClient->username == username) {
+						//tell 'em off, Charlie
+						std::string msg = "User " + username + " already logged in!";
+						printf("%s\n", msg.c_str());
+						serverProto.UserRecieveMessage("", "Server", msg);
+
+						std::vector<uint8_t> vect = serverProto.GetBuffer();
+
+						for (size_t i = 0; i < FD_SETSIZE; i++)
+						{
+							if (ClientArray[i] != NULL
+								&& ClientArray[i]->socket == requestid) {
+								iResult = send(requestid, (char*)vect.data(), (int)vect.size(), 0);
+								userAlreadyOn = true;
+								if (iResult == SOCKET_ERROR)
+								{
+									printf("send error %d\n", WSAGetLastError());
+								}
+								else
+								{
+									printf("Bytes sent: %d\n", iResult);
+								}
+								break;
+							}
+						}
+					}
+				}
+
+				if(userAlreadyOn)
+					break;
+
 				/*Send this info back to user*/
 				std::string msg = "Welcome " + username + " (user since " + creationdate + ")";
 				serverProto.UserRecieveMessage("", "Server", msg);
@@ -994,37 +1028,6 @@ int main(int argc, char** argv) {
 													printf("Bytes sent: %d\n", iResult);
 												}
 												break;
-											}
-										}
-									}
-									else {
-										for (ClientInfo* compClient : ClientArray) {
-											if (compClient != nullptr
-												&& compClient->username == user) {
-												//tell 'em off, Charlie
-												std::string msg = "User " + user + " already logged in!";
-												printf("%s\n", msg.c_str());
-												serverProto.UserRecieveMessage("", "Server", msg);
-
-												std::vector<uint8_t> vect = serverProto.GetBuffer();
-
-												for (size_t i = 0; i < FD_SETSIZE; i++)
-												{
-													if (ClientArray[i] != NULL
-														&& ClientArray[i]->socket == client->socket) {
-														iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
-														userAlreadyOn = true;
-														if (iResult == SOCKET_ERROR)
-														{
-															printf("send error %d\n", WSAGetLastError());
-														}
-														else
-														{
-															printf("Bytes sent: %d\n", iResult);
-														}
-														break;
-													}
-												}
 											}
 										}
 									}
