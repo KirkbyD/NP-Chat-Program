@@ -394,6 +394,27 @@ int main(int argc, char** argv)
 									unsigned uid;
 
 									try {
+										//check if exists first
+										prepstmt = con->prepareStatement("SELECT ID FROM users WHERE username = '" + usrn + "'");
+										rslt = prepstmt->executeQuery();
+										if (rslt->next()) {
+											RequestFailure* response = new RequestFailure();
+											response->set_requestid(requester);
+											response->set_reason(ACCOUNT_ALREADY_EXISTS);
+											//response->set_creationdate();											
+											std::string serializedResponse = response->SerializeAsString();
+											serverProto.ServerRegFail(serializedResponse);
+											std::vector<uint8_t> vect = serverProto.GetBuffer();
+											iResult = send(client->socket, (char*)vect.data(), (int)vect.size(), 0);
+											if (iResult == SOCKET_ERROR) {
+												printf("send() failed with error: %d\n", WSAGetLastError());
+												closesocket(client->socket);
+												WSACleanup();
+												return 1;
+											}
+											break;
+										}
+
 										// preform cleaning on the user names here.
 										prepstmt = con->prepareStatement("INSERT INTO users (username, creation_date) VALUES('" + usrn + "', NOW())");
 										prepstmt->executeUpdate();
@@ -401,15 +422,12 @@ int main(int argc, char** argv)
 										prepstmt = con->prepareStatement("SELECT ID FROM users WHERE username = '" + usrn + "'");
 										rslt = prepstmt->executeQuery();
 
-										if (rslt != 0) {
-											while (rslt->next()) {
-												uid = rslt->getInt(1);
-												std::cout << rslt->getString(1) << std::endl;
-											}
+										if (rslt->next()) {
+											uid = rslt->getInt(1);
+											std::cout << rslt->getString(1) << std::endl;
 										}
 										else {
 											// no rows returned.
-
 										}
 									
 										psw = hash_pass(psw);
@@ -492,14 +510,15 @@ int main(int argc, char** argv)
 									std::string usrn = "";
 									try {
 										// preform cleaning on the user names here.
-										ss << "SELECT wa.password, wa.salt, wa.username, u.creation_date FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE wa.email = '" << email << "'";
+										ss << "SELECT wa.password, wa.salt, u.username, u.creation_date FROM authservdb.web_auth wa JOIN authservdb.users u ON u.ID = wa.User_ID WHERE wa.email = '" << email << "'";
 										prepstmt = con->prepareStatement(ss.str());
 										rslt = prepstmt->executeQuery();
 
 										if (rslt->next()) {
 											hpsw = rslt->getString(1);
 											salt = rslt->getString(2);
-											creationdate = rslt->getString(3);
+											usrn = rslt->getString(3);
+											creationdate = rslt->getString(4);
 										}
 										else {
 											// email does not exist
@@ -518,6 +537,8 @@ int main(int argc, char** argv)
 											}
 											break;
 										}
+
+										psw = hash_pass(psw);
 
 										if ((salt + hpsw) == (salt + psw)) {
 											// login credentials accepted
